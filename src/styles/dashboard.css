@@ -1,0 +1,22 @@
+.btn.text-secondary-btn:hover {
+    color: white;
+  }
+
+.text-secondary-btn {
+    color: #B0A8B9;
+}
+.btn.selected-btn {
+    border-color: green;
+  }
+
+
+.green-line {
+    background-color: green;
+    border: none;
+  }
+
+
+.btn.selected-btn ~ .green-line {
+    margin-left: 0;
+  }
+  

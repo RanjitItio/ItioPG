@@ -1,0 +1,12 @@
+.card__body {
+    /* width: 50rem; */
+    height: 18rem;
+    border-radius: 20px;
+}
+
+@media (min-width: 992px) {
+    .img-large-device {
+        width: 700px;
+        max-height: 210px;
+    }
+}
