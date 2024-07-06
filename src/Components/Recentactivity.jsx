@@ -1,22 +1,21 @@
-
+import { Card, CardContent, Typography, Button } from '@mui/material';
 
 
 
 function RecentActivity() {
     return (
-        <div className="card shadow w-100 h-100">
-            <div className="card-body">
-                <div className="d-flex justify-content-between">
-                    <h5 className="card-title"><b>Recent Activities</b></h5>
-                   
-                    <button type="button" className="btn btn-light">See more</button>
-                   
+        <Card className="shadow" style={{ width: '100%', height: '100%' }}>
+            <CardContent>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography variant="h5" component="div"><b>Recent Activities</b></Typography>
+                    <Button variant="outlined" className="btn-light">
+                        See more
+                    </Button>
                 </div>
-              
-            </div>
-        </div>
-    )
-}
+            </CardContent>
+        </Card>
+    );
+};
 
 
 

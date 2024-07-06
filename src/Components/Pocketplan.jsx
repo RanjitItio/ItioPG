@@ -1,66 +1,102 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap-icons/font/bootstrap-icons.css'
+import { Card, CardContent, Typography, Grid, Box, Button } from '@mui/material';
+
 
 
 
 function PocketPlan() {
     return (
-        <div className="card mt-2 shadow" >
-            <div className="card-body">
-                <h5 className="card-title"><b>My Pocket Plans</b></h5>
-                &nbsp;
-                <div className="row">
-                    <div className="col">
-                        <div className="card rounded-4 shadow" style={{maxWidth: "18rem"}}>
-                        <div className="card-body" style={{overflow: "auto", maxHeight: "100px"}}>
-                            <h5 className="card-title">New Car</h5>
-                            <h6 className="card-subtitle mb-2 text-muted">$1191,68</h6>
-                        </div>
-                        </div>
-                    </div>
+        <Box className="card mt-2 shadow" sx={{ boxShadow: 3, borderRadius: 2 }}>
+            <CardContent>
+                <Typography variant="h5" component="div" gutterBottom>
+                    <b>My Pocket Plans</b>
+                </Typography>
 
-                    <div className="col">
-                        <div className="card rounded-4 shadow" style={{maxWidth: "18rem"}}>
-                        <div className="card-body" style={{overflow: "auto", maxHeight: "100px"}}>
-                            <h5 className="card-title">New Console</h5>
-                            <h6 className="card-subtitle mb-2 text-muted">$3.094,56</h6>
-                        </div>
-                        </div>
-                    </div>
-                </div>
+                {/* First Container */}
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                        <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
+                            <CardContent sx={{ overflow: 'auto', maxHeight: 100 }}>
 
-                &nbsp;
-                <div className="row">
-                    <div className="col">
-                        <div className="card rounded-4 shadow" style={{maxWidth: "18rem"}}>
-                        <div className="card-body" style={{overflow: "auto", maxHeight: "100px"}}>
-                            <h5 className="card-title">Savings</h5>
-                            <h6 className="card-subtitle mb-2 text-muted">$1.324,22</h6>
-                        </div>
-                        </div>
-                    </div>
+                                <Typography variant="h5" component="div">
+                                    New Car
+                                </Typography>
 
-                    <div className="col">
-                        <div className="card rounded-4 shadow" style={{maxWidth: "18rem"}}>
-                        <div className="card-body" style={{overflow: "auto", maxHeight: "100px"}}>
-                            <h5 className="card-title">Wedding</h5>
-                            <h6 className="card-subtitle mb-2 text-muted">$5.000,00</h6>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-                &nbsp;
-                <div className="row justify-content-center">
-                    <div className="col-auto">
-                        <button type="button" className="btn btn-outline-primary">Load More</button>
-                    </div>
-                </div>
-              
+                                <Typography variant="subtitle1" color="text.secondary">
+                                    $1191,68
+                                </Typography>
 
-            </div>
-        </div>
-    )
-}
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                        <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
+                            <CardContent sx={{ overflow: 'auto', maxHeight: 100 }}>
+
+                                <Typography variant="h5" component="div">
+                                    New Console
+                                </Typography>
+
+                                <Typography variant="subtitle1" color="text.secondary">
+                                    $3.094,56
+                                </Typography>
+
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+                </Grid>
+                {/* First Container ends here */}
+
+                {/* Second Container */}
+                <Grid container spacing={2} sx={{ marginTop: 2 }}>
+                    <Grid item xs={12} sm={6}>
+                        <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
+                            <CardContent sx={{ overflow: 'auto', maxHeight: 100 }}>
+
+                                <Typography variant="h5" component="div">
+                                    Savings
+                                </Typography>
+
+                                <Typography variant="subtitle1" color="text.secondary">
+                                    $1.324,22
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                        <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
+                            <CardContent sx={{ overflow: 'auto', maxHeight: 100 }}>
+
+                                <Typography variant="h5" component="div">
+                                    Wedding
+                                </Typography>
+
+                                <Typography variant="subtitle1" color="text.secondary">
+                                    $5.000,00
+                                </Typography>
+
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+                </Grid>
+                {/* Second Conatiner ends here */}
+
+                {/* Third Container */}
+                <Grid container justifyContent="center" sx={{ marginTop: 2 }}>
+                    <Grid item>
+                        <Button variant="outlined" color="primary">
+                        Load More
+                        </Button>
+                    </Grid>
+                </Grid>
+
+            </CardContent>
+        </Box>
+    );
+};
 
 
 

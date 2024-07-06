@@ -1,31 +1,54 @@
+import React from 'react';
+import { Card, CardContent, Typography, Button, Menu, MenuItem } from '@mui/material';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+
 
 
 
 function Currency(){ 
+
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [selectedCurrency, setSelectedCurrency] = React.useState('CNY');
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = (currency) => {
+        setAnchorEl(null);
+        setSelectedCurrency(currency);
+    };
+
+
     return (
-        <div className="card shadow w-100 h-100">
-            <div className="card-body">
-                <div className="d-flex justify-content-between">
-                    <h5 className="card-title"><b>Currency</b></h5>
-                   
-                    <div className="btn-group">
-                        <button type="button" className="btn btn-light">1</button>
-                        <button type="button" className="btn btn-light dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span className="visually-hidden">Toggle Dropdown</span>
-                        </button>
-                        <ul className="dropdown-menu">
-                            <li><a className="dropdown-item" href="#">CNY</a></li>
-                            <li><a className="dropdown-item" href="#">USD</a></li>
-                            <li><a className="dropdown-item" href="#">Rupaiah</a></li>
-                        </ul>
+        <Card className="shadow" sx={{ width: '100%', height: '100%' }}>
+            <CardContent>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography variant="h5" component="div"><b>Currency</b></Typography>
+                    <div>
+                        <Button
+                            variant="outlined"
+                            onClick={handleClick}
+                            endIcon={<ArrowDropDownIcon />}
+                        >
+                            {selectedCurrency}
+                        </Button>
+                        <Menu
+                            anchorEl={anchorEl}
+                            open={Boolean(anchorEl)}
+                            onClose={() => handleClose(selectedCurrency)}
+                        >
+                            <MenuItem onClick={() => handleClose('CNY')}>CNY</MenuItem>
+                            <MenuItem onClick={() => handleClose('USD')}>USD</MenuItem>
+                            <MenuItem onClick={() => handleClose('Rupaiah')}>Rupaiah</MenuItem>
+                        </Menu>
                     </div>
-                   
                 </div>
-              
-            </div>
-        </div>
-    )
-}
+            </CardContent>
+        </Card>
+    );
+};
+
 
 
 export default Currency;
