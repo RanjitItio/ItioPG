@@ -1,33 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Button,
   TextField, MenuItem, Select, InputLabel, FormControl, Collapse, Box, Grid, useMediaQuery
 } from '@mui/material';
-import FormHelperText from '@mui/material/FormHelperText';
-import FilterListIcon from '@mui/icons-material/FilterList';
+// import FormHelperText from '@mui/material/FormHelperText';
+// import FilterListIcon from '@mui/icons-material/FilterList';
 import { useTheme } from '@mui/material/styles';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
+import axiosInstance from '../Authentication/axios';
+import EditIcon from '@mui/icons-material/Edit';
+import Pagination from '@mui/material/Pagination';
+import AddIcon from '@mui/icons-material/Add';
+import IosShareIcon from '@mui/icons-material/IosShare';
+import { useNavigate } from 'react-router-dom';
+import CircularProgress from '@mui/material/CircularProgress';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 
 
-
-const transactions = [
-  { invoice: 'B12341', name: 'Figma Pro', business: 'Software', transactionType: 'Subscribe', date: 'October 20, 2022', amount: -32, status: 'Success' },
-  { invoice: 'B32345', name: 'Fiverr International', business: 'Freelance platform', transactionType: 'Receive', date: 'November 01, 2022', amount: 100, status: 'Pending' },
-  { invoice: 'B12341', name: 'Adobe', business: 'Software', transactionType: 'Subscribe', date: 'October 20, 2022', amount: -32, status: 'Canceled' },
-  { invoice: 'B12341', name: 'Starbucks', business: 'Freelance platform', transactionType: 'Receive', date: 'November 01, 2022', amount: 100, status: 'Pending' },
-  { invoice: 'B12341', name: 'Figma Pro', business: 'Software', transactionType: 'Subscribe', date: 'October 20, 2022', amount: -32, status: 'Success' },
-  { invoice: 'B12341', name: 'Figma Pro', business: 'Software', transactionType: 'Subscribe', date: 'October 20, 2022', amount: -32, status: 'Success' },
-  { invoice: 'B12341', name: 'Figma Pro', business: 'Software', transactionType: 'Subscribe', date: 'October 20, 2022', amount: -32, status: 'Success' },
-  { invoice: 'B12341', name: 'Figma Pro', business: 'Software', transactionType: 'Subscribe', date: 'October 20, 2022', amount: -32, status: 'Success' },
-  { invoice: 'B12341', name: 'Figma Pro', business: 'Software', transactionType: 'Subscribe', date: 'October 20, 2022', amount: -32, status: 'Success' },
-  { invoice: 'B12341', name: 'Figma Pro', business: 'Software', transactionType: 'Subscribe', date: 'October 20, 2022', amount: -32, status: 'Success' },
-  { invoice: 'B12341', name: 'Figma Pro', business: 'Software', transactionType: 'Subscribe', date: 'October 20, 2022', amount: -32, status: 'Success' },
-  { invoice: 'B12341', name: 'Figma Pro', business: 'Software', transactionType: 'Subscribe', date: 'October 20, 2022', amount: -32, status: 'Success' },
-  { invoice: 'B12341', name: 'Figma Pro', business: 'Software', transactionType: 'Subscribe', date: 'October 20, 2022', amount: -32, status: 'Success' },
-  { invoice: 'B12341', name: 'Figma Pro', business: 'Software', transactionType: 'Subscribe', date: 'October 20, 2022', amount: -32, status: 'Success' },
-];
 
 
 
@@ -35,21 +26,133 @@ const transactions = [
 // All Business Transaction Data
 export default function AllBusinessTable () {
 
+    const navigate = useNavigate();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    const [filterOpen, setFilterOpen] = useState(false);
 
-  const handleFilterClick = () => {
-    setFilterOpen(!filterOpen);
+    const [filterOpen, setFilterOpen] = useState(false);
+    const [loader, setLoader]         = useState(true);   // Waiting for API data state
+    const [emptyData, setEmptyData] = useState(false);    // Empty API response state
+    const [businesssData, setBusinessData] = useState([]);
+
+    // Method to open and close the Filter button fields
+    const handleFilterClick = () => {
+       setFilterOpen(!filterOpen);
+    };
+
+     // Get all the Businesses created by the user
+     useEffect(() => {
+      axiosInstance.get(`api/v4/user/all/merchants/`).then((res) => {
+          // console.log(res.data.data)
+          if (res.status === 200 && res.data.data) {
+              setBusinessData(res.data.data)
+              setLoader(false)
+          };
+
+          if (res.data.data.length === 0) {
+              setEmptyData(true);
+              setLoader(false)
+          };
+
+      }).catch((error)=> {
+          console.log(error)
+
+          if (error.response.data.msg === 'Merchant not available') {
+            setEmptyData(true);
+            setLoader(false)
+          };
+      })
+
+  }, []);
+  
+
+
+// Status color according to the input
+const getStatusColor = (status) => {
+  switch(status){
+      case 'Approved':
+          return 'success'
+      case 'Cancelled':
+          return 'danger'
+      case 'Moderation':
+          return 'warning'
+  }
+};
+
+
+const handleAddNewBusiness = ()=> {
+      navigate('/merchant/add/businesses/')
   };
 
-  return (
 
-    <Box sx={{zIndex: 0, marginTop: -8, padding: 4}}>
-    <Card>
+const handleBusinessUpdate = (merchant, curr) => {
+    const merch    = merchant
+    const currency = curr
+    navigate('/merchant/update/businesses/', {state: {merchant_details: merch, currency: currency}})
+};
+
+
+// API response witing component
+if (loader) {
+  return (
+      <>
+      <Box p={2} display="flex" justifyContent="space-between" alignItems="center">
+          {/* <TextField placeholder="Search for transaction here" variant="outlined" size="small" /> */}
+          <div className="d-flex justify-content-start">
+              <p>
+                  <b><span className='fs-3'>BUSINESSES</span></b> <br />
+                  <small>List of all your Businesses in one place</small>
+              </p>
+          </div>
+      </Box>
+
+      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '3%' }}>
+          <CircularProgress />
+      </Box>
+      </>
+  )
+};
+
+
+// If the response data is empty
+if (emptyData) {
+  return (
+      <>
 
       <Box p={2} display="flex" justifyContent="space-between" alignItems="center">
-        <TextField placeholder="Search for transaction here" variant="outlined" size="small" />
+          {/* <TextField placeholder="Search for transaction here" variant="outlined" size="small" /> */}
+          <div className="d-flex justify-content-start">
+              <p>
+                  <b><span className='fs-3'>BUSINESSES</span></b> <br />
+                  <small>List of all your Businesses in one place</small>
+              </p>
+          </div>
+      </Box>
+
+      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '2%'}}>
+          <DeleteOutlineIcon sx={{ fontSize: 90 }} />
+      </Box>
+      <p style={{display:'flex', justifyContent: 'center'}}>Nothing to show</p>
+
+      </>
+  )
+};
+
+
+
+  return (
+    <Box sx={{zIndex: 0, marginTop: -8, padding: 4}}>
+    <Card>
+      <Box p={2} display="flex" justifyContent="space-between" alignItems="center">
+        {/* <TextField placeholder="Search for transaction here" variant="outlined" size="small" /> */}
+        <div className="d-flex justify-content-start">
+            <p>
+                <b><span className='fs-3'>BUSINESSES</span></b> <br />
+                <small>List of all your Businesses in one place</small>
+            </p>
+        </div>
+
+
         <Box>
           {isSmallScreen ? (
             <>
@@ -63,10 +166,14 @@ export default function AllBusinessTable () {
             </>
           ) : (
             <>
-              <Button variant="contained" onClick={handleFilterClick} startIcon={<FilterListIcon />}>
+              {/* <Button variant="contained" onClick={handleFilterClick} startIcon={<FilterListIcon />}>
                 Filter
+              </Button> */}
+              <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddNewBusiness}>
+                  Add New Business
               </Button>
-              <Button variant="contained" style={{ marginLeft: 10 }}>
+
+              <Button variant="contained" style={{ marginLeft: 10 }} startIcon={<IosShareIcon />}>
                 Export
               </Button>
             </>
@@ -74,25 +181,25 @@ export default function AllBusinessTable () {
         </Box>
       </Box>
 
-        <Collapse in={filterOpen}>
+        {/* <Collapse in={filterOpen}>
             <Box p={1}>
             <Grid container spacing={0}>
                 <Grid item xs={12} sm={6} md={3}>
                     <FormControl sx={{width: {xs: '100%', sm: '95%',md:'80%'}}} size='medium'>
                         <InputLabel id="demo-simple-select-helper-label">Age</InputLabel>
                         <Select
-                        labelId="demo-simple-select-helper-label"
-                        id="demo-simple-select-helper"
-                        // value={age}
-                        label="Transaction Type"
-                        // onChange={handleChange}
+                          labelId="demo-simple-select-helper-label"
+                          id="demo-simple-select-helper"
+                          // value={age}
+                          // onChange={handleChange}
+                          label="Transaction Type"
                         >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
+                          <MenuItem value="">
+                              <em>None</em>
+                          </MenuItem>
+                          <MenuItem value={10}>Ten</MenuItem>
+                          <MenuItem value={20}>Twenty</MenuItem>
+                          <MenuItem value={30}>Thirty</MenuItem>
                         </Select>
                         <FormHelperText>With label + helper text</FormHelperText>
                     </FormControl>
@@ -152,7 +259,7 @@ export default function AllBusinessTable () {
                 </Grid>
             </Grid>
             </Box>
-        </Collapse>
+        </Collapse> */}
 
         <TableContainer style={{ overflowX: 'auto', maxHeight: '400px', overflowY: 'auto'}}>
             <Table stickyHeader>
@@ -171,31 +278,55 @@ export default function AllBusinessTable () {
                 </TableHead>
 
                 <TableBody>
-                    {transactions.map((transaction, index) => (
+                    {businesssData.map((business, index) => (
                     <TableRow key={index}>
-                        <TableCell>{transaction.invoice}</TableCell>
+
+                      {/* Serial No. Column */}
+                        <TableCell>{index}</TableCell>
+
+                        {/* Date Created */}
+                        <TableCell>{business.merchants.created_date}</TableCell>
+
+                        {/* Business Name Column */}
                         <TableCell>
                         <Box display="flex" alignItems="center">
-                            <img src={`/path/to/logo/${transaction.name}.png`} alt={transaction.name} style={{ width: 24, height: 24, marginRight: 8 }} />
+                            <img src={`${business.merchants.logo}`} alt={business.merchants.bsn_name} style={{ width: 24, height: 24, marginRight: 8 }} />
                             <Box>
-                                <div>{transaction.name}</div>
-                                <div style={{ color: 'gray', fontSize: 'small' }}>{transaction.business}</div>
+                                <div>{business.merchants.bsn_name}</div>
+                                <div style={{ color: 'gray', fontSize: 'small' }}>{business.merchants.bsn_name}</div>
                             </Box>
                         </Box>
+                        </TableCell>
+
+                        {/* Business URL Column */}
+                        <TableCell><a href={business.merchants.bsn_url}>{business.merchants.bsn_url}</a></TableCell>
+
+                        {/* Currency Column */}
+                        <TableCell>{business.currency.name}</TableCell>
+
+                        {/* Generate Form Column */}
+                        <TableCell>{business.currency.name}</TableCell>
+
+                        {/* Business Details Column */}
+                        <TableCell>
+                              {business.currency.name}
+                        </TableCell>
+
+                        {/* Status Column */}
+                        <TableCell>
+                            {/* <p>{getStatusColor(business.merchants.status)}</p> */}
+                            <p className={`text-${getStatusColor(business.merchants.status)}`}>{business.merchants.status}</p>
+                        </TableCell>
+
+                        {/* Edit Column */}
+                        <TableCell>
+
+                          <IconButton onClick={()=> {handleBusinessUpdate(business.merchants, business.currency);}}>
+                              <EditIcon color='primary'/>
+                          </IconButton>
 
                         </TableCell>
-                        <TableCell>{transaction.transactionType}</TableCell>
-                        <TableCell>{transaction.date}</TableCell>
-                        <TableCell>{transaction.amount < 0 ? `-$${Math.abs(transaction.amount)}` : `+$${transaction.amount}`}</TableCell>
-                        <TableCell>{transaction.status}</TableCell>
-                        <TableCell>
-                        <IconButton>
-                            <i className="far fa-eye"></i>
-                        </IconButton>
-                        <IconButton>
-                            <i className="far fa-trash-alt"></i>
-                        </IconButton>
-                        </TableCell>
+
                     </TableRow>
                     ))}
                 </TableBody>
@@ -203,6 +334,7 @@ export default function AllBusinessTable () {
             </Table>
         </TableContainer>
 
+        <Pagination count={10} color="primary" sx={{margin: 3}}/>
     </Card>
     </Box>
   );

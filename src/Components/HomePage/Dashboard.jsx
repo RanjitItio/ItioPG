@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import TotalBalance from '../Totalbalance';
-import PocketPlan from '../Pocketplan';
+import ActiveGateways from '../Gateway';
 import ExpenseCategory from '../Expense';
 import IncomeAnalysis from '../IncomeAnalysis';
 import ExpenseAnalysis from '../ExpenseAnalysis';
@@ -28,7 +28,7 @@ export default function GatewayDashboard() {
                             <Grid item xs={12} className="my-2">
 
                                 {/* Pocket Plan */}
-                                <PocketPlan />
+                                <ActiveGateways />
 
                             </Grid>
                         </Grid>

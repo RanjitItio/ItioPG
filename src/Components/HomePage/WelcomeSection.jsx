@@ -11,12 +11,14 @@ import { Link } from 'react-router-dom';
 
 export default function WelcomeSection() {
 
+    const user_full_name = localStorage.getItem('user_name');
+
     return (
 
         <Box sx={{ backgroundColor: "#2C73D2", paddingBottom: 5}}>
             <Typography variant="h4" sx={{ pt: 5, pb: 2, marginLeft: "4rem", color: "white" }}>
                 <span>
-                <b>Welcome back, Ranjit</b>
+                <b>Welcome, {user_full_name}</b>
                 <EmojiEmotionsIcon sx={{ ml: 1 }} />
                 </span>
             </Typography>
@@ -61,6 +63,18 @@ export default function WelcomeSection() {
                     }}
                 >
                     Business
+                </Button>
+
+                <Button 
+                    component={Link} 
+                    // to="/merchant/businesses/" 
+                    variant="text" 
+                    sx={{ 
+                    color: "white", 
+                    mr: 2 
+                    }}
+                >
+                    Bank Accounts
                 </Button>
             </Box>
 

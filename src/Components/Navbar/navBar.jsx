@@ -18,6 +18,8 @@ import { useState } from 'react';
 import FitbitIcon from '@mui/icons-material/Fitbit';
 import Button from '@mui/material/Button';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import Signout from '../Authentication/Signout';
 
 
 
@@ -69,6 +71,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function Navbar() {
 
+  const navigate = useNavigate();
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -80,6 +84,7 @@ export default function Navbar() {
     setAnchorElNav(event.currentTarget);
   };
 
+  // Close Item menu
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
@@ -101,6 +106,11 @@ export default function Navbar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  // Method to Logout user
+  const handleLogoutUser = ()=> {
+      Signout();
+  };
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -120,6 +130,7 @@ export default function Navbar() {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={()=> {handleMenuClose(); handleLogoutUser(); }}>Logout</MenuItem>
     </Menu>
   );
 

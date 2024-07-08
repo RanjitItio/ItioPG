@@ -3,12 +3,13 @@ import { Card, CardContent, Typography, Grid, Box, Button } from '@mui/material'
 
 
 
-function PocketPlan() {
+function ActiveGateways() {
+
     return (
         <Box className="card mt-2 shadow" sx={{ boxShadow: 3, borderRadius: 2 }}>
             <CardContent>
                 <Typography variant="h5" component="div" gutterBottom>
-                    <b>My Pocket Plans</b>
+                    <b>My Active Gateways</b>
                 </Typography>
 
                 {/* First Container */}
@@ -18,11 +19,11 @@ function PocketPlan() {
                             <CardContent sx={{ overflow: 'auto', maxHeight: 100 }}>
 
                                 <Typography variant="h5" component="div">
-                                    New Car
+                                    Paytm
                                 </Typography>
 
                                 <Typography variant="subtitle1" color="text.secondary">
-                                    $1191,68
+                                    Paytm
                                 </Typography>
 
                             </CardContent>
@@ -34,11 +35,11 @@ function PocketPlan() {
                             <CardContent sx={{ overflow: 'auto', maxHeight: 100 }}>
 
                                 <Typography variant="h5" component="div">
-                                    New Console
+                                    Razorpay
                                 </Typography>
 
                                 <Typography variant="subtitle1" color="text.secondary">
-                                    $3.094,56
+                                    Razorpay
                                 </Typography>
 
                             </CardContent>
@@ -55,11 +56,11 @@ function PocketPlan() {
                             <CardContent sx={{ overflow: 'auto', maxHeight: 100 }}>
 
                                 <Typography variant="h5" component="div">
-                                    Savings
+                                    Phonepe
                                 </Typography>
 
                                 <Typography variant="subtitle1" color="text.secondary">
-                                    $1.324,22
+                                    Phonepe
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -70,11 +71,11 @@ function PocketPlan() {
                             <CardContent sx={{ overflow: 'auto', maxHeight: 100 }}>
 
                                 <Typography variant="h5" component="div">
-                                    Wedding
+                                    Mastercard
                                 </Typography>
 
                                 <Typography variant="subtitle1" color="text.secondary">
-                                    $5.000,00
+                                    Mastercard
                                 </Typography>
 
                             </CardContent>
@@ -101,4 +102,4 @@ function PocketPlan() {
 
 
 
-export default PocketPlan;
+export default ActiveGateways;
