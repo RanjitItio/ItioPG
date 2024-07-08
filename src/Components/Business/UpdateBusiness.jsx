@@ -192,7 +192,7 @@ export default function UpdateMerchant({open}) {
                 setDisableButton(true)
 
                 setTimeout(() => {
-                navigate('/merchants/');
+                navigate('/merchant/businesses/');
                 }, 2000);
             }
 

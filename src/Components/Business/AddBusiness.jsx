@@ -186,7 +186,7 @@ export default function AddNewBusines({open}) {
               setSuccessMessage('Merchant created successfully. Please wait for admin approval.');
 
               setTimeout(() => {
-                navigate('/merchants/');
+                navigate('/merchant/businesses/');
               }, 2000);
             }
 
