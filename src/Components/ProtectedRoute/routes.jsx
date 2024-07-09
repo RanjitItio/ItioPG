@@ -15,6 +15,8 @@ import KYCSubmission from "../Authentication/KycSubmit";
 import Signout from "../Authentication/Signout";
 import AddNewBusines from "../Business/AddBusiness";
 import UpdateMerchant from "../Business/UpdateBusiness";
+import PaymentCheckoutPage from "../PaymentCheckout/checkout";
+import UPIQRCOde from "../PaymentCheckout/UPIQR";
 
 
 
@@ -34,13 +36,21 @@ const AuthRoutes = () => {
         element: <div>Service Page</div>,
       },
       {
-        path: "/about-us",
-        element: <div>About Us</div>,
+        path: "/merchant/payment/checkout/",
+        element: <PaymentCheckoutPage />,
       },
     ];
   
    
     const routesForAuthenticatedOnly = [
+      {
+        path: '/signup/',
+        element: <Signup />,
+      },
+      {
+        path: '/signin/',
+        element: <Signin />,
+      },
       {
         path: "*",
         element: <ProtectedRoute />, 
@@ -48,12 +58,7 @@ const AuthRoutes = () => {
           {
             path: "*",
             element: (
-<>
-               <Routes>
-                  <Route exact path='/signup/' element={<Signup />}></Route>
-                  <Route exact path='/signin/' element={<Signin />}></Route>
-               </Routes>
-
+        <>
                 <Navbar />
                 <Routes>
 
