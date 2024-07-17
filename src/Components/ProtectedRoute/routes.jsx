@@ -16,7 +16,11 @@ import Signout from "../Authentication/Signout";
 import AddNewBusines from "../Business/AddBusiness";
 import UpdateMerchant from "../Business/UpdateBusiness";
 import PaymentCheckoutPage from "../PaymentCheckout/checkout";
-import UPIQRCOde from "../PaymentCheckout/UPIQR";
+import TestPaymentCheckoutPage from "../PaymentTestCheckout/checkout";
+import MasterCardOTPComponent from "../Mastercard/otp";
+import PaymentSuccessPage from "../PaymentStatus/Success";
+import PaymentFailedPage from "../PaymentStatus/Failed";
+import MastercardPaymentStatus from "../PaymentCheckout/MCPaymentStatus";
 
 
 
@@ -39,9 +43,30 @@ const AuthRoutes = () => {
         path: "/merchant/payment/checkout/",
         element: <PaymentCheckoutPage />,
       },
+      {
+        path: "/merchant/payment/sb/checkout/",
+        element: <TestPaymentCheckoutPage />,
+      },
+      {
+        path: "/merchant/payment/mastercard/otp/",
+        element: <MasterCardOTPComponent />,
+      },
+      {
+        path: "/merchant/payment/success/",
+        element: <PaymentSuccessPage />,
+      },
+      {
+        path: "/merchant/payment/fail/",
+        element: <PaymentFailedPage />,
+      },
+      {
+        path: "/mastercard/payment/status/",
+        element: <MastercardPaymentStatus />,
+      },
+
     ];
   
-   
+
     const routesForAuthenticatedOnly = [
       {
         path: '/signup/',

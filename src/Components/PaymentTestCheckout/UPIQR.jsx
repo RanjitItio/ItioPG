@@ -8,7 +8,7 @@ import React from 'react';
 
 
 
-export default function UPIQRCOde () {
+export default function TestUPIQRCOde () {
     const upiID = 'sahooranjitkumar53@ybl'
     const qrValue = `upi://pay?pa=${upiID}&pn=Ranjit%20Kumar&am=1`;
     
