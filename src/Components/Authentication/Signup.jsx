@@ -88,7 +88,8 @@ export default function Signup() {
         setTimeout(() => {
           setDisableRegisterButton(false);
         }, 4000);
-    
+
+        console.log('axios not called')
         await axiosInstance.post(`api/v1/user/register/`, {
           firstname: formData.first_name,
           lastname: formData.last_name,
@@ -100,7 +101,8 @@ export default function Signup() {
         })
         .then((res) => {
           console.log(res)
-          
+          console.log('axios response received')
+
           if(res.status === 201) {
             const response_msg = res.data.msg;
             const match = response_msg.match(/\d+$/);
@@ -116,12 +118,14 @@ export default function Signup() {
             const queryString = new URLSearchParams(filteredFormData).toString();
     
             setTimeout(() => {
-              navigate(`/kyc?${queryString}`);
+              // navigate(`/kyc?${queryString}`);
+              window.location.href = `/kyc?${queryString}`
             }, 2000);
           }
         })
         .catch((error) => {
           console.log(error)
+          console.log('axios Error')
 
           if (error.response.status === 400) {
             setError(error.response.data.msg)

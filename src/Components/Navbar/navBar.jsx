@@ -24,7 +24,11 @@ import Signout from '../Authentication/Signout';
 
 
 
-const pages = ['Connectors', 'Developer', 'Blog'];
+const pages = [
+  {title: 'Connectors', url: ''}, 
+  {title: 'Developer', url: '/merchant/developer/tools/'}, 
+  {title: 'Blog', url: ''}
+];
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -109,6 +113,11 @@ export default function Navbar() {
   // Method to Logout user
   const handleLogoutUser = ()=> {
       Signout();
+  };
+
+  // Method to redirect to the respective page of nav Items
+  const handleRedirectNavPages = (pageURL)=> {
+    navigate(pageURL)
   };
 
   const menuId = 'primary-search-account-menu';
@@ -254,9 +263,9 @@ export default function Navbar() {
             >
               {pages.map((page) => (
                 <MenuItem key={page} 
-                   onClick={handleCloseNavMenu}
+                   onClick={()=> {handleCloseNavMenu(); handleRedirectNavPages(page.url)}}
                    >
-                  <Typography textAlign="center">{page}</Typography>
+                  <Typography textAlign="center">{page.title}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -264,13 +273,13 @@ export default function Navbar() {
 
           {/* Nav Items for Large Device */}
           <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
+            {pages.map((page, index) => (
               <Button
-                key={page}
-                onClick={handleCloseNavMenu}
+                key={index}
+                onClick={()=> {handleCloseNavMenu(); handleRedirectNavPages(page.url); }}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page}
+                {page.title}
               </Button>
             ))}
           </Box>

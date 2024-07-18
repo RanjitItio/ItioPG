@@ -21,6 +21,9 @@ import MasterCardOTPComponent from "../Mastercard/otp";
 import PaymentSuccessPage from "../PaymentStatus/Success";
 import PaymentFailedPage from "../PaymentStatus/Failed";
 import MastercardPaymentStatus from "../PaymentCheckout/MCPaymentStatus";
+import DeveloperTools from "../Developer/DevTools";
+import APIKeys from "../Developer/APIKeys";
+import DevDocs from "../Developer/Devdocs";
 
 
 
@@ -67,6 +70,10 @@ const AuthRoutes = () => {
         path: "/mastercard/payment/status/",
         element: <MastercardPaymentStatus />,
       },
+      {
+        path: "/pg/developer/docs/",
+        element: <DevDocs />,
+      },
 
     ];
   
@@ -93,6 +100,8 @@ const AuthRoutes = () => {
 
                   <Route exact path='/merchant/add/businesses/' element={<AddNewBusines />}></Route>
                   <Route exact path='/merchant/update/businesses/' element={<UpdateMerchant />}></Route>
+                  <Route exact path='/merchant/developer/tools/' element={<DeveloperTools />}></Route>
+                  <Route exact path='/merchant/developer/api/keys/' element={<APIKeys />}></Route>
 
                   <Route exact path='*' element={
                     <>
