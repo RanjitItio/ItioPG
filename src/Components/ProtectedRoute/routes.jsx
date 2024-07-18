@@ -36,8 +36,12 @@ const AuthRoutes = () => {
     
     const routesForPublic = [
       {
-        path: "/service",
-        element: <div>Service Page</div>,
+        path: "/kyc/",
+        element: <KYCForm />,
+      },
+      {
+        path: "/kyc/success/",
+        element: <KYCSubmission />,
       },
       {
         path: "/merchant/payment/checkout/",

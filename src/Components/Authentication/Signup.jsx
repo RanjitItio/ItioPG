@@ -99,6 +99,8 @@ export default function Signup() {
           is_merchent: isMerchant
         })
         .then((res) => {
+          console.log(res)
+          
           if(res.status === 201) {
             const response_msg = res.data.msg;
             const match = response_msg.match(/\d+$/);
@@ -115,7 +117,7 @@ export default function Signup() {
     
             setTimeout(() => {
               navigate(`/kyc?${queryString}`);
-            }, 3000);
+            }, 2000);
           }
         })
         .catch((error) => {
