@@ -15,6 +15,9 @@ import Stack from '@mui/material/Stack';
 
 
 const PaymentCheckoutPage = () => {
+    const query_params = new URLSearchParams(window.location.search)
+    const token        = query_params.get('token')
+
     const [upiqrPage, setUPIQRPage]         = useState(false);
     const [allPayment, setAllPayment]       = useState(true);
     const [cardDetail, setCardDetails]      = useState(false);
@@ -31,8 +34,6 @@ const PaymentCheckoutPage = () => {
     let transaction_currency = '';
 
 
-    const query_params = new URLSearchParams(window.location.search)
-    const token        = query_params.get('token')
 
     if (token) {
       let tokenValue = token.split(',')
@@ -41,7 +42,7 @@ const PaymentCheckoutPage = () => {
       transaction_amount   = tokenValue[1]
       merchant_order_id    = tokenValue[2]
       transaction_currency = tokenValue[3]
-    }
+    };
 
     const merchantTransactionAmount   = parseFloat(atob(transaction_amount))
     const merchantTransactionCurrency = JSON.parse(atob(transaction_currency))
@@ -81,7 +82,7 @@ const PaymentCheckoutPage = () => {
           }
 
         })
-    }, [])
+    }, []);
 
   if (!token) {
     return (
@@ -127,10 +128,10 @@ const PaymentCheckoutPage = () => {
               <Collapse in={cardDetail} timeout='auto' unmountOnExit>
                 <CardPayment 
                     merchantOrderID={merchantOrderID}
-                    setDisablePayButton={setDisablePayButton}
                     merchantTransactionAmount={merchantTransactionAmount}
                     merchantTransactionCurrency={merchantTransactionCurrency}
                     disblePayButton={disblePayButton}
+                    setDisablePayButton={setDisablePayButton}
                     loadingButton={loadingButton}
                     setLoadingButton={setLoadingButton}
                 />

@@ -5,11 +5,11 @@ import FooterSection from './Footer';
 import axiosInstance from '../Authentication/axios';
 import { useNavigate } from 'react-router-dom';
 import MasterCardOTPComponent from '../Mastercard/otp';
-import PaymentFailedPage from '../PaymentStatus/Failed';
 
 
 
 
+// Card Payment
 export default function CardPayment({...props}) {
     const initialFormValues = {
         expiry: '',
@@ -22,20 +22,16 @@ export default function CardPayment({...props}) {
 
     const navigate = useNavigate();
 
-    const [cardType, setCardType]     = useState('');
-    const [cardError, setCardError]   = useState('');
-    const [cardNumber, setCardNumber] = useState('');
-    // const [expiry, setExpiry] = useState('');
-    const [expiryError, setExpiryError] = useState('');
-    const [cvvError, setCvvError]       = useState('');
-    const [hoderNameError, setHolderNameError] = useState('');
+    const [cardType, setCardType]              = useState('');
+    const [cardError, setCardError]            = useState('');
+    const [cardNumber, setCardNumber]          = useState('');
+    const [expiryError, setExpiryError]        = useState('');
+    const [cvvError, setCvvError]              = useState('');
+    const [holderNameError, setHolderNameError] = useState('');
     const [formValues, updateFormValues]       = useState(initialFormValues);
-    // const [loader, setLoader]                  = useState(false);
     const [sessionID, setSessionID]            = useState('');
     const [transactionID, setTransactionID]    = useState('');
-    // const [failedTransactionID, setFailedTransactionID] = useState('');
-    // const [merchantRedirectURL, setMerchantRedirectURL] = useState('');
-    // const [error, setError]                    = useState('');
+
 
 
 
@@ -152,9 +148,10 @@ export default function CardPayment({...props}) {
                         setTransactionID(res.data.transactionID)
 
                         // Disable the Loading button
-                        props.setLoadingButton(false)
+                        // props.setLoadingButton(false)
 
                         setTimeout(() => {
+                            props.setLoadingButton(false)
                             navigate('/merchant/payment/mastercard/otp/')
                         }, 1000);
                     }
@@ -257,8 +254,8 @@ export default function CardPayment({...props}) {
                     label="Card Holder Name" 
                     variant="outlined" 
                     onChange={handleChange}
-                    error={Boolean(hoderNameError)}
-                    helperText={hoderNameError}
+                    error={Boolean(holderNameError)}
+                    helperText={holderNameError}
                     fullWidth 
                      />
             </Grid>

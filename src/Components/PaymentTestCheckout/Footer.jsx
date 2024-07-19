@@ -1,8 +1,9 @@
-import { Box, Typography, Button } from "@mui/material"
+import { Box, Typography, Button } from "@mui/material";
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
 
 
-export default function TestFooterSection() {
+export default function TestFooterSection({...props}) {
     return (
         <Box
             display="flex"
@@ -23,8 +24,19 @@ export default function TestFooterSection() {
               }
             }}
           >
-            <Typography variant="h6">₹ 1</Typography>
-            <Button variant="contained" color="primary">Pay Now</Button>
+            <Typography variant="h6">
+                {props.merchantTransactionCurrency === "USD" ? <AttachMoneyIcon /> : ''}
+                {props.merchantTransactionAmount}
+            </Typography>
+
+            <Button 
+                variant="contained" 
+                color="primary"
+                disabled={props.disblePayButton}
+                onClick={props.handleSubmitCardPayment}
+                >
+              Pay Now
+            </Button>
           </Box>
     );
     

@@ -74,7 +74,6 @@ const AuthRoutes = () => {
         path: "/pg/developer/docs/",
         element: <DevDocs />,
       },
-
     ];
   
 

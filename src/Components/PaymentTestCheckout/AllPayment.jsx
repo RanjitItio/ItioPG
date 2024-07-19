@@ -1,23 +1,24 @@
 import { Card, CardContent, Typography, List, ListItem, ListItemIcon, ListItemText, Divider, Box } from '@mui/material';
 import { QrCode, CreditCard, AccountBalance, AccountBalanceWallet, Payment } from '@mui/icons-material';
 import QRCode from 'qrcode.react';
+import TestFooterSection from './Footer';
 
 
 
 
 
-export default  function AllPaymentTestPage({setUPIQRPage, setAllPayment, setCardDetails}) {
+export default  function AllPaymentTestPage({...props}) {
     const upiID = 'sahooranjitkumar53@ybl'
     const qrValue = `upi://pay?pa=${upiID}&pn=Ranjit%20Kumar&am=1`;
 
     const handleUPIQRClick = ()=> {
-        setUPIQRPage(true);
-        setAllPayment(false);
+        props.setUPIQRPage(true);
+        props.setAllPayment(false);
     };
 
     const handleCardClicked = ()=> {
-        setCardDetails(true);
-        setAllPayment(false);
+        props.setCardDetails(true);
+        props.setAllPayment(false);
     };
 
     return (
@@ -142,6 +143,13 @@ export default  function AllPaymentTestPage({setUPIQRPage, setAllPayment, setCar
                 <Typography variant="body2" color="textSecondary">Secured by Itio</Typography>
             </Box>
             </CardContent>
+
+            {/* Footer Section */}
+            <TestFooterSection
+                merchantTransactionAmount={props.merchantTransactionAmount}
+                merchantTransactionCurrency={props.merchantTransactionCurrency}
+                disblePayButton={props.disblePayButton}
+            />
       </Card>
       
     );

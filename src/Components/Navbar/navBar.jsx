@@ -169,6 +169,7 @@ export default function Navbar() {
         </IconButton>
         <p>Messages</p>
       </MenuItem>
+    
       <MenuItem>
         <IconButton
           size="large"
@@ -197,7 +198,6 @@ export default function Navbar() {
   );
 
   return (
-
     <Box sx={{ flexGrow: 1, display:'flex' }}>
       <AppBar position="sticky">
         <Toolbar>
@@ -214,9 +214,9 @@ export default function Navbar() {
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
+            sx={{ display: { xs: 'none', sm: 'block', cursor: 'pointer'} }}
           >
-            Itio
+            <span onClick={()=> {window.location.href = '/'}}>Itio</span>
           </Typography>
 
           {/* Search Bar */}
@@ -261,8 +261,8 @@ export default function Navbar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} 
+              {pages.map((page, index) => (
+                <MenuItem key={index} 
                    onClick={()=> {handleCloseNavMenu(); handleRedirectNavPages(page.url)}}
                    >
                   <Typography textAlign="center">{page.title}</Typography>

@@ -11,6 +11,8 @@ const { Title, Paragraph } = Typography;
 
 
 
+
+// Developer Tools
 export default function DevDocs() {
 
     const [visible, setVisible] = useState(false);
@@ -38,11 +40,11 @@ export default function DevDocs() {
         <Layout style={{ minHeight: '100vh' }}>
             {!isMobile ? (
                 <Sider
-                width={250}
-                collapsible
-                collapsed={collapsed}
-                onCollapse={toggleCollapsed}
-                style={{ background: '#fff', height: '100vh', overflow: 'auto' }}
+                  width={250}
+                  collapsible
+                  collapsed={collapsed}
+                  onCollapse={toggleCollapsed}
+                  style={{ background: '#fff', height: '100vh', overflow: 'auto' }}
                 >
                 <Menu
                     mode="inline"
@@ -127,6 +129,7 @@ export default function DevDocs() {
           </Drawer>
         </>
       )}
+
 
       {/* Payment API Content */}
       <PayAPIContent />

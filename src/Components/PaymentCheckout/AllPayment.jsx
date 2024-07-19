@@ -174,6 +174,7 @@ export default  function AllPaymentPage({...props}) {
             </Box>
             </CardContent>
 
+            {/* Footer Section */}
             <FooterSection 
                 merchantTransactionAmount={props.merchantTransactionAmount}
                 merchantTransactionCurrency={props.merchantTransactionCurrency}

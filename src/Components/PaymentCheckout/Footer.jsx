@@ -4,6 +4,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
 
 
+
 // Footer Section
 export default function FooterSection({...props}) {
 
@@ -52,8 +53,6 @@ export default function FooterSection({...props}) {
                   Pay Now
               </Button>
               } 
-            
-            
             
           </Box>
     );
