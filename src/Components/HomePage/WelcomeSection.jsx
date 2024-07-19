@@ -18,13 +18,13 @@ export default function WelcomeSection() {
         <Box sx={{ backgroundColor: "#2C73D2", paddingBottom: 5}}>
             <Typography variant="h4" sx={{ pt: 5, pb: 2, marginLeft: "4rem", color: "white" }}>
                 <span>
-                <b>Welcome, {user_full_name}</b>
+                    Welcome, {user_full_name}
                 <EmojiEmotionsIcon sx={{ ml: 1 }} />
                 </span>
             </Typography>
 
             <Typography variant="body1" sx={{ marginLeft: "4rem", color: "white" }}>
-                Dashboard &gt; <b>Overview</b>
+                Dashboard &gt; Overview
             </Typography>
 
             <Box sx={{display: 'flex', overflowX: 'auto', ml: '3.5rem', mt: 3, '& > *': { flexShrink: 0 }}}>
@@ -67,7 +67,7 @@ export default function WelcomeSection() {
 
                 <Button 
                     component={Link} 
-                    // to="/merchant/businesses/" 
+                    to="/merchant/bank/accounts/" 
                     variant="text" 
                     sx={{ 
                     color: "white", 

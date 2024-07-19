@@ -24,6 +24,9 @@ import MastercardPaymentStatus from "../PaymentCheckout/MCPaymentStatus";
 import DeveloperTools from "../Developer/DevTools";
 import APIKeys from "../Developer/APIKeys";
 import DevDocs from "../Developer/Devdocs";
+import MerchantBankAccounts from "../Bank/BankAccounts";
+import AddMerchantBankAccount from "../Bank/AddBankaccount";
+import UpdateMerchantBankAccount from "../Bank/updateBank";
 
 
 
@@ -74,6 +77,10 @@ const AuthRoutes = () => {
         path: "/pg/developer/docs/",
         element: <DevDocs />,
       },
+      {
+        path: "/merchant/bank/NA/",
+        element: <div>Nothing to show</div>,
+      },
     ];
   
 
@@ -102,6 +109,10 @@ const AuthRoutes = () => {
                   <Route exact path='/merchant/developer/tools/' element={<DeveloperTools />}></Route>
                   <Route exact path='/merchant/developer/api/keys/' element={<APIKeys />}></Route>
 
+                  {/* Bank Account */}
+                  <Route exact path='/add/merchant/bank/account/' element={<AddMerchantBankAccount />}></Route>
+                  <Route exact path='/update/merchant/bank/accounts/' element={<UpdateMerchantBankAccount />}></Route>
+
                   <Route exact path='*' element={
                     <>
 
@@ -112,6 +123,7 @@ const AuthRoutes = () => {
                           <Route exact path='/' element={<GatewayDashboard />}></Route>
                           <Route exact path='/merchant/business/transactions/' element={<BusinessTransactionTable />}></Route>
                           <Route exact path='/merchant/businesses/' element={<AllBusinessTable />}></Route>
+                          <Route exact path='/merchant/bank/accounts/' element={<MerchantBankAccounts />}></Route>
                       </Routes>
                       
                       </>

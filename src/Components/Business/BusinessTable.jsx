@@ -127,6 +127,28 @@ if (emptyData) {
                   <small>List of all your Businesses in one place</small>
               </p>
           </div>
+
+          <Box>
+          {isSmallScreen ? (
+            <>
+              <IconButton onClick={handleFilterClick}>
+                <FilterAltOutlinedIcon />
+              </IconButton>
+
+              <IconButton style={{ marginLeft: 0 }}>
+                <FileUploadOutlinedIcon />
+              </IconButton>
+            </>
+          ) : (
+            <>
+              
+              <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddNewBusiness}>
+                  Add New Business
+              </Button>
+            </>
+          )}
+        </Box>
+
       </Box>
 
       <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '2%'}}>
@@ -166,9 +188,7 @@ if (emptyData) {
             </>
           ) : (
             <>
-              {/* <Button variant="contained" onClick={handleFilterClick} startIcon={<FilterListIcon />}>
-                Filter
-              </Button> */}
+              
               <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddNewBusiness}>
                   Add New Business
               </Button>
@@ -282,7 +302,7 @@ if (emptyData) {
                     <TableRow key={index}>
 
                       {/* Serial No. Column */}
-                        <TableCell>{index}</TableCell>
+                        <TableCell>{index + 1}</TableCell>
 
                         {/* Date Created */}
                         <TableCell>{business.merchants.created_date}</TableCell>
