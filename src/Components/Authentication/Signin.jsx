@@ -81,7 +81,7 @@ export default function Signin() {
                 }
 
 			}).catch((error)=> {
-                console.log(error.response)
+                console.log(error)
 
                 if (error.response.data.msg == 'Your account is not active. Please contact the administrator.'){
                     setError("Your account is not active yet please contact the Administrator");
@@ -94,9 +94,9 @@ export default function Signin() {
                 else {
                     setError('')
                 }
-
             })
     };
+
 
     return (
         // backgroundColor='#0081CF'

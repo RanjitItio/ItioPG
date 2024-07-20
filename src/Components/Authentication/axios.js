@@ -32,25 +32,25 @@ const axiosInstance = axios.create({
 
 
 // If the user is Unauthorize then redirect to Signin page
-axiosInstance.interceptors.response.use(
-    (response) => {
-        return response
-    },
+// axiosInstance.interceptors.response.use(
+//     // (response) => {
+//     //     return response
+//     // },
 
-    async function (error) {
-        const originalRequest = error.config;
+//     async function (error) {
+//         // const originalRequest = error.config;
 
-        if (error.response.data === 'Unauthorized') {
-            window.location.href = '/signin/';
-            return Promise.reject(error);
-        }
+//         if (error.response.data === 'Unauthorized') {
+//             window.location.href = '/signin/';
+//             return Promise.reject(error);
+//         }
 
-        if (error.response.status === 401) {
-            window.location.href = '/signin/';
-			return Promise.reject(error);
-        }
-    }
-);
+//         if (error.response.statusText === 'Unauthorized') {
+//             window.location.href = '/signin/';
+// 			return Promise.reject(error);
+//         }
+//     }
+// );
 
 
 

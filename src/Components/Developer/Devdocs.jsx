@@ -36,7 +36,8 @@ export default function DevDocs() {
     }, []);
 
 
-    return (
+
+  return (
         <Layout style={{ minHeight: '100vh' }}>
             {!isMobile ? (
                 <Sider
