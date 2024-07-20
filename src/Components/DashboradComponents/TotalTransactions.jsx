@@ -1,11 +1,10 @@
-// import 'bootstrap/dist/css/bootstrap.min.css'
-// import 'bootstrap-icons/font/bootstrap-icons.css';
 import { useState } from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { Card, CardContent, Typography, Grid, Select,
         MenuItem, FormControl, InputLabel } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
+import TransactionLineChart from './LineChart';
 
 
 
@@ -13,9 +12,7 @@ import NorthEastIcon from '@mui/icons-material/NorthEast';
 
 
 
-
-function IncomeAnalysis(){
-
+export default function TotalTransactions() {
     const [age, setAge] = useState('');
 
     const handleChange = (event) => {
@@ -23,19 +20,18 @@ function IncomeAnalysis(){
     };
 
     return (
-        
+        <>
         <Card 
             style={{ 
-                maxWidth: "30rem", 
+                // maxWidth: "30rem", 
                 height: "100%",
                 boxShadow: "0px 0px 10px rgba(0,0,0,0.1)", 
                 "&:hover": {
                 boxShadow: "0px 0px 20px rgba(0,0,0,0.3)" 
                 },
                 border: '1px solid black'
-                 }}>
+            }}>
         <CardContent style={{ overflow: "auto", maxHeight: "18rem" }}>
-        {/* sx={{display:'flex', justifyContent: 'space-around', alignItems: 'stretch'}} */}
             <Grid container>
                 <Grid item xs={4}>
                     <Typography variant="h5" component="div">Total Transactions</Typography>
@@ -72,18 +68,11 @@ function IncomeAnalysis(){
             
             <Typography>Transaction Amount $8,527,224</Typography>
 
-            <BarChart
-                xAxis={[{ scaleType: 'band', data: ['group A', 'group B', 'group C'] }]}
-                series={[{ data: [4, 3, 5] }, { data: [1, 6, 3] }, { data: [2, 5, 6] }]}
-                width={500}
-                height={300}
-                />
+            <TransactionLineChart />
+            
         </CardContent>
-    </Card>
 
+    </Card>
+    </>
     );
 };
-
-
-
-export default IncomeAnalysis;

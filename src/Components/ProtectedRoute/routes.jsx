@@ -27,6 +27,7 @@ import DevDocs from "../Developer/Devdocs";
 import MerchantBankAccounts from "../Bank/BankAccounts";
 import AddMerchantBankAccount from "../Bank/AddBankaccount";
 import UpdateMerchantBankAccount from "../Bank/updateBank";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 

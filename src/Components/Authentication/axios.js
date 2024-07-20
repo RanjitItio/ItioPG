@@ -31,6 +31,29 @@ const axiosInstance = axios.create({
 
 
 
+// If the user is Unauthorize then redirect to Signin page
+axiosInstance.interceptors.response.use(
+    (response) => {
+        return response
+    },
+
+    async function (error) {
+        const originalRequest = error.config;
+
+        if (error.response.data === 'Unauthorized') {
+            window.location.href = '/signin/';
+            return Promise.reject(error);
+        }
+
+        if (error.response.status === 401) {
+            window.location.href = '/signin/';
+			return Promise.reject(error);
+        }
+    }
+);
+
+
+
 // axiosInstance.interceptors.response.use(
 // 	(response) => {
 // 		return response;
@@ -38,7 +61,7 @@ const axiosInstance = axios.create({
 // 	async function (error) {
 // 		const originalRequest = error.config;
 
-// 		if (typeof error.response === 'undefined') {
+// 		if (typeof error.response.data === 'Unauthorized') {
 // 			alert(
 // 				'A server/network error occurred. ' +
 // 					'Looks like CORS might be the problem. ' +
@@ -48,7 +71,7 @@ const axiosInstance = axios.create({
 // 		}
 
 // 		if (
-// 			error.response.status === 400 &&
+// 			error.response.status === 401 &&
 // 			originalRequest.url === baseURL + 'api/v1/token/'
 // 		) {
 // 			window.location.href = '/signin/';
@@ -56,10 +79,10 @@ const axiosInstance = axios.create({
 // 		}
 
 // 		if (
-// 			error.response.data.msg === 'token_not_valid' &&
-// 			error.response.status === 400 &&
+// 			error.response.data === 'Unauthorized' &&
+// 			error.response.status === 401 &&
 // 			error.response.statusText === 'Unauthorized' && 
-// 			error.response.msg === 'Invalid token' 
+// 			error.message === 'Request failed with status code 401' 
 // 		) {
 // 			const refreshToken = localStorage.getItem('refresh_token');
 

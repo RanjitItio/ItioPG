@@ -28,6 +28,7 @@ const IconStyle = styled('div')(({ theme }) => ({
 const tools = [
   { title: 'API Keys', description: 'Access and manage your API keys', url: '/merchant/developer/api/keys/' },
   { title: 'API Docs', description: 'Integration Documentation', url: '/pg/developer/docs/' },
+  { title: 'Payment Forms', description: 'Pay without code', url: '/pg/developer/docs/' },
   { title: 'API Logs and Alerts', description: 'View API logs and configure alerts for API errors', url: '' },
   { title: 'Webhooks', description: 'Configure webhooks, subscribe to events and trace logs', url: '' },
   { title: 'Whitelisting', description: 'View, request and track your whitelisting requests', url: '' },

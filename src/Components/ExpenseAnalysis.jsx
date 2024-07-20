@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Card, CardContent, Typography } from '@mui/material';
 import { LineChart } from '@mui/x-charts/LineChart';
+import NorthEastIcon from '@mui/icons-material/NorthEast';
 
 
 
@@ -9,7 +10,7 @@ function ExpenseAnalysis(){
     return (
         <Card className="shadow" style={{ maxWidth: "30rem", height: "100%" }}>
             <CardContent style={{ overflow: "auto", maxHeight: "18rem" }}>
-                <Typography variant="h5" component="div"><b>Expense Analysis</b></Typography>
+                <Typography variant="h5" component="div"><b>Total Refunds</b></Typography>
                 <Typography variant="h4" className="mb-2"><b>$2,056,123</b></Typography>
                 <Typography variant="body1">VS This Month</Typography>
 
