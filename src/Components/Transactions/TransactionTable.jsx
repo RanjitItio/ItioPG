@@ -2,6 +2,7 @@ import React, { useState, useEffect} from 'react';
 import {
   Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Button,
   TextField, MenuItem, Select, InputLabel, FormControl, Collapse, Box, Grid,
+  styled,
 } from '@mui/material';
 import FormHelperText from '@mui/material/FormHelperText';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -9,6 +10,9 @@ import axiosInstance from '../Authentication/axios';
 import Pagination from '@mui/material/Pagination';
 import CircularProgress from '@mui/material/CircularProgress';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import SandBoxProductionTransactionSwitch from './Switch';
+import SandBoxTransactionTable from './SandBoxTransactions';
+import ProductionTransactionTable from './ProductionTransactions';
 
 
 
@@ -23,18 +27,55 @@ export default function BusinessTransactionTable () {
   const [businessTransactionData, updateBusinessTransactionData] = useState([])  // Transaction data state
   const [loader, setLoader] = useState(true);
   const [emptyData, setEmptyData] = useState(false);
+  const [paginationValue, setPaginationValue] = useState(0);   // Pagination Value state
+  const [SwitchTransaction, setSwitchTransaction] = useState(false);
+
 
   // Method to open Filter fields
   const handleFilterClick = () => {
     setFilterOpen(!filterOpen);
   };
 
+  const handlePaginationChange = (event, value)=> {
+    setPaginationValue(value)
+};
+
+  const handleSwitchTransactions = (event)=> {
+      setSwitchTransaction(event.target.checked)
+  };
+
+
+
+// Method to fetch pagination Data
+const handlePaginationTransactionData = ()=> {
+    const offsetValue = 10 * paginationValue
+    axiosInstance.get(`api/v2/merchant/prod/transactions/?limit=${10}&offset=${offsetValue}`).then((res)=> {
+
+        if (res.status === 200) {
+            // console.log(res.data.merchant_prod_trasactions)
+            const sortedData = res.data.merchant_prod_trasactions.sort((a, b) => b.id - a.id);
+            updateBusinessTransactionData(sortedData);
+            setLoader(false);
+
+            if (sortedData.length === 0) {
+                setEmptyData(true);
+                setLoader(false);
+            };
+        }
+
+    }).catch((error)=> {
+        console.log(error)
+
+    })
+};
+
 
   useEffect(() => {
-    axiosInstance.get(`api/v4/merchant/business/transactions/`).then((res)=> {
-        // console.log(res.data.data)
+    axiosInstance.get(`api/v2/merchant/prod/transactions/?limit=${10}&offset=${0}`).then((res)=> {
+
         if (res.status === 200) {
-            const sortedData = res.data.data.sort((a, b) => new Date(b.business_transaction.id) - new Date(a.business_transaction.id));
+            // console.log(res.data.merchant_prod_trasactions)
+            const sortedData = res.data.merchant_prod_trasactions.sort((a, b) => b.id - a.id);
             updateBusinessTransactionData(sortedData);
             setLoader(false);
 
@@ -50,19 +91,7 @@ export default function BusinessTransactionTable () {
     })
 }, []);
 
-// Status Colur according to the status type
-const getStatusColor = (status)=> {
-    switch (status) {
-        case 'Success':
-            return 'success'
-        case 'Cancelled':
-            return 'danger' 
-        case 'Pending':
-            return 'warning' 
-        default:
-            return 'defaultColor';
-    }
-};
+
 
 // API response witing component
 if (loader) {
@@ -111,32 +140,45 @@ if (emptyData) {
 };
 
 
+
+
 return (
 
     <Box sx={{zIndex: 0, marginTop: -8, padding: 4}}>
     <Card>
+        <Grid container p={2} justifyContent="space-between" alignItems="center">
+            <Grid item xs={6} sm={4} md={3} lg={3}>
+                <div className="d-flex justify-content-start">
+                <p>
+                    <b><span className='fs-3'>PAYMENTS</span></b> <br />
+                    <small>List of all payments received from customers</small>
+                </p>
+                </div>
+            </Grid>
 
-      <Box p={2} display="flex" justifyContent="space-between" alignItems="center">
-        {/* <TextField placeholder="Search for transaction here" variant="outlined" size="small" /> */}
-        <div className="d-flex justify-content-start">
-            <p>
-                <b><span className='fs-3'>PAYMENTS</span></b> <br />
-                <small>List of all payments received from customers</small>
-            </p>
-        </div>
-            
-        <Box>
-          <Button variant="contained" onClick={handleFilterClick} startIcon={<FilterListIcon />}>
-            Filter
-          </Button>
+            <Grid item xs={6} sm={8} md={9} lg={9} textAlign="right">
+                <Grid container justifyContent="flex-end">
 
-          <Button variant="contained" style={{ marginLeft: 10 }}>
-            Export
-          </Button>
+                <Grid item>
+                    <SandBoxProductionTransactionSwitch handleSwitchTransactions={handleSwitchTransactions} />
+                </Grid>
 
-        </Box>
-      </Box>
-     
+                <Grid item mb={1}>
+                    <Button variant="contained" onClick={handleFilterClick} startIcon={<FilterListIcon />}>
+                    Filter
+                    </Button>
+                </Grid>
+
+                <Grid item>
+                    <Button variant="contained" style={{ marginLeft: 10 }}>
+                    Export
+                    </Button>
+                </Grid>
+
+                </Grid>
+            </Grid>
+        </Grid>
+
         <Collapse in={filterOpen}>
             <Box p={1}>
             <Grid container spacing={0}>
@@ -190,89 +232,27 @@ return (
 
                 <Grid item xs={12} sm={6} md={3}>
                     <TextField 
-                          type="text" 
-                          label="Order ID" 
-                          variant="outlined" 
-                          size="medium" 
-                          sx={{width: {xs: '100%', sm: '95%',md:'80%'}, marginBottom: {xs: 2}}}
-                          />
+                        type="text" 
+                        label="Order ID" 
+                        variant="outlined" 
+                        size="medium" 
+                        sx={{width: {xs: '100%', sm: '95%',md:'80%'}, marginBottom: {xs: 2}}}
+                        />
                 </Grid>
                 
             </Grid>
             </Box>
         </Collapse>
 
-        <TableContainer style={{ overflowX: 'auto', maxHeight: '400px', overflowY: 'auto'}}>
-            <Table stickyHeader>
-                <TableHead>
-                    <TableRow>
-                        <TableCell><b>Sl No.</b></TableCell>
-                        <TableCell><b>Date</b></TableCell>
-                        <TableCell><b>Business Name</b></TableCell>
-                        <TableCell><b>Payer</b></TableCell>
-                        <TableCell><b>Method</b></TableCell>
-                        <TableCell><b>Order ID</b></TableCell>
-                        <TableCell><b>Amount</b></TableCell>
-                        <TableCell><b>Fee</b></TableCell>
-                        <TableCell><b>Total</b></TableCell>
-                        <TableCell><b>Currency</b></TableCell>
-                        <TableCell><b>Status</b></TableCell>
-                    </TableRow>
-                </TableHead>
+        <ProductionTransactionTable businessTransactionData={businessTransactionData} />
 
-                <TableBody>
-                    {businessTransactionData.map((transaction, index) => (
-                    <TableRow key={index}>
-
-                        {/* Sl No. Column */}
-                        <TableCell>{transaction.business_transaction ? transaction.business_transaction.id : '-'}</TableCell>
-
-                        <TableCell>{transaction.business_transaction ? transaction.business_transaction.date : '-'}</TableCell>
-
-                        <TableCell>
-                            <Box display="flex" alignItems="center">
-                                {/* <img src={`/path/to/logo/${transaction.business_transaction.merchant}.png`} alt={transaction.name} style={{ width: 24, height: 24, marginRight: 8 }} /> */}
-                                <Box>
-                                    <div>{transaction.business_transaction ? transaction.business_transaction.merchant : '-'}</div>
-                                    {/* <div style={{ color: 'gray', fontSize: 'small' }}>{transaction.business_transaction.merchant}</div> */}
-                                </Box>
-                            </Box>
-                        </TableCell>
-
-                        {/* Payer Column */}
-                        <TableCell>{transaction.business_transaction ? transaction.business_transaction.payer : '-'}</TableCell>
-
-                        {/* Payment Method Column */}
-                        <TableCell>{transaction.business_transaction ? transaction.business_transaction.pay_mode : '-'}</TableCell>
-
-                         {/* Order ID Column */}
-                        <TableCell>{transaction.business_transaction ? transaction.business_transaction.order_id : '-'}</TableCell>
-
-                        {/* Amount Column */}
-                        <TableCell>{transaction.business_transaction ? transaction.business_transaction.amount : '-'}</TableCell>
-
-                        {/* Fee Column */}
-                        <TableCell>{transaction.business_transaction ? transaction.business_transaction.fee : '-'}</TableCell>
-
-                        {/* Total Amount Column */}
-                        <TableCell>{transaction.business_transaction ? transaction.business_transaction.total_amount : '-'}</TableCell>
-  
-                         {/* Currency Column */}
-                        <TableCell>{transaction.business_transaction ? transaction.business_transaction.currency : '-'}</TableCell>
-
-                        <TableCell>
-                            <span className={`text-${getStatusColor(transaction.business_transaction?.status)}`}>
-                                {transaction.business_transaction ? transaction.business_transaction.status : '-'}
-                            </span>
-                        </TableCell>
-
-                    </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
-
-        <Pagination count={10} color="primary" sx={{margin: 3}}/>
+        <Pagination 
+            count={10} 
+            color="primary" 
+            sx={{margin: 3}}
+            onChange={handlePaginationChange}
+            onClick={handlePaginationTransactionData}
+            />
 
     </Card>
     </Box>
