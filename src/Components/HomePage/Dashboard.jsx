@@ -2,9 +2,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import TotalBalance from '../Totalbalance';
 import ActiveGateways from '../Gateway';
-import ExpenseCategory from '../Expense';
 import TotalTransactions from '../DashboradComponents/TotalTransactions';
-import ExpenseAnalysis from '../ExpenseAnalysis';
 import RecentActivity from '../Recentactivity';
 import Currency from '../currency';
 import MerchantTotalRefunds from '../DashboradComponents/TotalRefunds';
@@ -36,22 +34,17 @@ export default function GatewayDashboard() {
                     </Grid>
 
                     <Grid item xs={12} md={8}>
-                        {/* Expense Category */}
-                        <MerchantTotalRefunds />
+
+                        {/* Total Transactions */}
+                        <TotalTransactions />
 
                         <Grid container spacing={2}>
                             <Grid item xs={12} md={12} my={3}>
 
-                                {/* Income Analysis */}
-                                <TotalTransactions />
+                                {/* Total Refund */}
+                                <MerchantTotalRefunds />
 
                             </Grid>
-{/* 
-                            <Grid item xs={12} md={6} my={3}>
-
-                                <ExpenseAnalysis />
-
-                            </Grid> */} 
                         </Grid>
 
                     </Grid>

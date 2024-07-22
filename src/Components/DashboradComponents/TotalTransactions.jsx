@@ -1,30 +1,49 @@
-import { useState } from 'react';
-import { BarChart } from '@mui/x-charts/BarChart';
-import { Card, CardContent, Typography, Grid, Select,
+import { useEffect, useState } from 'react';
+import { Card, CardContent, Typography, Grid, Select, Box,
         MenuItem, FormControl, InputLabel } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import NorthEastIcon from '@mui/icons-material/NorthEast';
 import TransactionLineChart from './LineChart';
+import axiosInstance from '../Authentication/axios';
 
 
 
 
 
-
-
+// Total Transaction Chart
 export default function TotalTransactions() {
-    const [age, setAge] = useState('');
 
-    const handleChange = (event) => {
-        setAge(event.target.value);
+   const [allMerchantTransactions, updateAllMerchantTransactions] = useState([]);
+   const [duration, setDuration] = useState('');
+
+   // Current month
+   const now =  new Date();
+   const month = now.getMonth();
+
+   const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+   const currentMonthName = monthNames[month]
+
+    useEffect(()=> {
+        axiosInstance.get(`api/v2/merchant/all/prod/transactions/`).then((res)=> {
+            // console.log(res.data.merchant_all_prod_trasactions)
+            updateAllMerchantTransactions(res.data.merchant_all_prod_trasactions)
+
+        }).catch((error)=> {
+            console.log(error.response)
+
+        })
+    }, [])
+
+    const amounts     = allMerchantTransactions.map(transactions => Number(transactions.amount));
+    const totalAmount = amounts.reduce((accumulator, currentValue)=> accumulator + currentValue, 0)
+
+    const handleDurationChange = (event) => {
+        setDuration(event.target.value);
     };
 
     return (
         <>
         <Card 
             style={{ 
-                // maxWidth: "30rem", 
-                height: "100%",
                 boxShadow: "0px 0px 10px rgba(0,0,0,0.1)", 
                 "&:hover": {
                 boxShadow: "0px 0px 20px rgba(0,0,0,0.3)" 
@@ -32,46 +51,39 @@ export default function TotalTransactions() {
                 border: '1px solid black'
             }}>
         <CardContent style={{ overflow: "auto", maxHeight: "18rem" }}>
+               
             <Grid container>
-                <Grid item xs={4}>
-                    <Typography variant="h5" component="div">Total Transactions</Typography>
-                </Grid>
+                    <Grid item xs={10}>
+                        <Typography variant="h5" component="div">Total Transactions</Typography>
+                    </Grid>
 
-                <Grid item xs={4} textAlign="right">
-                    <FormControl sx={{ m: 1, minWidth: 90 }} size="small">
-                        <InputLabel id="demo-select-small-label">Age</InputLabel>
-                        <Select
-                            labelId="demo-select-small-label"
-                            id="demo-select-small"
-                            value={age}
-                            label="Age"
-                            onChange={handleChange}
-                        >
-                            <MenuItem value="">
-                            <em>None</em>
-                            </MenuItem>
-                            <MenuItem value={10}>Today</MenuItem>
-                            <MenuItem value={20}>Last 7 Days</MenuItem>
-                            <MenuItem value={30}>This Month</MenuItem>
-                            <MenuItem value={30}>Last Month</MenuItem>
-                        </Select>
-                    </FormControl>
+                    <Grid item xs={2}>
+                        <FormControl sx={{ m: 1, minWidth: 90 }} size="small">
+                            <InputLabel id="demo-select-small-label">Duration</InputLabel>
+                            <Select
+                                labelId="demo-select-small-label"
+                                id="demo-select-small"
+                                value={duration}
+                                label="Duration"
+                                onChange={handleDurationChange}
+                            >
+                                <MenuItem value="">
+                                <em>None</em>
+                                </MenuItem>
+                                <MenuItem value={10}>Today</MenuItem>
+                                <MenuItem value={20}>Last 7 Days</MenuItem>
+                                <MenuItem value={30}>This Month</MenuItem>
+                                <MenuItem value={30}>Last Month</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
                 </Grid>
-
-                <Grid item xs={4}>
-                    <IconButton aria-label="delete">
-                        <NorthEastIcon fontSize='small'/>
-                    </IconButton>
-                </Grid>
-
-            </Grid>
             
-            <Typography>Transaction Amount $8,527,224</Typography>
+            <Typography>{currentMonthName} Month Transaction Amount ${totalAmount}</Typography>
 
-            <TransactionLineChart />
+            <TransactionLineChart allMerchantTransactions={allMerchantTransactions}/>
             
         </CardContent>
-
     </Card>
     </>
     );

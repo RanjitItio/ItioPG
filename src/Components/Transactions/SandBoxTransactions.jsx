@@ -4,7 +4,7 @@ import {TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Box} f
 
 
 
-export default function SandBoxTransactionTable() {
+export default function SandBoxTransactionTable({businessSandboxTransactionData}) {
 
     const statusMap = {
         PAYMENT_INITIATED: 'PAYMENT INITIATED',
@@ -46,7 +46,7 @@ export default function SandBoxTransactionTable() {
                 </TableHead>
 
                 <TableBody>
-                    {businessTransactionData.map((transaction, index) => (
+                    {businessSandboxTransactionData.map((transaction, index) => (
                     <TableRow key={index}>
 
                         {/* Sl No. Column */}

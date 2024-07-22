@@ -46,7 +46,7 @@ export default function SandBoxProductionTransactionSwitch({...props}) {
     <FormGroup>
     <FormControlLabel
         control={<Android12Switch defaultChecked onChange={(event)=> {props.handleSwitchTransactions(event)}} />}
-        label="Production Mode"
+        label={props.transactionModeName}
     />
     </FormGroup>
   )

@@ -4,6 +4,8 @@ import {
       TableBody, Button, Grid } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import axiosInstance from '../Authentication/axios';
+import { useEffect, useState } from "react";
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -18,6 +20,26 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 
 export default function APIKeys() {
+
+    const [publicKeys, updatePublicKeys] = useState('');
+    const [secretKeys, updateSecretKeys] = useState('');
+    const [createdAt, updateCreatedAt]   = useState('');
+
+    useEffect(() => {
+        axiosInstance.get(`api/v3/merchant/keys/`).then((res)=> {
+
+            if (res.status === 200 && res.data.success === true) {
+                updatePublicKeys(res.data.merchantPublicKey)
+                updateSecretKeys(res.data.merchantSecretKey)
+                updateCreatedAt(res.data.createdAt)
+            }
+
+        }).catch((error)=> {
+            console.log(error.response)
+
+        })
+    }, [])
+    
     return (
         <>
             <Grid container sx={{marginTop: '2%'}}>
@@ -54,11 +76,11 @@ export default function APIKeys() {
                     <TableBody>
                         <TableRow>
 
-                            <TableCell>Generated At</TableCell>
+                            <TableCell>{createdAt}</TableCell>
 
-                            <TableCell>API Public key</TableCell>
+                            <TableCell>{publicKeys}</TableCell>
 
-                            <TableCell>API Secret Key</TableCell>
+                            <TableCell>{secretKeys}</TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>

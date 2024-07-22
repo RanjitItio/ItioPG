@@ -24,13 +24,15 @@ import ProductionTransactionTable from './ProductionTransactions';
 export default function BusinessTransactionTable () {
   
   const [filterOpen, setFilterOpen] = useState(false);  // Open filter fields state
-  const [businessTransactionData, updateBusinessTransactionData] = useState([])  // Transaction data state
-  const [loader, setLoader] = useState(true);
+  const [businessTransactionData, updateBusinessTransactionData] = useState([])  // Production Transaction data state
+  const [businessSandboxTransactionData, updateBusinessSandboxTransactionData] = useState([])  // Production Transaction data state
+  const [isLoading, setIsLoading] = useState(true);
   const [emptyData, setEmptyData] = useState(false);
   const [paginationValue, setPaginationValue] = useState(0);   // Pagination Value state
-  const [SwitchTransaction, setSwitchTransaction] = useState(false);
+  const [SwitchTransaction, setSwitchTransaction] = useState(true);
+  const [transactionModeName, setTransactionModeName] = useState('');
 
-
+   
   // Method to open Filter fields
   const handleFilterClick = () => {
     setFilterOpen(!filterOpen);
@@ -40,10 +42,49 @@ export default function BusinessTransactionTable () {
     setPaginationValue(value)
 };
 
+//   Method to accept transaction type of user
   const handleSwitchTransactions = (event)=> {
       setSwitchTransaction(event.target.checked)
+
   };
 
+  useEffect(() => {
+    if (SwitchTransaction) {
+        setTransactionModeName('Production Mode')
+    } else if (!SwitchTransaction) {
+        setTransactionModeName('Test Mode')
+    };
+  }, [SwitchTransaction])
+  
+
+  
+
+
+  // Call API for all sandBox transaction data
+  useEffect(() => {
+
+    if (!SwitchTransaction) {
+
+        axiosInstance.get(`api/v2/merchant/sandbox/transactions/?limit=${10}&offset=${0}`).then((res)=> {
+
+            if (res.status === 200) {
+                const sandBoxData = res.data.merchant_sandbox_trasactions
+                updateBusinessSandboxTransactionData(sandBoxData);
+                setIsLoading(false);
+    
+                if (sandBoxData.length === 0) {
+                    setEmptyData(true);
+                    setIsLoading(false);
+                };
+            }
+
+        }).catch((error)=> {
+            console.log(error)
+
+        })
+    }
+  }, [SwitchTransaction])
+  
 
 
 // Method to fetch pagination Data
@@ -52,14 +93,13 @@ const handlePaginationTransactionData = ()=> {
     axiosInstance.get(`api/v2/merchant/prod/transactions/?limit=${10}&offset=${offsetValue}`).then((res)=> {
 
         if (res.status === 200) {
-            // console.log(res.data.merchant_prod_trasactions)
-            const sortedData = res.data.merchant_prod_trasactions.sort((a, b) => b.id - a.id);
-            updateBusinessTransactionData(sortedData);
-            setLoader(false);
+            const paginationProdData = res.data.merchant_prod_trasactions
+            updateBusinessTransactionData(paginationProdData);
+            setIsLoading(false);
 
-            if (sortedData.length === 0) {
+            if (paginationProdData.length === 0) {
                 setEmptyData(true);
-                setLoader(false);
+                setIsLoading(false);
             };
         }
 
@@ -70,18 +110,20 @@ const handlePaginationTransactionData = ()=> {
 };
 
 
+  // Fetch all the production transaction data of merchant
   useEffect(() => {
+
     axiosInstance.get(`api/v2/merchant/prod/transactions/?limit=${10}&offset=${0}`).then((res)=> {
 
         if (res.status === 200) {
-            // console.log(res.data.merchant_prod_trasactions)
-            const sortedData = res.data.merchant_prod_trasactions.sort((a, b) => b.id - a.id);
-            updateBusinessTransactionData(sortedData);
-            setLoader(false);
+          
+            const prodData = res.data.merchant_prod_trasactions
+            updateBusinessTransactionData(prodData);
+            setIsLoading(false);
 
-            if (sortedData.length === 0) {
+            if (prodData.length === 0) {
                 setEmptyData(true);
-                setLoader(false);
+                setIsLoading(false);
             };
         }
 
@@ -89,12 +131,14 @@ const handlePaginationTransactionData = ()=> {
         console.log(error)
 
     })
+
 }, []);
 
 
 
+
 // API response witing component
-if (loader) {
+if (isLoading) {
     return (
         <>
         <Box p={2} display="flex" justifyContent="space-between" alignItems="center">
@@ -113,6 +157,7 @@ if (loader) {
         </>
     )
 };
+
 
 
 // If the response data is empty
@@ -160,7 +205,10 @@ return (
                 <Grid container justifyContent="flex-end">
 
                 <Grid item>
-                    <SandBoxProductionTransactionSwitch handleSwitchTransactions={handleSwitchTransactions} />
+                    <SandBoxProductionTransactionSwitch 
+                          handleSwitchTransactions={handleSwitchTransactions} 
+                          transactionModeName={transactionModeName}
+                        />
                 </Grid>
 
                 <Grid item mb={1}>
@@ -244,7 +292,12 @@ return (
             </Box>
         </Collapse>
 
-        <ProductionTransactionTable businessTransactionData={businessTransactionData} />
+        {/* Production Transaction table */}
+        {SwitchTransaction ? 
+          <ProductionTransactionTable businessTransactionData={businessTransactionData} /> 
+        : 
+        <SandBoxTransactionTable businessSandboxTransactionData={businessSandboxTransactionData} />}
+        
 
         <Pagination 
             count={10} 
