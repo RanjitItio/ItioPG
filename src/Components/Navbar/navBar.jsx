@@ -24,8 +24,7 @@ import Signout from '../Authentication/Signout';
 
 
 
-const pages = [
-  {title: 'Connectors', url: ''}, 
+const pages = [ 
   {title: 'Developer', url: '/merchant/developer/tools/'}, 
   {title: 'Blog', url: ''}
 ];

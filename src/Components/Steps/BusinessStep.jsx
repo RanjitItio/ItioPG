@@ -17,8 +17,8 @@ import FormHelperText from '@mui/material/FormHelperText';
 
 
 
-// Add new business for merchant
-export default function AddNewBusines() {
+// Add Business Step
+export default function AddBusinesStep({...props}) {
 
     const navigate = useNavigate();
 
@@ -120,6 +120,7 @@ export default function AddNewBusines() {
 
 
     const handleFormSubmit = (event) => {
+        props.handleNext();
 
         if(formData.img) {
             const file = formData.img

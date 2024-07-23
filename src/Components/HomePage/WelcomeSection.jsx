@@ -5,6 +5,8 @@ import Divider from '@mui/material/Divider';
 import { Link } from 'react-router-dom';
 import animationData from '../Animations/WelcomeRobot.json';
 import Lottie from 'lottie-react';
+import Alert from '@mui/material/Alert';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -13,11 +15,29 @@ import Lottie from 'lottie-react';
 
 export default function WelcomeSection() {
 
+    const navigate = useNavigate();
+
     const user_full_name = localStorage.getItem('user_name');
 
-    return (
+    const handleAlertClicked = ()=> {
+        navigate('/merchant/sandbox/steps/')
+    };
+    
 
+    return (
         <Box sx={{ backgroundColor: "#2C73D2", paddingBottom: 5}}>
+
+            <Alert 
+                severity="warning"
+                action={
+                    <Button color='inherit' size='small' onClick={handleAlertClicked}>
+                        Complete
+                    </Button>
+                }
+            >
+                Your account is in sandbox mode, Please activate your account!
+            </Alert>
+
             <Typography variant="h4" sx={{ pt: 2, pb: 2, marginLeft: "4rem", color: "white", display: 'flex', alignItems: 'center' }}>
                 <span>
                     Welcome, {user_full_name}
