@@ -2,8 +2,10 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import { Link } from 'react-router-dom';
+import animationData from '../Animations/WelcomeRobot.json';
+import Lottie from 'lottie-react';
+
 
 
 
@@ -16,11 +18,11 @@ export default function WelcomeSection() {
     return (
 
         <Box sx={{ backgroundColor: "#2C73D2", paddingBottom: 5}}>
-            <Typography variant="h4" sx={{ pt: 5, pb: 2, marginLeft: "4rem", color: "white" }}>
+            <Typography variant="h4" sx={{ pt: 2, pb: 2, marginLeft: "4rem", color: "white", display: 'flex', alignItems: 'center' }}>
                 <span>
                     Welcome, {user_full_name}
-                <EmojiEmotionsIcon sx={{ ml: 1 }} />
                 </span>
+                <Lottie animationData={animationData} loop={true} style={{width:'100px', height: '100px'}} />
             </Typography>
 
             <Typography variant="body1" sx={{ marginLeft: "4rem", color: "white" }}>
