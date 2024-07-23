@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Button,
   TextField, MenuItem, Select, InputLabel, FormControl, Collapse, Box, Grid, useMediaQuery
 } from '@mui/material';
-// import FormHelperText from '@mui/material/FormHelperText';
-// import FilterListIcon from '@mui/icons-material/FilterList';
 import { useTheme } from '@mui/material/styles';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
@@ -16,6 +14,8 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import { useNavigate } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import animationData from '../Animations/EmptyAnimation.json';
+import lottie from 'lottie-web';
 
 
 
@@ -27,6 +27,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 export default function AllBusinessTable () {
 
     const navigate = useNavigate();
+    const animationContainer = useRef(null);
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -39,6 +40,26 @@ export default function AllBusinessTable () {
     const handleFilterClick = () => {
        setFilterOpen(!filterOpen);
     };
+
+
+
+    // Load the animation
+  useEffect(() => {
+    const animationInstance = lottie.loadAnimation({
+        container: animationContainer.current,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        animationData: animationData,
+    })
+
+    return () => {
+        animationInstance.destroy();
+      };
+
+  }, []);
+
+
 
      // Get all the Businesses created by the user
      useEffect(() => {
@@ -61,6 +82,10 @@ export default function AllBusinessTable () {
             setEmptyData(true);
             setLoader(false)
           };
+
+          if (error.response.statusText === 'Unauthorized') {
+            window.location.href = '/signin/';
+        };
       })
 
   }, []);
@@ -151,8 +176,8 @@ if (emptyData) {
 
       </Box>
 
-      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '2%'}}>
-          <DeleteOutlineIcon sx={{ fontSize: 90 }} />
+      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '0%'}}>
+          <div ref={animationContainer} style={{ width: 300, height: 220 }}></div>
       </Box>
       <p style={{display:'flex', justifyContent: 'center'}}>Nothing to show</p>
 

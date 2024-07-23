@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import {
   Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Button,
   TextField, MenuItem, Select, InputLabel, FormControl, Collapse, Box, Grid,
@@ -9,11 +9,11 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import axiosInstance from '../Authentication/axios';
 import Pagination from '@mui/material/Pagination';
 import CircularProgress from '@mui/material/CircularProgress';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import SandBoxProductionTransactionSwitch from './Switch';
 import SandBoxTransactionTable from './SandBoxTransactions';
 import ProductionTransactionTable from './ProductionTransactions';
-
+import animationData from '../Animations/EmptyAnimation.json';
+import lottie from 'lottie-web';
 
 
 
@@ -22,7 +22,9 @@ import ProductionTransactionTable from './ProductionTransactions';
 
 // All Business Transaction Data
 export default function BusinessTransactionTable () {
-  
+
+  const animationContainer = useRef(null);
+
   const [filterOpen, setFilterOpen] = useState(false);  // Open filter fields state
   const [businessTransactionData, updateBusinessTransactionData] = useState([])  // Production Transaction data state
   const [businessSandboxTransactionData, updateBusinessSandboxTransactionData] = useState([])  // Production Transaction data state
@@ -32,6 +34,23 @@ export default function BusinessTransactionTable () {
   const [SwitchTransaction, setSwitchTransaction] = useState(true);
   const [transactionModeName, setTransactionModeName] = useState('');
 
+
+  // Load the animation
+  useEffect(() => {
+    const animationInstance = lottie.loadAnimation({
+        container: animationContainer.current,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        animationData: animationData,
+    })
+
+    return () => {
+        animationInstance.destroy();
+      };
+
+  }, []);
+  
    
   // Method to open Filter fields
   const handleFilterClick = () => {
@@ -81,6 +100,15 @@ export default function BusinessTransactionTable () {
         }).catch((error)=> {
             console.log(error)
 
+            if (error.response.data.error === 'No transaction available') {
+                setEmptyData(true);
+                setIsLoading(false);
+            }
+
+            if (error.response.statusText === 'Unauthorized') {
+                window.location.href = '/signin/';
+            };
+
         })
     }
   }, [SwitchTransaction])
@@ -101,10 +129,23 @@ const handlePaginationTransactionData = ()=> {
                 setEmptyData(true);
                 setIsLoading(false);
             };
+
+            if (error.response.statusText === 'Unauthorized') {
+                window.location.href = '/signin/';
+            };
         }
 
     }).catch((error)=> {
         console.log(error)
+
+        if (error.response.data.error === 'No transaction available') {
+            setEmptyData(true);
+            setIsLoading(false);
+        };
+
+        if (error.response.statusText === 'Unauthorized') {
+            window.location.href = '/signin/';
+        };
 
     })
 };
@@ -130,12 +171,20 @@ const handlePaginationTransactionData = ()=> {
     }).catch((error)=> {
         console.log(error)
 
+        if (error.response.data.error === 'No transaction available') {
+            setEmptyData(true);
+            setIsLoading(false);
+        };
+        if (error.response.statusText === 'Unauthorized') {
+            window.location.href = '/signin/';
+        };
+
     })
 
 }, []);
 
 
-
+// console.log(isLoading)
 
 // API response witing component
 if (isLoading) {
@@ -175,8 +224,8 @@ if (emptyData) {
             </div>
         </Box>
 
-        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '2%'}}>
-            <DeleteOutlineIcon sx={{ fontSize: 90 }} />
+        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '0%'}}>
+            <div ref={animationContainer} style={{ width: 300, height: 220 }}></div>
         </Box>
         <p style={{display:'flex', justifyContent: 'center'}}>Nothing to show</p>
 
