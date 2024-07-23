@@ -13,7 +13,7 @@ import SandBoxProductionTransactionSwitch from './Switch';
 import SandBoxTransactionTable from './SandBoxTransactions';
 import ProductionTransactionTable from './ProductionTransactions';
 import animationData from '../Animations/EmptyAnimation.json';
-import lottie from 'lottie-web';
+import Lottie from 'lottie-react';
 
 
 
@@ -23,8 +23,6 @@ import lottie from 'lottie-web';
 // All Business Transaction Data
 export default function BusinessTransactionTable () {
 
-  const animationContainer = useRef(null);
-
   const [filterOpen, setFilterOpen] = useState(false);  // Open filter fields state
   const [businessTransactionData, updateBusinessTransactionData] = useState([])  // Production Transaction data state
   const [businessSandboxTransactionData, updateBusinessSandboxTransactionData] = useState([])  // Production Transaction data state
@@ -33,23 +31,6 @@ export default function BusinessTransactionTable () {
   const [paginationValue, setPaginationValue] = useState(0);   // Pagination Value state
   const [SwitchTransaction, setSwitchTransaction] = useState(true);
   const [transactionModeName, setTransactionModeName] = useState('');
-
-
-  // Load the animation
-  useEffect(() => {
-    const animationInstance = lottie.loadAnimation({
-        container: animationContainer.current,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        animationData: animationData,
-    })
-
-    return () => {
-        animationInstance.destroy();
-      };
-
-  }, []);
   
    
   // Method to open Filter fields
@@ -225,7 +206,7 @@ if (emptyData) {
         </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '0%'}}>
-            <div ref={animationContainer} style={{ width: 300, height: 220 }}></div>
+            <Lottie animationData={animationData} loop={true} style={{width:'200px', height: '200px'}} />
         </Box>
         <p style={{display:'flex', justifyContent: 'center'}}>Nothing to show</p>
 
@@ -288,9 +269,6 @@ return (
                           value={'USD'}
                           // onChange={handleChange}
                         >
-                        {/* <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem> */}
                         <MenuItem value={'USD'}>USD</MenuItem>
                         <MenuItem value={'INR'}>INR</MenuItem>
                         <MenuItem value={'EUR'}>EUR</MenuItem>

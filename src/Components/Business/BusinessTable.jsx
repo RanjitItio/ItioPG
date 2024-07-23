@@ -13,9 +13,8 @@ import AddIcon from '@mui/icons-material/Add';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import { useNavigate } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import animationData from '../Animations/EmptyAnimation.json';
-import lottie from 'lottie-web';
+import Lottie from 'lottie-react';
 
 
 
@@ -27,7 +26,6 @@ import lottie from 'lottie-web';
 export default function AllBusinessTable () {
 
     const navigate = useNavigate();
-    const animationContainer = useRef(null);
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -40,24 +38,6 @@ export default function AllBusinessTable () {
     const handleFilterClick = () => {
        setFilterOpen(!filterOpen);
     };
-
-
-
-    // Load the animation
-  useEffect(() => {
-    const animationInstance = lottie.loadAnimation({
-        container: animationContainer.current,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        animationData: animationData,
-    })
-
-    return () => {
-        animationInstance.destroy();
-      };
-
-  }, []);
 
 
 
@@ -177,7 +157,7 @@ if (emptyData) {
       </Box>
 
       <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '0%'}}>
-          <div ref={animationContainer} style={{ width: 300, height: 220 }}></div>
+          <Lottie animationData={animationData} loop={true} style={{width:'200px', height: '200px'}} />
       </Box>
       <p style={{display:'flex', justifyContent: 'center'}}>Nothing to show</p>
 
