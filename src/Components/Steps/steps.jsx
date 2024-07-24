@@ -8,6 +8,9 @@ import Typography from '@mui/material/Typography';
 import AddMerchantBankAccountStep from './BankStep';
 import AddBusinesStep from './BusinessStep';
 import { ColorlibConnector, ColorlibStepIcon } from './stepStyles';
+import animationData from '../Animations/SuccessTick.json';
+import Lottie from 'lottie-react';
+import { useState, useEffect } from 'react';
 
 
 
@@ -26,8 +29,24 @@ const steps = [
 
 
 export default function SandBoxProcessStepper() {
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set());
+  let businessStep = localStorage.getItem('i_sb_bs_c')
+  let bankStep     = localStorage.getItem('i_sb_bks_c')
+  
+  const [activeStep, setActiveStep] = useState(0);
+  const [skipped, setSkipped] = useState(new Set());
+
+  // Check to how many steps completed by the mechant
+  useEffect(() => {
+    if (bankStep === 'true') {
+        setActiveStep(1)
+    }
+
+    if (businessStep === 'true') {
+      setActiveStep(2)
+    }
+
+  }, [bankStep, businessStep])
+
 
   const isStepOptional = (step) => {
     return step === 1;
@@ -113,12 +132,25 @@ export default function SandBoxProcessStepper() {
             })}
       </Stepper>
 
-      {activeStep === steps.length ? (
+      {activeStep === steps.length  ? (
         // If all steps completed
         <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1, color:'green', display:'flex', justifyContent: 'center' }}>
-              Thanks for the details, Our Team will contact you soon.
-          </Typography>
+
+          <div style={{ marginTop: '30px',color:'green', display:'flex', justifyContent: 'center' }}>
+              <p>Thanks, your Information has been submitted successfully,</p> <br />
+          </div>
+
+          <div style={{ marginBottom: '5px', color:'green', display:'flex', justifyContent: 'center' }}>
+              <p>Now you can use your keys for live payments</p>
+          </div>
+
+          <div style={{ mt: 2, mb: 1, color:'green', display:'flex', justifyContent: 'center' }}>
+          <Lottie 
+              animationData={animationData} 
+              loop={false} 
+              style={{width:'200px', height: '200px'}} 
+              /> 
+          </div>
           {/* <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Box sx={{ flex: '1 1 auto' }} />
             <Button onClick={handleReset}>Reset</Button>

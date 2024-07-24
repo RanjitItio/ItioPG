@@ -120,7 +120,6 @@ export default function AddBusinesStep({...props}) {
 
 
     const handleFormSubmit = (event) => {
-        props.handleNext();
 
         if(formData.img) {
             const file = formData.img
@@ -188,9 +187,10 @@ export default function AddBusinesStep({...props}) {
             if (res.status === 200) {
               setSuccessMessage('Merchant created successfully. Please wait for admin approval.');
 
-              setTimeout(() => {
-                navigate('/merchant/businesses/');
-              }, 2000);
+               // Redirect to Next step
+                setTimeout(() => {
+                    props.handleNext();
+                }, 3000);
             }
 
           }).catch((error) => {

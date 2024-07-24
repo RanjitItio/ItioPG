@@ -107,7 +107,6 @@ export default function AddMerchantBankAccountStep({...props}) {
 // console.log(formData.bank_doc)
 
     const handleFormSubmit = ()=> {
-        props.handleNext();
 
          if (formData.acc_holder_name === '') {
             setErrorMessage('Please type Account holder name')
@@ -157,10 +156,10 @@ export default function AddMerchantBankAccountStep({...props}) {
              if (res.status === 200) {
                 setSuccessMessage('Bank Account Added successfully please wait for Admin Approval')
                 
-
+                // Redirect to Next step
                 setTimeout(() => {
-                    navigate('/merchant/bank/accounts/')
-                }, 1500);
+                    props.handleNext();
+                }, 2000);
              }
 
           }).catch((error)=> {
@@ -354,8 +353,14 @@ export default function AddMerchantBankAccountStep({...props}) {
                     </Button>
 
                 </Stack>
-                {errorMessage && <Typography variant="body2" sx={{ ml: 2, color:'red' }}>{errorMessage}</Typography>}
-                {successMessage && <Typography variant="body2" sx={{ ml: 2, color: 'green' }}>{successMessage}</Typography>}
+                {errorMessage && 
+                    <Typography variant="body2" sx={{ ml: 2, color:'red' , display:'flex', justifyContent:'center'}}>
+                        {errorMessage}
+                    </Typography>}
+                {successMessage && 
+                    <Typography variant="body2" sx={{ ml: 2, color: 'green', display:'flex', justifyContent:'center' }}>
+                        {successMessage}
+                    </Typography>}
 
                 </Paper>
             </Box>
