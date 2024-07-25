@@ -45,10 +45,10 @@ const axiosInstance = axios.create({
 //             return Promise.reject(error);
 //         }
 
-//         if (error.response.statusText === 'Unauthorized') {
-//             window.location.href = '/signin/';
-// 			return Promise.reject(error);
-//         }
+        // if (error.response.statusText === 'Unauthorized') {
+        //     window.location.href = '/signin/';
+		// 	return Promise.reject(error);
+        // }
 //     }
 // );
 

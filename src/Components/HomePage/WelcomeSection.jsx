@@ -24,8 +24,9 @@ export default function WelcomeSection() {
     const user_full_name = localStorage.getItem('user_name');
 
     const navigate = useNavigate();
-    const [breadcrumb, setBreadcrumb] = useState(breadcrumbs);
-    const [stepsData, setStepsData]   = useState([]);
+    const [breadcrumb, setBreadcrumb] = useState(breadcrumbs); // Breadcrumb Steps
+    const [stepsData, setStepsData]   = useState([]);          // Merchant steps completed data
+    const [showAlert, setShowAlert]   = useState(false);       // Sandbox alert notification
 
 
     // Snadbox alert Button method
@@ -33,6 +34,7 @@ export default function WelcomeSection() {
         navigate('/merchant/sandbox/steps/')
     };
 
+    // Update Breadcrumb data
     const updateBreadCrumb =(path, label)=> {
         setBreadcrumb([
             {
@@ -72,15 +74,28 @@ export default function WelcomeSection() {
                     window.location.href = '/signin/';
                 }
         })
-    }, [])
 
 
+    }, []);
+
+    
+    // All steps completed or not
+    useEffect(() => {
+       if (stepsData['isCompleted']) {
+            setShowAlert(false);
+
+       } else if (stepsData['isCompleted'] === false) {
+            setShowAlert(true)
+       } 
+
+    }, [stepsData]);
+
+    
 
     return (
         <Box sx={{ backgroundColor: "#2C73D2", paddingBottom: 5}}>
 
-            {stepsData.isCompleted ? '' 
-                : 
+            {showAlert &&  
                 <Alert 
                     severity="warning"
                     action={

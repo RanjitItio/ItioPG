@@ -11,22 +11,28 @@ import CheckoutErrorPopup from './Error';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Stack from '@mui/material/Stack';
+import Lottie from 'lottie-react';
+import animationData from '../Animations/Wallet.json';
 
 
 
+
+
+// Production payment checkout
 const PaymentCheckoutPage = () => {
     const query_params = new URLSearchParams(window.location.search)
     const token        = query_params.get('token')
 
-    const [upiqrPage, setUPIQRPage]         = useState(false);
-    const [allPayment, setAllPayment]       = useState(true);
-    const [cardDetail, setCardDetails]      = useState(false);
-    const [merchantPipes, setMerchantPipes] = useState([]);
-    const [openError, setOpenError]         = useState(false);
-    const [error, setError]                 = useState('');
-    const [disblePayButton, setDisablePayButton] = useState(true);
-    const [loadingButton, setLoadingButton] = useState(false);
-
+    const [upiqrPage, setUPIQRPage]         = useState(false);  // UPI Pay page state
+    const [allPayment, setAllPayment]       = useState(true);    // All payment state
+    const [cardDetail, setCardDetails]      = useState(false);   // Card payment page state
+    const [merchantPipes, setMerchantPipes] = useState([]);       // Merchant available pipes state
+    const [openError, setOpenError]         = useState(false);   // 
+    const [error, setError]                 = useState('');      // 
+    const [disblePayButton, setDisablePayButton] = useState(true);  // Disable button
+    const [loadingButton, setLoadingButton] = useState(false);      // Loading button state
+    const [showAnimation, setShowAnimation] = useState(true);   // Show animation during the start of the page
+ 
 
     let merchant_public_key  = '';
     let transaction_amount   = '';
@@ -84,6 +90,18 @@ const PaymentCheckoutPage = () => {
         })
     }, []);
 
+    useEffect(()=> {
+      // Turn off the animation after two second
+       const animationTimeoutID = setTimeout(() => {
+          setShowAnimation(false)
+       }, 3000);
+
+       return ()=> {
+         clearTimeout(animationTimeoutID)
+       };
+
+    }, [])
+
   if (!token) {
     return (
      
@@ -100,7 +118,18 @@ const PaymentCheckoutPage = () => {
 
   return (
     <>
-     <Container maxWidth="xs" style={{ marginTop: '2rem' }}>
+    {showAnimation ? 
+        <Container maxWidth="xs" style={{ marginTop: '5rem' }}>
+          <Lottie 
+              animationData={animationData} 
+              loop={true} 
+              style={{width: '300px', height: '300px', 
+                      display:'flex', marginLeft: '10%'
+                    }} />
+          </Container>
+        :
+
+        <Container maxWidth="xs" style={{ marginTop: '2rem' }}>
          <TopBar 
             setUPIQRPage={setUPIQRPage} 
             setAllPayment={setAllPayment} 
@@ -139,8 +168,11 @@ const PaymentCheckoutPage = () => {
             </Box>
 
     </Container>
+        
+            }
 
     <CheckoutErrorPopup open={openError} setOpen={setOpenError} error={error} />
+      
     </>
   );
 };

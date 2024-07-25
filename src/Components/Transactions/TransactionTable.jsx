@@ -194,9 +194,51 @@ if (isLoading) {
 if (emptyData) {
     return (
         <>
+       
+        <Grid container p={2} justifyContent="space-between" alignItems="center">
+            <Grid item xs={6} sm={4} md={3} lg={3}>
+                <div className="d-flex justify-content-start">
+                <p>
+                    <b><span className='fs-3'>PAYMENTS</span></b> <br />
+                    <small>List of all payments received from customers</small>
+                </p>
+                </div>
+            </Grid>
 
-        <Box p={2} display="flex" justifyContent="space-between" alignItems="center">
-            {/* <TextField placeholder="Search for transaction here" variant="outlined" size="small" /> */}
+            <Grid item xs={6} sm={8} md={9} lg={9} textAlign="right">
+                <Grid container justifyContent="flex-end">
+
+                <Grid item>
+                    <SandBoxProductionTransactionSwitch 
+                          handleSwitchTransactions={handleSwitchTransactions} 
+                          transactionModeName={transactionModeName}
+                        />
+                </Grid>
+
+                <Grid item mb={1}>
+                    <Button variant="contained" onClick={handleFilterClick} startIcon={<FilterListIcon />}>
+                    Filter
+                    </Button>
+                </Grid>
+
+                <Grid item>
+                    <Button variant="contained" style={{ marginLeft: 10 }}>
+                    Export
+                    </Button>
+                </Grid>
+
+                </Grid>
+            </Grid>
+        </Grid>
+
+         {/* Production Transaction table */}
+         {SwitchTransaction ? 
+          <ProductionTransactionTable businessTransactionData={businessTransactionData} /> 
+        : 
+        <SandBoxTransactionTable businessSandboxTransactionData={businessSandboxTransactionData} />}
+        
+        
+        {/* <Box p={2} display="flex" justifyContent="space-between" alignItems="center">
             <div className="d-flex justify-content-start">
                 <p>
                     <b><span className='fs-3'>PAYMENTS</span></b> <br />
@@ -208,7 +250,7 @@ if (emptyData) {
         <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '0%'}}>
             <Lottie animationData={animationData} loop={true} style={{width:'200px', height: '200px'}} />
         </Box>
-        <p style={{display:'flex', justifyContent: 'center'}}>Nothing to show</p>
+        <p style={{display:'flex', justifyContent: 'center'}}>Nothing to show</p> */}
 
         </>
     )
@@ -319,7 +361,7 @@ return (
             </Box>
         </Collapse>
 
-        {/* Production Transaction table */}
+        {/* Production and Sandbox Transaction table */}
         {SwitchTransaction ? 
           <ProductionTransactionTable businessTransactionData={businessTransactionData} /> 
         : 

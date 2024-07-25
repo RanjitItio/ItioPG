@@ -29,20 +29,21 @@ const steps = [
 
 
 export default function SandBoxProcessStepper() {
-  let businessStep = localStorage.getItem('i_sb_bs_c')
-  let bankStep     = localStorage.getItem('i_sb_bks_c')
+  let businessStep = localStorage.getItem('i_sb_bs_c')  // Business step completion from Local storage
+  let bankStep     = localStorage.getItem('i_sb_bks_c') // Bank step completion from Local storage
   
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(0);   // Steper steps state
   const [skipped, setSkipped] = useState(new Set());
+
 
   // Check to how many steps completed by the mechant
   useEffect(() => {
-    if (bankStep === 'true') {
-        setActiveStep(1)
+    if (bankStep === 'false') {
+        setActiveStep(0)
     }
 
-    if (businessStep === 'true') {
-      setActiveStep(2)
+    if (businessStep === 'false') {
+      setActiveStep(1)
     }
 
   }, [bankStep, businessStep])

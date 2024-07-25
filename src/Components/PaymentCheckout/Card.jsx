@@ -31,6 +31,7 @@ export default function CardPayment({...props}) {
     const [formValues, updateFormValues]       = useState(initialFormValues);
     const [sessionID, setSessionID]            = useState('');
     const [transactionID, setTransactionID]    = useState('');
+    const [apiError, setAPIError]              = useState('');  // API Response Error
 
 
 
@@ -160,17 +161,13 @@ export default function CardPayment({...props}) {
                     console.log(error.response)
 
                     if (error.response.data.status === 'PAYMENT_FAILED') {
-                        // console.log(error.response.data)
-
-                        //  setFailedTransactionID(error.response.data.transactionID)
-                        //  setMerchantRedirectURL(error.response.data.merchantRedirectURL)
+                        setAPIError(error.response.data.message)
 
                          // Disable the Loading button
                          props.setLoadingButton(false)
 
-                        //  setTimeout(() => {
-                        //     navigate('/merchant/payment/fail/', {state: {URL: merchantRedirectURL}})
-                        //  }, 1000);
+                    } else {
+                        setAPIError('')
                     }
 
                 })
@@ -259,7 +256,17 @@ export default function CardPayment({...props}) {
                     fullWidth 
                      />
             </Grid>
+
         </Grid>
+
+        {/* API Response Error Message */}
+            {apiError && 
+                <p style={{color: 'red', display: 'flex', 
+                            justifyContent: 'center', alignItems:'center'}}
+                        >
+                    {apiError}
+                </p>
+            }
 
         <FooterSection
            merchantTransactionAmount={props.merchantTransactionAmount}

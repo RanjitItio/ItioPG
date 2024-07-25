@@ -28,6 +28,8 @@ import MerchantBankAccounts from "../Bank/BankAccounts";
 import AddMerchantBankAccount from "../Bank/AddBankaccount";
 import UpdateMerchantBankAccount from "../Bank/updateBank";
 import SandBoxProcessStepper from "../Steps/steps";
+import AllPaymentForms from "../PaymentForm/Froms";
+import PaymentForm from "../PaymentForm/PaymentForms";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -117,6 +119,10 @@ const AuthRoutes = () => {
 
                   {/* SandBox Steps */}
                   <Route exact path='/merchant/sandbox/steps/' element={<SandBoxProcessStepper />}></Route>
+
+                  {/* SandBox Steps */}
+                  <Route exact path='/merchant/payment/forms/' element={<AllPaymentForms />}></Route>
+                  <Route exact path='/merchant/payment/form/steps/' element={<PaymentForm />}></Route>
 
                   
                   <Route exact path='*' element={

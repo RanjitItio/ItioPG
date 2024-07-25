@@ -1,6 +1,7 @@
 import { Typography, Box, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-
+import animationData from '../Animations/TestMode.json';
+import Lottie from 'lottie-react';
 
 
 
@@ -11,6 +12,7 @@ export default function TestPaymentTopBar({setUPIQRPage, setAllPayment, setCardD
         setAllPayment(true);
         setCardDetails(false);
     };
+
 
     return (
         <Box 
@@ -23,8 +25,9 @@ export default function TestPaymentTopBar({setUPIQRPage, setAllPayment, setCardD
                 }} 
                 mt={2}
             >
-            <Box sx={{ padding: '1px'}} display="flex" justifyContent="start" alignItems='start'>
+            <Box sx={{ padding: '1px'}} display="flex" justifyContent="space-between" alignItems='center'>
 
+            <Box display="flex" alignItems='center'>
                 {!allPayment && 
                  <IconButton onClick={handleBack} sx={{marginTop: '2%'}}>
                     <ArrowBackIcon fontSize='small'/>
@@ -33,7 +36,12 @@ export default function TestPaymentTopBar({setUPIQRPage, setAllPayment, setCardD
 
                 <img src="https://python-uat.oyefin.com/media/signup/merchant.png" alt="" style={{ width: '30px', height: '30px', marginLeft: '4px', marginTop: '3%' }} />
                 <Typography variant="h6" color={'white'} sx={{marginLeft: '15px', marginTop: '3%'}}>Business Name</Typography>
+            </Box>
 
+                <Lottie 
+                    animationData={animationData} 
+                    loop={true} 
+                    style={{width:'50px', height: '50px'}} />
             </Box>
             <hr style={{ margin: '1rem 0', borderTop: '1px solid black'}}  />
         </Box>

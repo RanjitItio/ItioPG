@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 
 
 
-
+// Available Total Balance
 export default function TotalBalance() {
 
    const [anchorEl, setAnchorEl] = useState(null);
@@ -26,7 +26,7 @@ export default function TotalBalance() {
       <Card className="shadow">
          <CardContent>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-               <Typography variant="h5" component="div">
+               <Typography variant="h6" component="div">
                   <b>Total Balance</b>
                </Typography>
 
@@ -64,7 +64,7 @@ export default function TotalBalance() {
                </div>
             </div>
 
-         <Typography variant="h4" component="div" style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+         <Typography variant="h5" component="div" style={{ marginTop: '1rem', marginBottom: '1rem' }}>
             <b>$12,456,315</b>
          </Typography>
 

@@ -1,27 +1,48 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Collapse, Box } from '@mui/material';
 import TopBar from './TopBar';
 import AllPaymentTestPage from './AllPayment';
-import TestFooterSection from './Footer';
 import TestUPIQRCOde from './UPIQR';
 import TestCardPayment from './Card';
+import Lottie from 'lottie-react';
+import animationData from '../Animations/Wallet.json';
 
 
 
+
+// Sandbox Payment method
 const TestPaymentCheckoutPage = () => {
-    const query_params = new URLSearchParams(window.location.search)
+    const query_params = new URLSearchParams(window.location.search)  // Get The data from query
     const token        = query_params.get('token')
 
-    const [upiqrPage, setUPIQRPage] = useState(false);
-    const [allPayment, setAllPayment] = useState(true);
-    const [cardDetail, setCardDetails] = useState(false);           
+    const [upiqrPage, setUPIQRPage] = useState(false);       // UPI Pay page state
+    const [allPayment, setAllPayment] = useState(true);      // All payment state
+    const [cardDetail, setCardDetails] = useState(false);    // Card payment page state       
     const [disblePayButton, setDisablePayButton] = useState(true);  // Disable pay button
+    const [loadingButton, setLoadingButton] = useState(false);     // Loading button state
+    const [showAnimation, setShowAnimation] = useState(true);   // Show animation during the start of the page
+
 
     let merchant_public_key  = '';
     let transaction_amount   = '';
     let merchant_order_id    = '';
     let transaction_currency = '';
 
+
+    useEffect(()=> {
+      // Turn off the animation after two second
+       const animationTimeoutID = setTimeout(() => {
+          setShowAnimation(false)
+       }, 3000);
+
+       return ()=> {
+         clearTimeout(animationTimeoutID)
+       };
+
+    }, [])
+
+  
+    // If token present in query
     if (token) {
       let tokenValue = token.split(',')
 
@@ -31,12 +52,13 @@ const TestPaymentCheckoutPage = () => {
       transaction_currency = tokenValue[3]
     };
 
+    // Decode the base64 encoded value
     const merchantTransactionAmount   = parseFloat(atob(transaction_amount))
     const merchantTransactionCurrency = JSON.parse(atob(transaction_currency))
     const merchantOrderID             = JSON.parse(atob(merchant_order_id))
 
     
-    // Page without any value
+    // Page without any value in query
     if (!token) {
       return (
        
@@ -52,7 +74,19 @@ const TestPaymentCheckoutPage = () => {
 
 
    return (
-     <Container maxWidth="xs" style={{ marginTop: '2rem' }}>
+    <>
+    {showAnimation ? 
+        <Container maxWidth="xs" style={{ marginTop: '5rem' }}>
+          <Lottie 
+              animationData={animationData} 
+              loop={true} 
+              style={{width: '300px', height: '300px', 
+                      display:'flex', marginLeft: '10%'
+                    }} />
+          </Container>
+        :
+
+        <Container maxWidth="xs" style={{ marginTop: '2rem' }}>
          <TopBar 
             setUPIQRPage={setUPIQRPage} 
             setAllPayment={setAllPayment} 
@@ -68,6 +102,8 @@ const TestPaymentCheckoutPage = () => {
                                   merchantTransactionAmount={merchantTransactionAmount}
                                   merchantTransactionCurrency={merchantTransactionCurrency}
                                   disblePayButton={disblePayButton}
+                                  loadingButton={loadingButton}
+                                  setLoadingButton={setLoadingButton}
                                   />
                                   }
               {upiqrPage && <TestUPIQRCOde />}
@@ -80,13 +116,19 @@ const TestPaymentCheckoutPage = () => {
                     merchantOrderID={merchantOrderID}
                     disblePayButton={disblePayButton}
                     setDisablePayButton={setDisablePayButton}
+                    loadingButton={loadingButton}
+                    setLoadingButton={setLoadingButton}
                  />
               </Collapse>
             </Box>
-
-         {/* <TestFooterSection /> */}
     </Container>
+      
+      }
+
+     
+    </>
   );
 };
+
 
 export default TestPaymentCheckoutPage;

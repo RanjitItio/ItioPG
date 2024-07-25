@@ -2,13 +2,15 @@ import {TextField, Grid} from '@mui/material';
 import TestFooterSection from './Footer';
 import MaskedInput from 'react-text-mask';
 import { useState } from 'react';
+import axiosInstance from '../Authentication/axios';
+
 
 
 const cardNumberMask = [/\d/, /\d/, /\d/, /\d/, ' ', /\d/, /\d/, /\d/, /\d/, ' ', /\d/, /\d/, /\d/, /\d/, ' ', /\d/, /\d/, /\d/, /\d/];
 const expiryMask     = [/\d/, /\d/, '/', /\d/, /\d/];
 
 
-
+// Sandbox card payment
 export default function TestCardPayment({...props}) {
 
     const initialFormValues = {
@@ -122,8 +124,30 @@ export default function TestCardPayment({...props}) {
             }
 
             const encoded_base64 = btoa(JSON.stringify(PAYLOAD))
+
+            // Call API to process the transaction
+            axiosInstance.post(`/api/v1/pg/sandbox/merchant/process/transactions/`, {
+                request: encoded_base64
+
+            }).then(async (res)=> {
+                // console.log(res.data)
+
+                if (res.status === 200) {
+                    let redirectUrl = res.data.merchantRedirectURL
+
+                    setTimeout(() => {
+                        window.location.href = redirectUrl
+                    }, 2000);
+
+                }
+            }).catch((error)=> {
+                console.log(error.response)
+
+            })
         }
      };
+
+
     return (
         <div style={{marginBottom:'90px'}}>
         <Grid container spacing={2}>
@@ -210,7 +234,7 @@ export default function TestCardPayment({...props}) {
            merchantTransactionCurrency={props.merchantTransactionCurrency}
            disblePayButton={props.disblePayButton}
            handleSubmitCardPayment={handleSubmitCardPayment}
-        //    loadingButton={props.loadingButton}
+           loadingButton={props.loadingButton}
         />
         </div>
 

@@ -30,6 +30,9 @@ export default function TotalTransactions() {
         }).catch((error)=> {
             console.log(error.response)
 
+            if (error.response.statusText === 'Unauthorized') {
+                window.location.href = '/signin/';
+            }
         })
     }, [])
 

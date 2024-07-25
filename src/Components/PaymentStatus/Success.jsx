@@ -1,20 +1,12 @@
 // src/CongratulationsPage.js
 import React from 'react';
 import { Box, Typography, Button, Container } from '@mui/material';
-import Lottie from 'react-lottie';
+import Lottie from 'lottie-react';
 import tickAnimation from './tickAnimation.json'; // Ensure you have the tick animation JSON file
 
 
-
+// Payment success page
 const PaymentSuccessPage = () => {
-  const defaultOptions = {
-    loop: false,
-    autoplay: true,
-    animationData: tickAnimation,
-    rendererSettings: {
-      preserveAspectRatio: 'xMidYMid slice',
-    },
-  };
 
   return (
     <Container
@@ -47,7 +39,9 @@ const PaymentSuccessPage = () => {
             margin: '0 auto',
           }}
         >
-          <Lottie options={defaultOptions} height="100%" width="100%" />
+
+        <Lottie animationData={tickAnimation} loop={false} autoplay={true} />
+
         </Box>
         <Typography variant="body1" gutterBottom>
           Congatulations, Payment Successful

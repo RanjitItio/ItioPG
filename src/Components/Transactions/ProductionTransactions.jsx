@@ -28,6 +28,18 @@ export default function ProductionTransactionTable({businessTransactionData}) {
         }
     };
 
+    const formatDate = (dateString)=> {
+        let date = new Date(dateString)
+
+        const formatter = new Intl.DateTimeFormat('en-GB', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
+        });
+
+        return formatter.format(date);
+    };
+
 
     return (
         <TableContainer style={{ overflowX: 'auto', maxHeight: '400px', overflowY: 'auto'}}>
@@ -49,10 +61,13 @@ export default function ProductionTransactionTable({businessTransactionData}) {
                     <TableRow key={index}>
 
                         {/* Sl No. Column */}
-                        <TableCell>{transaction.id ? transaction.id : '-'}</TableCell>
+                        <TableCell>{index + 1}</TableCell>
+                        {/* <TableCell>{transaction.id ? transaction.id : '-'}</TableCell> */}
 
                         {/* Date Column */}
-                        <TableCell>{transaction.ceatedDate} {transaction.createdTime}</TableCell>
+                        <TableCell>
+                            {formatDate(transaction.createdAt.split('T')[0])} &ensp; {transaction.createdAt.split('T')[1]}
+                        </TableCell>
 
                         {/* Merchant Order ID */}
                         <TableCell>
@@ -70,7 +85,7 @@ export default function ProductionTransactionTable({businessTransactionData}) {
                         <TableCell>{transaction.payment_mode}</TableCell>
 
                         {/* Amount Column */}
-                        <TableCell>{transaction.currency} {transaction.amount}</TableCell>
+                        <TableCell>{transaction.amount} {transaction.currency}</TableCell>
 
                         {/* Status */}
                         <TableCell>

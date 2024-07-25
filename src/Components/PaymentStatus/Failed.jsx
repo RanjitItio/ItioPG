@@ -1,5 +1,5 @@
 import { Box, Typography, Button, Container } from '@mui/material';
-import Lottie from 'react-lottie';
+import Lottie from 'lottie-react';
 import crossAnimation from './crossAnimation.json';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 
 
 
-
+// Failed payment Page
 const PaymentFailedPage = () => {
   const location  = useLocation();
   const navigate  =  useNavigate();
@@ -35,17 +35,7 @@ const PaymentFailedPage = () => {
     }, 3000);
      
   }, []);
-  
 
-
-  const defaultOptions = {
-    loop: false,
-    autoplay: true,
-    animationData: crossAnimation,
-    rendererSettings: {
-      preserveAspectRatio: 'xMidYMid slice',
-    },
-  };
 
 
   return (
@@ -79,7 +69,7 @@ const PaymentFailedPage = () => {
             margin: '0 auto',
           }}
         >
-          <Lottie options={defaultOptions} height="100%" width="100%" />
+          <Lottie animationData={crossAnimation} loop={false} autoPlay={true} height="100%" width="100%" />
         </Box>
         <Typography variant="body1" gutterBottom>
            Please try after some time

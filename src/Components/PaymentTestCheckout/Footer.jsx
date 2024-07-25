@@ -1,9 +1,12 @@
 import { Box, Typography, Button } from "@mui/material";
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import LoadingButton from '@mui/lab/LoadingButton';
+import SaveIcon from '@mui/icons-material/Save';
 
 
 
 export default function TestFooterSection({...props}) {
+
     return (
         <Box
             display="flex"
@@ -29,14 +32,25 @@ export default function TestFooterSection({...props}) {
                 {props.merchantTransactionAmount}
             </Typography>
 
-            <Button 
+            {props.loadingButton === true ? 
+              <LoadingButton
+                loading
+                loadingPosition="start"
+                startIcon={<SaveIcon />}
+                variant="outlined"
+                >
+                Loading
+              </LoadingButton> 
+              :
+              <Button 
                 variant="contained" 
                 color="primary"
                 disabled={props.disblePayButton}
                 onClick={props.handleSubmitCardPayment}
                 >
-              Pay Now
-            </Button>
+                  Pay Now
+              </Button>
+              } 
           </Box>
     );
     

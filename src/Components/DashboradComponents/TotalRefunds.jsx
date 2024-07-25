@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, Typography, 
-        Box, Button, Menu, MenuItem, FormControl, 
+        Box, MenuItem, FormControl, 
         InputLabel, Select } from '@mui/material';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import TransactionLineChart from './LineChart';
 
 
