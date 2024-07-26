@@ -1,7 +1,7 @@
 import { Box, Typography, Button, Container } from '@mui/material';
 import Lottie from 'lottie-react';
 import crossAnimation from './crossAnimation.json';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 
 
@@ -9,31 +9,18 @@ import { useEffect } from 'react';
 
 // Failed payment Page
 const PaymentFailedPage = () => {
-  const location  = useLocation();
-  const navigate  =  useNavigate();
+  const location = new useLocation();
+  const query = new URLSearchParams(location.search); 
+  const url = query.get('url');  // Get the url query params
 
-
-  const states = location?.state || '';
-  let transaction_id = '';
-  let redirect_url = '';
-
-  if (states) {
-    transaction_id = states.transaction_id
-    redirect_url   = states.URL
-  };
-
-  console.log('redirect url', redirect_url)
-
+  // Redirect to merchant redirect page
   useEffect(() => {
+    if (url) {
+      setTimeout(() => {
+        window.location.href = url
+      }, 3000);
+    };
 
-    setTimeout(() => {
-
-      if (redirect_url) {
-        navigate(redirect_url)
-      };
-
-    }, 3000);
-     
   }, []);
 
 

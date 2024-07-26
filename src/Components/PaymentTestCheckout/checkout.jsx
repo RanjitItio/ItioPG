@@ -95,20 +95,31 @@ const TestPaymentCheckoutPage = () => {
          />
 
          <Box sx={{ flexGrow: 1 }}>
-              {allPayment && <AllPaymentTestPage 
-                                  setUPIQRPage={setUPIQRPage} 
-                                  setAllPayment={setAllPayment} 
-                                  setCardDetails={setCardDetails}
-                                  merchantTransactionAmount={merchantTransactionAmount}
-                                  merchantTransactionCurrency={merchantTransactionCurrency}
-                                  disblePayButton={disblePayButton}
-                                  loadingButton={loadingButton}
-                                  setLoadingButton={setLoadingButton}
-                                  />
-                                  }
-              {upiqrPage && <TestUPIQRCOde />}
+              <Collapse in={allPayment} timeout='auto' unmountOnExit>
+                  <AllPaymentTestPage 
+                        setUPIQRPage={setUPIQRPage} 
+                        setAllPayment={setAllPayment} 
+                        setCardDetails={setCardDetails}
+                        merchantTransactionAmount={merchantTransactionAmount}
+                        merchantTransactionCurrency={merchantTransactionCurrency}
+                        disblePayButton={disblePayButton}
+                        loadingButton={loadingButton}
+                        setLoadingButton={setLoadingButton}
+                        />
+              </Collapse>
 
-              {/* {cardDetail && <CardPayment />} */}
+              <Collapse in={upiqrPage} timeout='auto' unmountOnExit>
+                  <TestUPIQRCOde 
+                    merchantTransactionAmount={merchantTransactionAmount}
+                    merchantTransactionCurrency={merchantTransactionCurrency}
+                    merchantOrderID={merchantOrderID}
+                    disblePayButton={disblePayButton}
+                    setDisablePayButton={setDisablePayButton}
+                    loadingButton={loadingButton}
+                    setLoadingButton={setLoadingButton}
+                  />
+              </Collapse>
+              
               <Collapse in={cardDetail} timeout='auto' unmountOnExit>
                 <TestCardPayment
                     merchantTransactionAmount={merchantTransactionAmount}

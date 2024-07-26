@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Container, Collapse, Box } from '@mui/material';
 import TopBar from './TopBar';
 import AllPaymentPage from './AllPayment';
-import FooterSection from './Footer';
 import UPIQRCOde from './UPIQR';
 import CardPayment from './Card';
 import axiosInstance from '../Authentication/axios';

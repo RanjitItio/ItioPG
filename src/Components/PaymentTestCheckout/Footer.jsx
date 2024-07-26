@@ -46,7 +46,7 @@ export default function TestFooterSection({...props}) {
                 variant="contained" 
                 color="primary"
                 disabled={props.disblePayButton}
-                onClick={props.handleSubmitCardPayment}
+                onClick={props.handleSubmitCardPayment ? props.handleSubmitCardPayment : props.handleSubmitUPIPayment}
                 >
                   Pay Now
               </Button>

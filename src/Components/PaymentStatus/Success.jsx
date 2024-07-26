@@ -2,11 +2,27 @@
 import React from 'react';
 import { Box, Typography, Button, Container } from '@mui/material';
 import Lottie from 'lottie-react';
-import tickAnimation from './tickAnimation.json'; // Ensure you have the tick animation JSON file
+import tickAnimation from './tickAnimation.json'; 
+import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 
 
 // Payment success page
 const PaymentSuccessPage = () => {
+  const location = new useLocation();
+  const query = new URLSearchParams(location.search); 
+  const url = query.get('url');  // Get the url query params
+
+  // Redirect to merchant redirect page
+  useEffect(() => {
+    if (url) {
+      setTimeout(() => {
+        window.location.href = url
+      }, 3000);
+    };
+
+  }, [])
+  
 
   return (
     <Container
@@ -56,5 +72,6 @@ const PaymentSuccessPage = () => {
     </Container>
   );
 };
+
 
 export default PaymentSuccessPage;

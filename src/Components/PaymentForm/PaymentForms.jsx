@@ -7,6 +7,7 @@ import {
 } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import AddIcon from '@mui/icons-material/Add';
+import XIcon from '@mui/icons-material/X';
 
 
 
@@ -16,8 +17,12 @@ const steps = ['Button Details', 'Amount Detail', 'Customer Details', 'Review an
 
 // Payment form
 export default function PaymentForm() {
-    const [current, setCurrent] = useState(0);
-    const [fields, setFields] = useState([{ type: '', label: '' }]);
+    const [current, setCurrent] = useState(0);     // Step position state
+    const [fields, setFields] = useState([{ type: '', label: '' }]); // Add new fields state
+    const [buttonText, setButtonText] = useState('Pay Now');  // Button text
+    const [buttonColor, setButtonColor] = useState('blue');  // Button Color
+    const [buttonVariant, setButtonVariant] = useState('contained')
+
 
     const next = () => {
         setCurrent(current + 1);
@@ -39,6 +44,19 @@ export default function PaymentForm() {
             return field;
         });
         setFields(newFields);
+    };
+
+    // Button name text field change method
+    const handleFirstStepFieldChange = (e)=> {
+        if (e.target.name === 'buttonLabel') {
+            setButtonText(e.target.value)
+        }
+        if (e.target.name === 'buttonColor') {
+            setButtonColor(e.target.value)
+            if (e.target.value == 'outline') {
+                setButtonVariant('outlined')
+            }
+        }
     };
 
     return (
@@ -74,6 +92,8 @@ export default function PaymentForm() {
                                             label="Button Label"
                                             placeholder="This label is shown to your customers"
                                             margin="normal"
+                                            name='buttonLabel'
+                                            onChange={handleFirstStepFieldChange}
                                         />
 
                                         <FormControl fullWidth margin="normal">
@@ -85,11 +105,15 @@ export default function PaymentForm() {
 
                                         <FormControl fullWidth margin="normal">
                                             <InputLabel>Button Theme</InputLabel>
-                                            <Select defaultValue="Razorpay Dark">
-                                                <MenuItem value="Dark">Dark</MenuItem>
-                                                <MenuItem value="Light">Light</MenuItem>
-                                                <MenuItem value="Outline">Outline</MenuItem>
-                                                <MenuItem value="Aqua">Aqua</MenuItem>
+                                            <Select 
+                                                defaultValue="dark" 
+                                                onChange={handleFirstStepFieldChange}
+                                                name='buttonColor'
+                                                >
+                                                <MenuItem value="dark">Dark</MenuItem>
+                                                <MenuItem value="light">Light</MenuItem>
+                                                <MenuItem value="outline">Outline</MenuItem>
+                                                <MenuItem value="aqua">Aqua</MenuItem>
                                             </Select>
                                         </FormControl>
                                     </>
@@ -194,12 +218,35 @@ export default function PaymentForm() {
                     </Card>
                 </Grid>
                 <Grid item xs={12} sm={3}>
-                    <Card>
+                    <Card sx={{height: '90%'}}>
                         <CardContent>
-                            <Typography variant="h6">Preview</Typography>
-                            <Button variant="contained" color="primary" fullWidth>
-                                Donate Now
+                            <Typography variant="h6" sx={{mb:4}}>Preview</Typography>
+
+                            <Button 
+                                 variant={buttonVariant}
+                                 startIcon={<XIcon />}
+                                 sx={{
+                                    backgroundColor: (theme) => {
+                                        switch (buttonColor) {
+                                          case 'dark':
+                                            return '#0A0D54';
+                                          case 'light':
+                                            return theme.palette.common.white;
+                                          case 'outline':
+                                            return 'transparent';
+                                          case 'aqua':
+                                            return '#00BFFF'; // or any other aqua color code
+                                          default:
+                                            return theme.palette.primary.main;
+                                        }
+                                      },
+                                      color: (theme) => {
+                                        return buttonColor === 'light' ? theme.palette.common.black : '';
+                                      },
+                                 }} fullWidth>
+                                {buttonText}
                             </Button>
+                            
                         </CardContent>
                     </Card>
                 </Grid>

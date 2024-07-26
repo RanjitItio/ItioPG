@@ -3,7 +3,7 @@ import {TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Box} f
 
 
 
-
+// Sandbox Transactions
 export default function SandBoxTransactionTable({businessSandboxTransactionData}) {
 
     const statusMap = {
@@ -27,6 +27,19 @@ export default function SandBoxTransactionTable({businessSandboxTransactionData}
             default:
                 return 'defaultColor';
         }
+    };
+
+    // Format Date type
+    const formatDate = (dateString)=> {
+        let date = new Date(dateString)
+
+        const formatter = new Intl.DateTimeFormat('en-GB', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
+        });
+
+        return formatter.format(date);
     };
 
     
@@ -53,7 +66,7 @@ export default function SandBoxTransactionTable({businessSandboxTransactionData}
                         <TableCell>{transaction.id ? transaction.id : '-'}</TableCell>
 
                         {/* Date Column */}
-                        <TableCell>{transaction.ceatedDate} {transaction.createdTime}</TableCell>
+                        <TableCell>{formatDate(transaction.createdAt.split('T')[0])} &ensp; {transaction.createdAt.split('T')[1]} </TableCell>
 
                         {/* Merchant Order ID */}
                         <TableCell>

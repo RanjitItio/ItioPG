@@ -11,11 +11,13 @@ export default  function AllPaymentTestPage({...props}) {
     const upiID = 'sahooranjitkumar53@ybl'
     const qrValue = `upi://pay?pa=${upiID}&pn=Ranjit%20Kumar&am=1`;
 
+    // When clieked on UPI Button
     const handleUPIQRClick = ()=> {
         props.setUPIQRPage(true);
         props.setAllPayment(false);
     };
 
+    // Method to implement when clicked on Card button
     const handleCardClicked = ()=> {
         props.setCardDetails(true);
         props.setAllPayment(false);

@@ -19,15 +19,16 @@ export default function TestCardPayment({...props}) {
         secretCode: ''
     };
 
-    const [cardType, setCardType]        = useState('');
-    const [cardError, setCardError]      = useState('');
-    const [cardNumber, setCardNumber]    = useState('');
-    const [formValues, updateFormValues] = useState(initialFormValues);
-    const [expiryError, setExpiryError]  = useState('');
-    const [cvvError, setCvvError]        = useState('');
-    const [holderNameError, setHolderNameError] = useState('');
+    const [cardType, setCardType]        = useState('');   // Card type state(MC, Visa etc.)
+    const [cardError, setCardError]      = useState('');   // Card type error state(MC, Visa etc.)
+    const [cardNumber, setCardNumber]    = useState('');  // Card number state
+    const [formValues, updateFormValues] = useState(initialFormValues);  // All card fields state
+    const [expiryError, setExpiryError]  = useState('');         // Expiry field empty state
+    const [cvvError, setCvvError]        = useState('');         // Cvv field is empty state
+    const [holderNameError, setHolderNameError] = useState('');  // Card holder name is empty state
+    const [error, setError]              = useState('');  // Error from API state
 
-
+     // Method to Identify card type
     const IdentifyCardType =(e)=> {
         const number = e.target.value;
         const cleaned = number.replace(/\D/g, '');
@@ -39,27 +40,21 @@ export default function TestCardPayment({...props}) {
 
         } else if (/^5[1-5]/.test(cleaned) || /^2[2-7]/.test(cleaned)) {
             setCardType('Mastercard')
-            // setCardNumber(cleaned)
 
         } else if (/^3[47]/.test(cleaned)) {
             setCardType('American Express');
-            // setCardError('Only Master card accepted')
 
         } else if (/^6(?:011|5|4[4-9]|22)/.test(cleaned)) { 
             setCardType('Discover');
-            // setCardError('Only Master card accepted')
 
         } else if (/^35(2[89]|[3-8][0-9])/.test(cleaned)) {
             setCardType('JCB');
-            // setCardError('Only Master card accepted')
 
         } else if (/^3(?:0[0-5]|[68])/.test(cleaned)) {
             setCardType('Diners Club');
-            // setCardError('Only Master card accepted')
 
         } else {
             setCardType('Others');
-            // setCardError('');
         }
 
     };
@@ -120,7 +115,8 @@ export default function TestCardPayment({...props}) {
                 cardExpiry: formValues.expiry,
                 cardCvv: formValues.secretCode,
                 cardHolderName: formValues.cardHolderName,
-                MerchantOrderId: props.merchantOrderID
+                MerchantOrderId: props.merchantOrderID,
+                paymentMode: 'Card'
             }
 
             const encoded_base64 = btoa(JSON.stringify(PAYLOAD))
@@ -132,17 +128,39 @@ export default function TestCardPayment({...props}) {
             }).then(async (res)=> {
                 // console.log(res.data)
 
-                if (res.status === 200) {
+                // If Success status received
+                if (res.status === 200 && res.data.status === 'PAYMENT_SUCCESS') {
                     let redirectUrl = res.data.merchantRedirectURL
 
                     setTimeout(() => {
-                        window.location.href = redirectUrl
+                        window.location.href = `/merchant/payment/success/?url=${redirectUrl}`
                     }, 2000);
-
                 }
-            }).catch((error)=> {
-                console.log(error.response)
 
+                // If failed status received
+                else if (res.status === 200 && res.data.status === 'PAYMENT_FAILED') {
+                    let redirectUrl = res.data.merchantRedirectURL
+
+                    setTimeout(() => {
+                        window.location.href = `/merchant/payment/fail/?url=${redirectUrl}`
+                    }, 2000);
+                }
+
+            }).catch((error)=> {
+                console.log(error)
+
+                if (error.response) {
+                    if (error.response.data.error === 'Transaction has been closed') {
+                        setError('Transaction Closed')
+                        props.setLoadingButton(false); 
+                    } else if (error.response.data.error === 'Please initiate transaction') {
+                        setError('Please reinitiate Transaction')
+                    } else if (error.response.data.error === 'Merchant Public key not found') {
+                        setError('Invalid merchantPublicKey')
+                    } else {
+                        setError('')
+                    };
+                };
             })
         }
      };
@@ -228,6 +246,15 @@ export default function TestCardPayment({...props}) {
             </Grid>
 
         </Grid>
+
+        {/* API Response Error Message */}
+        {error && 
+                <p style={{color: 'red', display: 'flex', 
+                            justifyContent: 'center', alignItems:'center'}}
+                        >
+                    {error}
+                </p>
+            }
 
         <TestFooterSection
            merchantTransactionAmount={props.merchantTransactionAmount}

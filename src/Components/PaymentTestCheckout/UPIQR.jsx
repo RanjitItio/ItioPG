@@ -4,24 +4,109 @@ import { useState } from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import QRCode from 'qrcode.react';
 import React from 'react';
+import TestFooterSection from './Footer';
+import axiosInstance from '../Authentication/axios';
 
 
 
-
-export default function TestUPIQRCOde () {
+// UPI QR Code payment Processing
+export default function TestUPIQRCOde ({...props}) {
     const upiID = 'sahooranjitkumar53@ybl'
     const qrValue = `upi://pay?pa=${upiID}&pn=Ranjit%20Kumar&am=1`;
     
-    const [openMibileBox, setOpenMobileBox] = useState(false);
-    const [checked, updateChecked] = useState(false);
+    const [openMibileBox, setOpenMobileBox] = useState(false);   // Open UPI ID field state 
+    const [checked, updateChecked]          = useState(false);  // Clcked the UPI button
+    const [upiIDField, updateUPIIDField]    = useState('');    // UPI ID Value sate
+    const [upiError, setUPIError]           =  useState('');  // Invalid UPI field state
+    const [error, setError]                 = useState('');  // Error state
 
+
+    // Clicked on the UPI box
     const handleUPIMobileNoClick = ()=> {
         setOpenMobileBox(!openMibileBox);
         updateChecked(!checked);
     };
 
+    // UPI Pay button clicked
+    const handleSubmitUPIPayment = ()=> {
+        if (upiIDField === '') {
+            setError('Please fill in the UPI ID')
+
+        } else {
+            setError('');
+            props.setLoadingButton(true)
+
+            const PAYLOAD = {
+                upi_id: upiIDField,
+                MerchantOrderId: props.merchantOrderID,
+                paymentMode: 'UPI'
+            }
+
+            const encoded_base64 = btoa(JSON.stringify(PAYLOAD))
+
+            // Call API to process the transaction
+            axiosInstance.post(`/api/v1/pg/sandbox/merchant/process/transactions/`, {
+                request: encoded_base64
+
+            }).then(async (res)=> {
+                // console.log(res.data)
+
+                // If Success status received
+                if (res.status === 200 && res.data.status === 'PAYMENT_SUCCESS') {
+                    let redirectUrl = res.data.merchantRedirectURL
+
+                    setTimeout(() => {
+                        window.location.href = `/merchant/payment/success/?url=${redirectUrl}`
+                    }, 2000);
+                }
+
+                // If failed status received
+                else if (res.status === 200 && res.data.status === 'PAYMENT_FAILED') {
+                    let redirectUrl = res.data.merchantRedirectURL
+
+                    setTimeout(() => {
+                        window.location.href = `/merchant/payment/fail/?url=${redirectUrl}`
+                    }, 2000);
+                }
+
+            }).catch((error)=> {
+                console.log(error)
+
+                if (error.response) {
+                    if (error.response.data.error === 'Transaction has been closed') {
+                        setError('Transaction Closed')
+                        props.setLoadingButton(false); 
+                    } else if (error.response.data.error === 'Please initiate transaction') {
+                        setError('Please reinitiate Transaction')
+                    } else if (error.response.data.error === 'Merchant Public key not found') {
+                        setError('Invalid merchantPublicKey')
+                    } else {
+                        setError('')
+                    };
+                };
+            })
+            // Finish API part
+        }
+    };
+
+    // UPI ID capture
+    const handleUPIChange = (e)=> {
+        let upiValue =  e.target.value
+        const upiIdRegex = /^[a-zA-Z0-9._-]{2,256}@[a-zA-Z]{2,64}$/;
+
+        // Validate the formt of the input as upi ID
+        if (upiIdRegex.test(upiValue)) {
+            updateUPIIDField(upiValue)
+            props.setDisablePayButton(false);
+            setUPIError('')
+
+        } else {
+            setUPIError('Invalid UPI ID')
+        }
+    };
 
     return (
+        <>
         <div style={{marginBottom: '100px'}}>
 
            <small>Pay with UPI ID / Mobile Number</small>
@@ -41,12 +126,16 @@ export default function TestUPIQRCOde () {
                 <Collapse in={openMibileBox} timeout='auto' unmountOnExit>
                     <TextField 
                         size='small' 
-                        id="upiID/MobileNo" 
-                        label="UPI ID / MobileNo" 
+                        id="upiID" 
+                        label="UPI ID" 
                         variant="outlined" 
+                        // value={upiIDField}
+                        onChange={handleUPIChange}
                         fullWidth 
                         autoFocus
                         sx={{width: '80%', marginLeft: '10%'}}
+                        error={Boolean(upiError)}
+                        helperText={upiError}
                         />
                 </Collapse>
                 
@@ -85,5 +174,23 @@ export default function TestUPIQRCOde () {
                 </Box>
             </Box>
         </div>
+
+        {error && 
+                <p style={{color: 'red', display: 'flex', 
+                            justifyContent: 'center', alignItems:'center'}}
+                        >
+                    {error}
+                </p>
+            }
+
+            {/* Footer Section */}
+            <TestFooterSection 
+               merchantTransactionAmount={props.merchantTransactionAmount}
+               merchantTransactionCurrency={props.merchantTransactionCurrency}
+               disblePayButton={props.disblePayButton}
+               handleSubmitUPIPayment={handleSubmitUPIPayment}
+               loadingButton={props.loadingButton}
+            />
+            </>
     )
 }
