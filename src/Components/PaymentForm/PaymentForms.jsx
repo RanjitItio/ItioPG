@@ -8,11 +8,25 @@ import {
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import AddIcon from '@mui/icons-material/Add';
 import XIcon from '@mui/icons-material/X';
+import Tooltip, { tooltipClasses }  from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
 
 
 
 const steps = ['Button Details', 'Amount Detail', 'Customer Details', 'Review and Create'];
 
+
+const HtmlTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: '#f5f5f9',
+      color: 'rgba(0, 0, 0, 0.87)',
+      maxWidth: 220,
+      fontSize: theme.typography.pxToRem(12),
+      border: '1px solid #dadde9',
+    },
+  }));
 
 
 // Payment form
@@ -96,12 +110,12 @@ export default function PaymentForm() {
                                             onChange={handleFirstStepFieldChange}
                                         />
 
-                                        <FormControl fullWidth margin="normal">
+                                        {/* <FormControl fullWidth margin="normal">
                                             <InputLabel>Button Type</InputLabel>
                                             <Select defaultValue="Donations Button">
                                                 <MenuItem value="Donations Button">Donations Button</MenuItem>
                                             </Select>
-                                        </FormControl>
+                                        </FormControl> */}
 
                                         <FormControl fullWidth margin="normal">
                                             <InputLabel>Button Theme</InputLabel>
@@ -110,6 +124,7 @@ export default function PaymentForm() {
                                                 onChange={handleFirstStepFieldChange}
                                                 name='buttonColor'
                                                 >
+                                                <MenuItem value="default">Default</MenuItem>
                                                 <MenuItem value="dark">Dark</MenuItem>
                                                 <MenuItem value="light">Light</MenuItem>
                                                 <MenuItem value="outline">Outline</MenuItem>
@@ -131,13 +146,43 @@ export default function PaymentForm() {
                                                     sx={{marginTop:'4%'}}
                                                     startIcon={<AddIcon />}
                                                     >
-                                                    Dashboard
+                                                    Add Amount Field
                                                 </Button>
 
                                                 <Menu {...bindMenu(popupState)}>
-                                                    <MenuItem onClick={popupState.close}>Fixed Amount</MenuItem>
-                                                    <MenuItem onClick={popupState.close}>Customer Decided Amount</MenuItem>
-                                                    <MenuItem onClick={popupState.close}>Item With Quantity</MenuItem>
+                                                    <HtmlTooltip 
+                                                        title={
+                                                            <React.Fragment>
+                                                                <Typography color="inherit">Fixed Amount</Typography>
+                                                                <em>{"Add a field which contains the price value which customer should pay."}</em>
+                                                            </React.Fragment>
+                                                        } 
+                                                        placement="right-start">
+                                                        <MenuItem onClick={popupState.close}>Fixed Amount</MenuItem>
+                                                    </HtmlTooltip>
+
+                                                    <HtmlTooltip
+                                                        title={
+                                                            <React.Fragment>
+                                                                <Typography color="inherit">Customer Decided Amount</Typography>
+                                                                <em>{"Add a free field which helps customer to fill a amount which they wish to pay."}</em>
+                                                            </React.Fragment>
+                                                        } 
+                                                        placement="right-start">
+                                                        <MenuItem onClick={popupState.close}>Customer Decided Amount</MenuItem>
+                                                    </HtmlTooltip>
+
+                                                    <HtmlTooltip 
+                                                        title={
+                                                            <React.Fragment>
+                                                                <Typography color="inherit">Item With Quantity</Typography>
+                                                                <em>{"Add a price field with quantity selection widget to facilitate to purchase multiple quantities."}</em>
+                                                            </React.Fragment>
+                                                        } 
+                                                        placement="right-start">
+                                                        <MenuItem onClick={popupState.close}>Item With Quantity</MenuItem>
+                                                    </HtmlTooltip>
+                                                    
                                                 </Menu>
                                                 </React.Fragment>
                                             )}
@@ -222,6 +267,7 @@ export default function PaymentForm() {
                         <CardContent>
                             <Typography variant="h6" sx={{mb:4}}>Preview</Typography>
 
+                            {/* Preview Button */}
                             <Button 
                                  variant={buttonVariant}
                                  startIcon={<XIcon />}
@@ -235,17 +281,29 @@ export default function PaymentForm() {
                                           case 'outline':
                                             return 'transparent';
                                           case 'aqua':
-                                            return '#00BFFF'; // or any other aqua color code
+                                            return '#00BFFF'; 
+                                          case 'default':
+                                            return theme.palette.primary.main; 
                                           default:
                                             return theme.palette.primary.main;
                                         }
                                       },
                                       color: (theme) => {
-                                        return buttonColor === 'light' ? theme.palette.common.black : '';
+                                        switch (buttonColor){
+                                            case 'dark':
+                                                return theme.palette.common.white
+                                            case 'default':
+                                                return theme.palette.common.white
+                                            case 'light':
+                                                return theme.palette.common.black
+                                            case 'aqua':
+                                                return theme.palette.common.white
+                                        }
                                       },
                                  }} fullWidth>
                                 {buttonText}
                             </Button>
+                            {/* Preview Button Ends */}
                             
                         </CardContent>
                     </Card>

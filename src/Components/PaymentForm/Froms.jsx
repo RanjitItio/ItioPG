@@ -1,5 +1,4 @@
 import React from 'react';
-import SummarizeIcon from '@mui/icons-material/Summarize';
 import { useNavigate } from 'react-router-dom';
 import { 
         AppBar, Tabs, Tab, Box, 

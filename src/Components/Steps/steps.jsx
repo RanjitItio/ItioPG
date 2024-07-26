@@ -40,9 +40,7 @@ export default function SandBoxProcessStepper() {
   useEffect(() => {
     if (bankStep === 'false') {
         setActiveStep(0)
-    }
-
-    if (businessStep === 'false') {
+    } else if (businessStep === 'false') {
       setActiveStep(1)
     }
 
