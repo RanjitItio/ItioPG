@@ -12,6 +12,7 @@ const PaymentSuccessPage = () => {
   const location = new useLocation();
   const query = new URLSearchParams(location.search); 
   const url = query.get('url');  // Get the url query params
+  const transaction_id = query.get('transaction')
 
   // Redirect to merchant redirect page
   useEffect(() => {
@@ -63,7 +64,7 @@ const PaymentSuccessPage = () => {
           Congatulations, Payment Successful
         </Typography>
         <Typography variant="body1" gutterBottom>
-           Transaction ID: 
+           Transaction ID: {transaction_id ? transaction_id : ''}
         </Typography>
         <Button variant="contained" color="success" sx={{ mt: 2 }}>
           Go Back

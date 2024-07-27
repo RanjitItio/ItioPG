@@ -166,7 +166,11 @@ export default function CardPayment({...props}) {
                          // Disable the Loading button
                          props.setLoadingButton(false)
 
-                    } else {
+                    } else if (error.response.data.error === 'Transaction has been closed') {
+                        setAPIError('Transaction has been completed')
+                        props.setLoadingButton(false)
+                    }
+                    else {
                         setAPIError('')
                     }
 
