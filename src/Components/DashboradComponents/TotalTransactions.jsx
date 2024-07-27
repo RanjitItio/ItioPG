@@ -28,13 +28,11 @@ export default function TotalTransactions() {
             updateAllMerchantTransactions(res.data.merchant_all_prod_trasactions)
 
         }).catch((error)=> {
-            console.log(error.response)
+            console.log(error)
 
-            if (error.response.statusText === 'Unauthorized') {
-                window.location.href = '/signin/';
-            }
-        })
-    }, [])
+        });
+    }, []);
+
 
     const amounts     = allMerchantTransactions.map(transactions => Number(transactions.amount));
     const totalAmount = amounts.reduce((accumulator, currentValue)=> accumulator + currentValue, 0)

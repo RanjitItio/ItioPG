@@ -10,7 +10,6 @@ import { useState, useEffect } from 'react';
 import Textarea from '@mui/joy/Textarea';
 import Button from '@mui/material/Button';
 import axiosInstance from '../Authentication/axios';
-import { useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import FormHelperText from '@mui/material/FormHelperText';
 
@@ -19,8 +18,6 @@ import FormHelperText from '@mui/material/FormHelperText';
 
 // Add Business Step
 export default function AddBusinesStep({...props}) {
-
-    const navigate = useNavigate();
 
     const initialFormData = {
         business_name: '',
@@ -202,12 +199,16 @@ export default function AddBusinesStep({...props}) {
             } else if (error.response.data.msg === 'This URl has already been taken') {
               setError('URL already exists');
 
-            }
+            } else if (error.response.data.msg === 'Only merchant allowed') {
+                setError('Only Merchant allowed');
+            } else if (error.response.data.msg === 'Account not activated yet please contact Administration') {
+                setError('Account not active, to perform the action');
+            };
 
           });
         }
       };
-    // console.log(error)
+
 
     return (
         <>

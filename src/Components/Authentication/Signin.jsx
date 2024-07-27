@@ -28,6 +28,7 @@ export default function Signin() {
     const [formData, updateFormData] = useState(initialFormData);   // Form data state
     const [error, setError] = useState('')                          // Error Message state
     const [successMessage, setSuccessMessage] = useState('');       // Success Message state
+    const [disbaleButton, setDisableButton]   = useState(false);    // Disable login button state
 
     
     // Method to capture user input values
@@ -57,6 +58,10 @@ export default function Signin() {
             setError('');
         }
 
+        // Diable the button
+        setDisableButton(true)
+
+        // Call signin API
         await axiosInstance.post(`api/v1/user/login/`, {
 				email: formData.email,
 				password: formData.password,
@@ -163,8 +168,9 @@ export default function Signin() {
                       fullWidth
                       variant="contained"
                       color="primary"
+                      disabled={disbaleButton}
                     >
-                      Submit
+                      Login
                     </Button>
                   </Grid>
   

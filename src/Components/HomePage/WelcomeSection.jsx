@@ -68,13 +68,9 @@ export default function WelcomeSection() {
             }
 
         }).catch((error)=> {
-            console.log(error.response)
+            console.log(error);
 
-            if (error.response.statusText === 'Unauthorized') {
-                    window.location.href = '/signin/';
-                }
-        })
-
+        });
 
     }, []);
 

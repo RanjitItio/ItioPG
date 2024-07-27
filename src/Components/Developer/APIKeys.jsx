@@ -39,11 +39,7 @@ export default function APIKeys() {
                 updateKeys(res.data)
             }
         }).catch((error)=> {
-            console.log(error.response)
-
-            if (error.response.statusText === 'Unauthorized') {
-                window.location.href = '/signin/';
-            };
+            console.log(error)
 
         })
     }, []);
@@ -61,11 +57,8 @@ export default function APIKeys() {
             };
 
         }).catch((error)=> {
-            console.log(error.response)
+            console.log(error)
 
-            if (error.response.statusText === 'Unauthorized') {
-                window.location.href = '/signin/';
-            };
         })
     };
 

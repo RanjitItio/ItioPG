@@ -160,7 +160,7 @@ export default function AddMerchantBankAccount() {
              }
 
           }).catch((error)=> {
-            console.log(error.reponse)
+            console.log(error)
 
           })
          }

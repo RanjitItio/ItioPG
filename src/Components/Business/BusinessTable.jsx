@@ -62,10 +62,6 @@ export default function AllBusinessTable () {
             setEmptyData(true);
             setLoader(false)
           };
-
-          if (error.response.statusText === 'Unauthorized') {
-            window.location.href = '/signin/';
-        };
       })
 
   }, []);

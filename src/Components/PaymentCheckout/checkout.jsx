@@ -67,7 +67,7 @@ const PaymentCheckoutPage = () => {
             };
 
         }).catch((error)=> {
-          console.log(error.response)
+          console.log(error)
 
           if (error.response.data.error === 'Invalid key') {
                 setError('Invalid Key provided')

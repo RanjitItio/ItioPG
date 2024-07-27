@@ -92,7 +92,7 @@ export default function AddMerchantBankAccountStep({...props}) {
     //Fetch all the Available currency
     useEffect(() => {
         axiosInstance.get(`api/v2/currency/`).then((res)=> {
-            // console.log(res.data.currencies)
+            // console.log(res)
 
             if (res.status === 200 && res.data.currencies) {
                 updateCurrencies(res.data.currencies)
@@ -128,7 +128,7 @@ export default function AddMerchantBankAccountStep({...props}) {
             setErrorMessage('Please select valid document')
          } else {
             setErrorMessage('');
-            setDisableButton(true)
+            // setDisableButton(true)
 
             
 
@@ -163,7 +163,11 @@ export default function AddMerchantBankAccountStep({...props}) {
              }
 
           }).catch((error)=> {
-            console.log(error.reponse)
+            // console.log(error)
+            
+            if(error.response.data.msg === 'Only Accessible by merchant') {
+                setErrorMessage('Only Merchants can add bank account')
+            };
 
           })
          }

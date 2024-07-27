@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef} from 'react';
 import {
-  Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Button,
-  TextField, MenuItem, Select, InputLabel, FormControl, Collapse, Box, Grid,
-  styled,
+  Card,Button,TextField, MenuItem, Select, InputLabel, FormControl, Collapse, Box, Grid,
 } from '@mui/material';
 import FormHelperText from '@mui/material/FormHelperText';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -84,10 +82,6 @@ export default function BusinessTransactionTable () {
             if (error.response.data.error === 'No transaction available') {
                 setEmptyData(true);
                 setIsLoading(false);
-            }
-
-            if (error.response.statusText === 'Unauthorized') {
-                window.location.href = '/signin/';
             };
 
         })
@@ -110,11 +104,7 @@ const handlePaginationTransactionData = ()=> {
                 setEmptyData(true);
                 setIsLoading(false);
             };
-
-            if (error.response.statusText === 'Unauthorized') {
-                window.location.href = '/signin/';
-            };
-        }
+        };
 
     }).catch((error)=> {
         console.log(error)
@@ -123,12 +113,7 @@ const handlePaginationTransactionData = ()=> {
             setEmptyData(true);
             setIsLoading(false);
         };
-
-        if (error.response.statusText === 'Unauthorized') {
-            window.location.href = '/signin/';
-        };
-
-    })
+    });
 };
 
 
@@ -156,11 +141,7 @@ const handlePaginationTransactionData = ()=> {
             setEmptyData(true);
             setIsLoading(false);
         };
-        if (error.response.statusText === 'Unauthorized') {
-            window.location.href = '/signin/';
-        };
-
-    })
+    });
 
 }, []);
 

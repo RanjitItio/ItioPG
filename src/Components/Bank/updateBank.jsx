@@ -176,7 +176,7 @@ export default function UpdateMerchantBankAccount() {
             }
 
          }).catch((error)=> {
-           console.log(error.reponse)
+           console.log(error)
 
          })
         }

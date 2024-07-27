@@ -101,7 +101,6 @@ export default function Signup() {
         })
         .then((res) => {
           console.log(res)
-          console.log('axios response received')
 
           if(res.status === 201) {
             const response_msg = res.data.msg;
@@ -125,7 +124,6 @@ export default function Signup() {
         })
         .catch((error) => {
           console.log(error)
-          console.log('axios Error')
 
           if (error.response.status === 400) {
             setError(error.response.data.msg)

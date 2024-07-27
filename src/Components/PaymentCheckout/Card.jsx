@@ -158,7 +158,7 @@ export default function CardPayment({...props}) {
                     }
 
                 }).catch((error)=> {
-                    console.log(error.response)
+                    console.log(error)
 
                     if (error.response.data.status === 'PAYMENT_FAILED') {
                         setAPIError(error.response.data.message)
