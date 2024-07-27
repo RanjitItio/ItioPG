@@ -128,7 +128,7 @@ export default function AddMerchantBankAccountStep({...props}) {
             setErrorMessage('Please select valid document')
          } else {
             setErrorMessage('');
-            // setDisableButton(true)
+            setDisableButton(true)
 
             
 
