@@ -38,15 +38,16 @@ export default function SandBoxProcessStepper() {
 
   // Check to how many steps completed by the mechant
   useEffect(() => {
-    if (bankStep === 'false') {
+    if (bankStep === 'false' && businessStep === 'false') {
         setActiveStep(0)
-    } else if (businessStep === 'false') {
+    } else if (bankStep === 'false' && businessStep === 'true') {
+      setActiveStep(0)
+    } else if (bankStep === 'true' && businessStep === 'false') {
       setActiveStep(1)
-    }
-
+    };
   }, [bankStep, businessStep])
 
-
+  
   const isStepOptional = (step) => {
     return step === 1;
   };
@@ -56,6 +57,7 @@ export default function SandBoxProcessStepper() {
     return skipped.has(step);
   };
 
+  // Head on to next step
   const handleNext = () => {
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
@@ -67,10 +69,12 @@ export default function SandBoxProcessStepper() {
     setSkipped(newSkipped);
   };
 
+  // Previod Step
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  // Skip any page
   const handleSkip = () => {
     if (!isStepOptional(activeStep)) {
       // You probably want to guard against something like this,
@@ -86,6 +90,7 @@ export default function SandBoxProcessStepper() {
     });
   };
 
+  // Reset the steps and starts from begining
   const handleReset = () => {
     setActiveStep(0);
   };

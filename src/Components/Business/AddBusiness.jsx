@@ -118,7 +118,7 @@ export default function AddNewBusines() {
         }
     };
 
-
+    // Method to Submit the data
     const handleFormSubmit = (event) => {
 
         if(formData.img) {
@@ -155,6 +155,7 @@ export default function AddNewBusines() {
     };
 
 
+    // API call to submit data through API
     const submitFormData = () => {
 
         if (formData.business_name === '') {
@@ -185,7 +186,7 @@ export default function AddNewBusines() {
             setDisableButton(true)
 
             if (res.status === 200) {
-              setSuccessMessage('Merchant created successfully. Please wait for admin approval.');
+              setSuccessMessage('Business created successfully. Please wait for admin approval.');
 
               setTimeout(() => {
                 navigate('/merchant/businesses/');

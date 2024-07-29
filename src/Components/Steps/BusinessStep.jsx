@@ -182,7 +182,7 @@ export default function AddBusinesStep({...props}) {
             setDisableButton(true)
 
             if (res.status === 200) {
-              setSuccessMessage('Merchant created successfully. Please wait for admin approval.');
+              setSuccessMessage('Business created successfully. Please wait for admin approval.');
 
                // Redirect to Next step
                 setTimeout(() => {

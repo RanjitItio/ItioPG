@@ -20,6 +20,7 @@ export default function BankAccountDelete({open, setOpen, accountID}) {
     setOpen(false);
   };
 
+  // Method to delete bank account of the user
   const handleDeleteBankAccount = ()=> {
       axiosInstance.delete(`api/v4/merchant/bank/?query=${accountID}`).then((res)=> {
         // console.log(res)
@@ -37,6 +38,8 @@ export default function BankAccountDelete({open, setOpen, accountID}) {
 
         if (error.response.data.msg === 'Requested Account not found') {
             setErrorMessage('Account does not Exists')
+        }else if (error.response.data.msg === 'Only Accessible by merchant') {
+            setErrorMessage('Only accessible by merchant')
         };
       })
   };

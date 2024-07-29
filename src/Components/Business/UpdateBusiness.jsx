@@ -121,7 +121,8 @@ export default function UpdateMerchant({open}) {
         })
       }, []);
 
-
+    
+    // Method to submit the form data
     const handleFormSubmit = ()=> {
 
         if(formData.img) {
@@ -188,7 +189,7 @@ export default function UpdateMerchant({open}) {
             }).then((res) => {
 
             if (res.status === 200) {
-                setSuccessMessage('Updated Successfully');
+                setSuccessMessage('Business Updated Successfully');
                 setDisableButton(true)
 
                 setTimeout(() => {
