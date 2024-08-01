@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import TotalBalance from '../Totalbalance';
+import AccountBalance from '../AccountBalance';
 import ActiveGateways from '../Gateway';
 import TotalTransactions from '../DashboradComponents/TotalTransactions';
 import RecentActivity from '../Recentactivity';
@@ -21,7 +21,7 @@ export default function GatewayDashboard() {
                     <Grid item xs={12} md={4}>
 
                         {/* Total Balance */}
-                        <TotalBalance />
+                        <AccountBalance />
 
                         <Grid container>
                             <Grid item xs={12} my={2}>

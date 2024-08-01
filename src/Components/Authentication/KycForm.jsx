@@ -328,7 +328,7 @@ const KYCForm = () => {
     idType: '',
     idNumber: '',
     idExpiryDate: '',
-    document: '',
+    document: null,
     user_id: '',
   };
 
@@ -433,6 +433,10 @@ const KYCForm = () => {
       }
     } catch (error) {
       console.log(error);
+
+      if (error.response.data.msg === 'Please upload document') {
+          setError('Please upload document');
+      };
     }
   };
 
@@ -520,6 +524,7 @@ const KYCForm = () => {
     };
 
     // Fourth step validation
+
     if (activeStep === 3) {
       if (formData.idType === '') {
         setError('Please select ID Type')
@@ -527,15 +532,17 @@ const KYCForm = () => {
         setError('Please type ID Number')
       } else if (formData.idExpiryDate === '') {
         setError('Please select ID Expiry Date')
-      } else if (formData.document === '') {
-        setError('Please upload document')
+      } else if (formData.document === null) {
+        setError('Please upload your document')
       } else {
         setError('')
       };
+
     };
 
   };
   
+
 
   // Back button method
   const handleBack = () => {

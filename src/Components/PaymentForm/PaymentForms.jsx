@@ -3,18 +3,41 @@ import {
     Container, Grid, Typography, TextField,
     Button, MenuItem, Card, CardContent,
     Stepper, Step, StepLabel, Select,
-    FormControl, InputLabel, Menu
+    FormControl, InputLabel, Menu, Box, Stack
 } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import AddIcon from '@mui/icons-material/Add';
 import XIcon from '@mui/icons-material/X';
 import Tooltip, { tooltipClasses }  from '@mui/material/Tooltip';
 import { styled } from '@mui/material/styles';
+import AmountFields from './AmountFields';
+import Input from '@mui/joy/Input';
+import PreviewFooterSection from './PreviewFooterSection';
+import ReviewCreate from './ReviewCreate';
+
+
+
 
 
 
 const steps = ['Button Details', 'Amount Detail', 'Customer Details', 'Review and Create'];
 
+// Amount Currency value in Preview section
+const getStartDecorator = (currency) => {
+    if (currency === 'USD') {
+      return '$';
+    } else if (currency === 'EUR') {
+      return '€';
+    } else if (currency === 'GBP') {
+      return '£';
+    } else if (currency === 'INR') {
+        return '₹'
+    } else if (currency === 'yen') {
+        return '¥'
+    } else {
+      return '';
+    }
+  };
 
 const HtmlTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
@@ -31,25 +54,82 @@ const HtmlTooltip = styled(({ className, ...props }) => (
 
 // Payment form
 export default function PaymentForm() {
-    const [current, setCurrent] = useState(0);     // Step position state
-    const [fields, setFields] = useState([{ type: '', label: '' }]); // Add new fields state
-    const [buttonText, setButtonText] = useState('Pay Now');  // Button text
-    const [buttonColor, setButtonColor] = useState('blue');  // Button Color
-    const [buttonVariant, setButtonVariant] = useState('contained')
+    const initialAmountFieldData = {
+        fixedAmountLable: '',
+        fixedAmount: 0.00,
+        customerAmtLabel: '',
+        customerAmount: 0.00,
+    }
+
+    const [current, setCurrent]             = useState(0);     // Step position state
+    const [fields, setFields]               = useState([{ type: '', label: '' }]); // Add new fields state
+    const [buttonText, setButtonText]       = useState('Pay Now');  // Button text
+    const [buttonColor, setButtonColor]     = useState('blue');  // Button Color
+    const [buttonVariant, setButtonVariant] = useState('contained') // Button style
+
+    const [fixedAmountField, setFixedAmountField]       = useState(false);    // Fixed amount field
+    const [CustomerAmountField, setCustomerAmountField] = useState(false); // Customer decided amount
+    const [firstStepData, updateFirstStepData]          = useState({title: ''})    // Button step state
+    const [stepErorMessage, setStepErrorMessage]        = useState(true);   // Step wise fields error Message
 
 
+    // Customer details fields state
+    const [customerDetailFieldValue, updateCustomerDetailFieldValue] = useState({email:'Email', phoneNo:'Phone Number'})
+
+    // Amount detail fields state
+    const [amountFieldsData, updateAmoutFieldsData] = useState(initialAmountFieldData);
+
+    // Amount field step Currencies
+    const [currency, setCurrency] = useState('USD');  // Currency in second step
+    const [currency2, setCurrency2] = useState('USD');  // Currency in second step
+    
+
+    // Forward to Next step
     const next = () => {
-        setCurrent(current + 1);
+        if (current === 0) {
+            if (firstStepData.title === '') {
+                setStepErrorMessage('Please type your form title')
+            } else {
+                setStepErrorMessage('')
+                setCurrent(current + 1);
+            }
+        } else if (current === 1) {
+            if (fixedAmountField === false && CustomerAmountField === false) {
+                setStepErrorMessage('Please select one amount field')
+            } else if (fixedAmountField) {
+                if (amountFieldsData.fixedAmount === 0.00) {
+                    setStepErrorMessage('Please Enter amount')
+                } else {
+                    
+                    // setStepErrorMessage('')
+                    // setCurrent(current + 1);
+                };
+
+            } else if (currency !== currency2) {
+                setStepErrorMessage('Both currency must be same')
+            }
+            else {
+                setStepErrorMessage('')
+                setCurrent(current + 1);
+            };
+        } 
+        else {
+            setStepErrorMessage('')
+            setCurrent(current + 1);
+        };
+        
     };
 
     const prev = () => {
         setCurrent(current - 1);
     };
 
+    // Add new Customer detail fields
     const handleAddField = () => {
         setFields([...fields, { type: '', label: '' }]);
     };
 
+    // Method to handle customer details field value change
     const handleFieldChange = (index, event) => {
         const newFields = fields.map((field, idx) => {
             if (index === idx) {
@@ -58,6 +138,13 @@ export default function PaymentForm() {
             return field;
         });
         setFields(newFields);
+    };
+
+    // Method to capture the value of Customer detail step
+    const handleCustomerDetailFieldValueChange = (e)=> {
+        updateCustomerDetailFieldValue({...customerDetailFieldValue, 
+            [e.target.name]: e.target.value
+        })
     };
 
     // Button name text field change method
@@ -73,10 +160,26 @@ export default function PaymentForm() {
         }
     };
 
+    // Method to check which amount field clicked by user
+    const handleAmountFieldClicked = (selectedAmountField)=> {
+        if (selectedAmountField === 'Fixed Amount') {
+            setFixedAmountField(true);
+        } else if (selectedAmountField === 'Customer Decided Amount') {
+            setCustomerAmountField(true);
+        } 
+    };
+
+    // First step values
+    const handleFirstStepChange = (e)=> {
+        updateFirstStepData({...firstStepData,
+            [e.target.name]: e.target.value
+        })
+    };
+
     return (
         <Container maxWidth="lg" style={{ marginTop: '20px' }}>
             <Grid container spacing={2}>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={12} md={3}>
                     <Stepper activeStep={current} orientation="vertical">
                         {steps.map((label, index) => (
                             <Step key={index}>
@@ -86,12 +189,13 @@ export default function PaymentForm() {
                     </Stepper>
                 </Grid>
 
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={12} md={current === 3 ? 9 : 6}>
                     <Card>
                         <CardContent>
                             <Typography variant="h5">{steps[current]}</Typography>
 
                             <form>
+                                {/* First Step */}
                                 {current === 0 && (
                                     <>
                                         <TextField
@@ -99,6 +203,9 @@ export default function PaymentForm() {
                                             label="Title"
                                             placeholder="For dashboard use, not visible to customers"
                                             margin="normal"
+                                            name='title'
+                                            value={firstStepData.title}
+                                            onChange={handleFirstStepChange}
                                         />
 
                                         <TextField
@@ -107,15 +214,9 @@ export default function PaymentForm() {
                                             placeholder="This label is shown to your customers"
                                             margin="normal"
                                             name='buttonLabel'
+                                            value={buttonText}
                                             onChange={handleFirstStepFieldChange}
                                         />
-
-                                        {/* <FormControl fullWidth margin="normal">
-                                            <InputLabel>Button Type</InputLabel>
-                                            <Select defaultValue="Donations Button">
-                                                <MenuItem value="Donations Button">Donations Button</MenuItem>
-                                            </Select>
-                                        </FormControl> */}
 
                                         <FormControl fullWidth margin="normal">
                                             <InputLabel>Button Theme</InputLabel>
@@ -134,62 +235,78 @@ export default function PaymentForm() {
                                     </>
                                 )}
 
+                                {/* Second Step */}
                                 {current === 1 && (
                                     <>
-                                        <PopupState variant="popover" popupId="demo-popup-menu">
-                                            {(popupState) => (
-                                                <React.Fragment>
+                                <PopupState variant="popover" popupId="demo-popup-menu">
+                                    {(popupState) => (
+                                        <React.Fragment>
+                                            <Button 
+                                                variant="outlined" 
+                                                {...bindTrigger(popupState)}
+                                                sx={{marginTop:'4%'}}
+                                                startIcon={<AddIcon />}
+                                                >
+                                                Add Amount Field
+                                            </Button>
 
-                                                <Button 
-                                                    variant="outlined" 
-                                                    {...bindTrigger(popupState)}
-                                                    sx={{marginTop:'4%'}}
-                                                    startIcon={<AddIcon />}
-                                                    >
-                                                    Add Amount Field
-                                                </Button>
+                                            <Menu {...bindMenu(popupState)}>
+                                                <HtmlTooltip 
+                                                    title={
+                                                        <React.Fragment>
+                                                            <Typography color="inherit">Fixed Amount</Typography>
+                                                            <em>{"Add a field which contains the price value which customer should pay."}</em>
+                                                        </React.Fragment>
+                                                    } 
+                                                    placement="right-start">
+                                                    <MenuItem onClick={()=> {popupState.close(); handleAmountFieldClicked('Fixed Amount')}}>Fixed Amount</MenuItem>
+                                                </HtmlTooltip>
 
-                                                <Menu {...bindMenu(popupState)}>
-                                                    <HtmlTooltip 
-                                                        title={
-                                                            <React.Fragment>
-                                                                <Typography color="inherit">Fixed Amount</Typography>
-                                                                <em>{"Add a field which contains the price value which customer should pay."}</em>
-                                                            </React.Fragment>
-                                                        } 
-                                                        placement="right-start">
-                                                        <MenuItem onClick={popupState.close}>Fixed Amount</MenuItem>
-                                                    </HtmlTooltip>
+                                                <HtmlTooltip
+                                                    title={
+                                                        <React.Fragment>
+                                                            <Typography color="inherit">Customer Decided Amount</Typography>
+                                                            <em>{"Add a free field which helps customer to fill a amount which they wish to pay."}</em>
+                                                        </React.Fragment>
+                                                    } 
+                                                    placement="right-start">
+                                                    <MenuItem onClick={()=> {popupState.close(); handleAmountFieldClicked('Customer Decided Amount')}}>Customer Decided Amount</MenuItem>
+                                                </HtmlTooltip>
 
-                                                    <HtmlTooltip
-                                                        title={
-                                                            <React.Fragment>
-                                                                <Typography color="inherit">Customer Decided Amount</Typography>
-                                                                <em>{"Add a free field which helps customer to fill a amount which they wish to pay."}</em>
-                                                            </React.Fragment>
-                                                        } 
-                                                        placement="right-start">
-                                                        <MenuItem onClick={popupState.close}>Customer Decided Amount</MenuItem>
-                                                    </HtmlTooltip>
+                                                {/* <HtmlTooltip 
+                                                    title={
+                                                        <React.Fragment>
+                                                            <Typography color="inherit">Item With Quantity</Typography>
+                                                            <em>{"Add a price field with quantity selection widget to facilitate to purchase multiple quantities."}</em>
+                                                        </React.Fragment>
+                                                    } 
+                                                    placement="right-start">
+                                                    <MenuItem onClick={()=> {popupState.close(); handleAmountFieldClicked('Item With Quantity')}}>Item With Quantity</MenuItem>
+                                                </HtmlTooltip> */}
+                                            </Menu>
 
-                                                    <HtmlTooltip 
-                                                        title={
-                                                            <React.Fragment>
-                                                                <Typography color="inherit">Item With Quantity</Typography>
-                                                                <em>{"Add a price field with quantity selection widget to facilitate to purchase multiple quantities."}</em>
-                                                            </React.Fragment>
-                                                        } 
-                                                        placement="right-start">
-                                                        <MenuItem onClick={popupState.close}>Item With Quantity</MenuItem>
-                                                    </HtmlTooltip>
-                                                    
-                                                </Menu>
-                                                </React.Fragment>
-                                            )}
-                                        </PopupState>
+                                    {/* Amount Fields */}
+                                    <AmountFields 
+                                        fixedAmountField={fixedAmountField}
+                                        CustomerAmountField={CustomerAmountField}
+                                        setFixedAmountField={setFixedAmountField}
+                                        setCustomerAmountField={setCustomerAmountField}
+                                        amountFieldsData={amountFieldsData}
+                                        updateAmoutFieldsData={updateAmoutFieldsData}
+                                        currency={currency}
+                                        setCurrency={setCurrency}
+                                        currency2={currency2}
+                                        setCurrency2={setCurrency2}
+                                    />
+
+                                            </React.Fragment>
+
+                                    )}
+                                </PopupState>
                                     </>
                                 )}
 
+                                {/* 3rd Step */}
                                 {current === 2 && (
 
                                     <>
@@ -201,43 +318,97 @@ export default function PaymentForm() {
                                     <CardContent>
                                         {fields.map((field, index) => (
                                             <Grid container spacing={2} key={index}>
+
                                                 <Grid item xs={12} sm={6}>
-                                                    <TextField
+                                                    <InputLabel id="demo-simple-select-label">Email</InputLabel>
+                                                    <Select
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-simple-select"
+                                                        defaultValue='Email'
+                                                        label="Email"
                                                         fullWidth
-                                                        label="Field Type"
-                                                        name="type"
-                                                        value={field.type}
-                                                        onChange={(event) => handleFieldChange(index, event)}
-                                                        margin="normal"
-                                                    />
+                                                        disabled
+                                                        >
+                                                        <MenuItem value='Email'>Email</MenuItem>
+                                                        <MenuItem value='Text'>Text</MenuItem>
+                                                        <MenuItem value='Number'>Number</MenuItem>
+                                                    </Select>
                                                 </Grid>
+
                                                 <Grid item xs={12} sm={6}>
                                                     <TextField
                                                         fullWidth
                                                         label="Field Label"
-                                                        name="label"
-                                                        value={field.label}
-                                                        onChange={(event) => handleFieldChange(index, event)}
+                                                        name="email"
+                                                        value={customerDetailFieldValue.email}
+                                                        onChange={handleCustomerDetailFieldValueChange}
                                                         margin="normal"
+                                                        sx={{mt:3}}
+                                                    />
+                                                </Grid>
+
+                                                <Grid item xs={12} sm={6}>
+                                                    <InputLabel id="demo-simple-select-label">Phone Number</InputLabel>
+                                                    <Select
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-simple-select"
+                                                        defaultValue='Number'
+                                                        label="Phone Number"
+                                                        fullWidth
+                                                        disabled
+                                                        >
+                                                        <MenuItem value='Email'>Email</MenuItem>
+                                                        <MenuItem value='Text'>Text</MenuItem>
+                                                        <MenuItem value='Number'>Number</MenuItem>
+                                                    </Select>
+                                                </Grid>
+
+                                                <Grid item xs={12} sm={6}>
+                                                    <TextField
+                                                        fullWidth
+                                                        label="Field Label"
+                                                        name="phoneNo"
+                                                        value={customerDetailFieldValue.phoneNo}
+                                                        onChange={handleCustomerDetailFieldValueChange}
+                                                        margin="normal"
+                                                        sx={{mt:3}}
                                                     />
                                                 </Grid>
                                             </Grid>
                                         ))}
-                                        <Button
+                                        {/* <Button
                                             variant="outlined"
                                             color="primary"
                                             onClick={handleAddField}
                                             style={{ marginTop: '20px' }}
                                         >
                                             + Add Another Input Field
-                                        </Button>
+                                        </Button> */}
                                     </CardContent>
                                 </Card>
                                 </>
                                 )}
 
+                                {/* 4th Step */}
+                                {current === 3 && (
+                                    <ReviewCreate 
+                                        buttonVariant={buttonVariant}
+                                        buttonColor={buttonColor}
+                                        buttonText={buttonText}
+                                        fixedAmountField={fixedAmountField}
+                                        CustomerAmountField={CustomerAmountField}
+                                        currency={currency}
+                                        currency2={currency2}
+                                        amountFieldsData={amountFieldsData}
+                                        customerDetailFieldValue={customerDetailFieldValue}
+                                    />
+                                )}
+
+
                                 {/* Add similar form fields for other steps here */}
                                 <div style={{ marginTop: '20px' }}>
+                                    <p style={{color:'red'}}>{stepErorMessage}</p>
+
                                     {current > 0 && (
                                         <Button variant="contained" onClick={prev} style={{ marginRight: '8px' }}>
                                             Previous
@@ -254,7 +425,7 @@ export default function PaymentForm() {
                                             color="primary"
                                             onClick={() => alert('Processing complete!')}
                                         >
-                                            Done
+                                            Create Form
                                         </Button>
                                     )}
                                 </div>
@@ -262,52 +433,150 @@ export default function PaymentForm() {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item xs={12} sm={3}>
-                    <Card sx={{height: '90%'}}>
+
+                {/* Preview Section */}
+                {current !== 3 && (
+                <Grid item xs={12} sm={12} md={3}>
+                    <Card sx={{height: '120%', display: 'flex', flexDirection: 'column' }}>
                         <CardContent>
                             <Typography variant="h6" sx={{mb:4}}>Preview</Typography>
 
-                            {/* Preview Button */}
-                            <Button 
-                                 variant={buttonVariant}
-                                 startIcon={<XIcon />}
-                                 sx={{
-                                    backgroundColor: (theme) => {
-                                        switch (buttonColor) {
-                                          case 'dark':
-                                            return '#0A0D54';
-                                          case 'light':
-                                            return theme.palette.common.white;
-                                          case 'outline':
-                                            return 'transparent';
-                                          case 'aqua':
-                                            return '#00BFFF'; 
-                                          case 'default':
-                                            return theme.palette.primary.main; 
-                                          default:
-                                            return theme.palette.primary.main;
-                                        }
-                                      },
-                                      color: (theme) => {
-                                        switch (buttonColor){
-                                            case 'dark':
-                                                return theme.palette.common.white
-                                            case 'default':
-                                                return theme.palette.common.white
-                                            case 'light':
-                                                return theme.palette.common.black
-                                            case 'aqua':
-                                                return theme.palette.common.white
-                                        }
-                                      },
-                                 }} fullWidth>
-                                {buttonText}
-                            </Button>
-                            {/* Preview Button Ends */}
+                            {/* First Preview */}
+                            {current === 0 && (
+                                <>
+                                    {/* Preview Button */}
+                                    
+                                    <Button 
+                                        variant={buttonVariant}
+                                        startIcon={<XIcon />}
+                                        sx={{
+                                            backgroundColor: (theme) => {
+                                                switch (buttonColor) {
+                                                case 'dark':
+                                                    return '#0A0D54';
+                                                case 'light':
+                                                    return theme.palette.common.white;
+                                                case 'outline':
+                                                    return 'transparent';
+                                                case 'aqua':
+                                                    return '#00BFFF'; 
+                                                case 'default':
+                                                    return theme.palette.primary.main; 
+                                                default:
+                                                    return theme.palette.primary.main;
+                                                }
+                                            },
+                                            color: (theme) => {
+                                                switch (buttonColor){
+                                                    case 'dark':
+                                                        return theme.palette.common.white
+                                                    case 'default':
+                                                        return theme.palette.common.white
+                                                    case 'light':
+                                                        return theme.palette.common.black
+                                                    case 'aqua':
+                                                        return theme.palette.common.white
+                                                }
+                                            },
+                                        }} fullWidth>
+
+                                        <Stack direction="column">
+                                            <Typography>{buttonText}</Typography>
+                                            <Typography 
+                                                sx={{ 
+                                                    fontSize: 9, 
+                                                    color: (theme) => {
+                                                        switch (buttonColor){
+                                                            case 'dark':
+                                                                return theme.palette.common.white
+                                                            case 'default':
+                                                                return theme.palette.common.white
+                                                            case 'light':
+                                                                return theme.palette.common.black
+                                                            case 'aqua':
+                                                                return theme.palette.common.white
+                                                        }
+                                                    } 
+                                                }}
+                                                    >
+                                                    Secured by Itio
+                                            </Typography>
+                                        </Stack>
+                                        
+                                    </Button>
+                                    {/* Preview Button Ends */}
+                                </>
+                            )}
+
+                            {current === 1 && (
+                    
+                                <Box>
+                                    {fixedAmountField && (
+                                        <>
+                                            <label>{amountFieldsData.fixedAmountLable}</label>
+                                            <Input
+                                                type="text"
+                                                value={amountFieldsData.fixedAmount}
+                                                placeholder="Type in here…"
+                                                startDecorator={getStartDecorator(currency)}
+                                                sx={{mb:1}}
+                                                disabled
+                                            />
+                                        </>
+                                    )}
+
+                                    {CustomerAmountField && (
+                                        <>
+                                            <label>{amountFieldsData.customerAmtLabel}</label>
+                                            <Input
+                                                type="text"
+                                                placeholder="Type in here…"
+                                                startDecorator={getStartDecorator(currency2)}
+                                                sx={{mb:1}}
+                                                disabled
+                                            />
+                                        </>
+                                    )}
+
+                                    {/* {ItemQAmountField && (
+                                        <Input
+                                            type="text"
+                                            placeholder="Type in here…"
+                                            startDecorator={<AttachMoneyIcon />}
+                                        />
+                                    )} */}
+                                    
+                                </Box>
+                            )}
+
+                            {current === 2 && (
+                                <>
+                                <TextField
+                                    fullWidth
+                                    label={customerDetailFieldValue.email}
+                                    name="label"
+                                    margin="normal"
+                                    disabled
+                                />
+                                <TextField
+                                    fullWidth
+                                    label={customerDetailFieldValue.phoneNo}
+                                    name="label"
+                                    margin="normal"
+                                    disabled
+                                />
+                                </>
+                            )}
                             
                         </CardContent>
+
+                        {/* Footer Section */}
+                        <PreviewFooterSection  />
+                        {/* Footer Section */}
+
                     </Card>
                 </Grid>
+                )}
             </Grid>
         </Container>
     );

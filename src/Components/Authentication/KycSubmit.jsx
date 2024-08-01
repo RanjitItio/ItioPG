@@ -50,11 +50,11 @@ function KYCSubmission(params) {
           </Typography>
         </DialogContentText>
       </DialogContent>
-      <DialogActions>
+      {/* <DialogActions>
         <Button onClick={() => {}} color="primary">
           Close
         </Button>
-      </DialogActions>
+      </DialogActions> */}
     </Dialog>
   );
 }
