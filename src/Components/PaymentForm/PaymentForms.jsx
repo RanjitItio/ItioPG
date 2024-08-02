@@ -69,7 +69,7 @@ export default function PaymentForm() {
 
     const [fixedAmountField, setFixedAmountField]       = useState(false);    // Fixed amount field
     const [CustomerAmountField, setCustomerAmountField] = useState(false); // Customer decided amount
-    const [firstStepData, updateFirstStepData]          = useState({title: ''})    // Button step state
+    const [firstStepData, updateFirstStepData]          = useState({title: '', businessName: ''})    // Button step state
     const [stepErorMessage, setStepErrorMessage]        = useState(true);   // Step wise fields error Message
 
 
@@ -86,40 +86,33 @@ export default function PaymentForm() {
 
     // Forward to Next step
     const next = () => {
+        // First step checks
         if (current === 0) {
             if (firstStepData.title === '') {
                 setStepErrorMessage('Please type your form title')
             } else {
                 setStepErrorMessage('')
-                setCurrent(current + 1);
+                setCurrent(current + 1)
             }
+            // Second step checks
         } else if (current === 1) {
             if (fixedAmountField === false && CustomerAmountField === false) {
                 setStepErrorMessage('Please select one amount field')
-            } else if (fixedAmountField) {
-                if (amountFieldsData.fixedAmount === 0.00) {
-                    setStepErrorMessage('Please Enter amount')
-                } else {
-                    
-                    // setStepErrorMessage('')
-                    // setCurrent(current + 1);
-                };
-
-            } else if (currency !== currency2) {
-                setStepErrorMessage('Both currency must be same')
-            }
-            else {
+            }  else if (fixedAmountField && amountFieldsData.fixedAmount === 0.00) {
+                setStepErrorMessage('Please type fixed amount')
+            } else if (fixedAmountField && CustomerAmountField && currency !== currency2) {
+                setStepErrorMessage('Both the currency should be same')
+            } else {
                 setStepErrorMessage('')
                 setCurrent(current + 1);
-            };
-        } 
-        else {
+            }
+        } else {
             setStepErrorMessage('')
             setCurrent(current + 1);
         };
-        
     };
 
+    // Previous Step 
     const prev = () => {
         setCurrent(current - 1);
     };
@@ -205,6 +198,15 @@ export default function PaymentForm() {
                                             margin="normal"
                                             name='title'
                                             value={firstStepData.title}
+                                            onChange={handleFirstStepChange}
+                                        />
+                                        <TextField
+                                            fullWidth
+                                            label="Business Name"
+                                            placeholder="Will be visible to customers"
+                                            margin="normal"
+                                            name='businessName'
+                                            value={firstStepData.businessName}
                                             onChange={handleFirstStepChange}
                                         />
 
@@ -401,6 +403,9 @@ export default function PaymentForm() {
                                         currency2={currency2}
                                         amountFieldsData={amountFieldsData}
                                         customerDetailFieldValue={customerDetailFieldValue}
+                                        BusinessName={firstStepData.businessName}
+                                        FixedAmountLabel={amountFieldsData.fixedAmountLable}
+                                        CustomerAmountLabel={amountFieldsData.customerAmtLabel}
                                     />
                                 )}
 

@@ -95,12 +95,12 @@ export default function ReviewCreate({...props}) {
             <Paper elevation={3} sx={{ height:480, borderRadius: '20px', display: 'flex', flexDirection: 'column'}}>
                 <Typography variant="p" sx={{ padding:'5%', marginLeft: '15%'}}>AMOUNT DETAILS</Typography>
 
-                <Typography variant="subtitle1" sx={{ mb: 2, ml:2 }}>Ranjit Kumar Sahoo</Typography>
+                <Typography variant="subtitle1" sx={{ mb: 2, ml:2 }}>{props.BusinessName}</Typography>
                 <Divider component="div" />
 
                 {props.fixedAmountField && (
                     <>
-                        <label style={{marginLeft: '10px', marginTop:'10px'}}>Amount</label>
+                        <label style={{marginLeft: '10px', marginTop:'10px'}}>{props.FixedAmountLabel}</label>
                         <Input
                             fullWidth
                             label="Enter Amount"
@@ -114,7 +114,7 @@ export default function ReviewCreate({...props}) {
 
                 {props.CustomerAmountField && (
                     <>
-                        <label style={{marginLeft: '10px', marginTop:'10px'}}>Price</label>
+                        <label style={{marginLeft: '10px', marginTop:'10px'}}>{props.CustomerAmountLabel}</label>
                         <Input
                             fullWidth
                             startDecorator={getStartDecorator(props.currency2)}
@@ -144,7 +144,7 @@ export default function ReviewCreate({...props}) {
             <Paper elevation={3} sx={{ height:480, borderRadius: '20px', display: 'flex', flexDirection: 'column'}}>
                 <Typography variant="p" sx={{ padding:'5%', marginLeft: '15%'}}>CUSTOMER DETAILS</Typography>
 
-                <Typography variant="subtitle1" sx={{ mb: 2, ml:2 }}>Ranjit Kumar Sahoo</Typography>
+                <Typography variant="subtitle1" sx={{ mb: 2, ml:2 }}>{props.BusinessName}</Typography>
                 <Divider component="div" />
 
                 <TextField
