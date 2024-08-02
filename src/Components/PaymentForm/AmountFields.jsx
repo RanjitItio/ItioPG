@@ -3,7 +3,7 @@ import Divider from '@mui/joy/Divider';
 import Option from '@mui/joy/Option';
 import Select from '@mui/joy/Select';
 import React, { useState } from 'react';
-import { Box, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import IconButton from '@mui/material/IconButton';
 
@@ -126,7 +126,6 @@ export default function AmountFields({...props}) {
                     <Input
                         placeholder="0.00"
                         name='customerAmount'
-                        // onChange={handleFormChange}
                         value={''}
                         startDecorator={{ USD: '$', yen: '¥', INR: '₹', EUR: '€', GBP: '£' }[props.currency2]}
                         endDecorator={

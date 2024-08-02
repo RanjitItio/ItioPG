@@ -14,6 +14,8 @@ import AmountFields from './AmountFields';
 import Input from '@mui/joy/Input';
 import PreviewFooterSection from './PreviewFooterSection';
 import ReviewCreate from './ReviewCreate';
+import axiosInstance from '../Authentication/axios';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -56,10 +58,12 @@ const HtmlTooltip = styled(({ className, ...props }) => (
 export default function PaymentForm() {
     const initialAmountFieldData = {
         fixedAmountLable: '',
-        fixedAmount: 0.00,
+        fixedAmount: 0,
         customerAmtLabel: '',
-        customerAmount: 0.00,
-    }
+        customerAmount: 0,
+    };
+
+    const navigate = useNavigate();
 
     const [current, setCurrent]             = useState(0);     // Step position state
     const [fields, setFields]               = useState([{ type: '', label: '' }]); // Add new fields state
@@ -98,7 +102,7 @@ export default function PaymentForm() {
         } else if (current === 1) {
             if (fixedAmountField === false && CustomerAmountField === false) {
                 setStepErrorMessage('Please select one amount field')
-            }  else if (fixedAmountField && amountFieldsData.fixedAmount === 0.00) {
+            }  else if (fixedAmountField && amountFieldsData.fixedAmount === '') {
                 setStepErrorMessage('Please type fixed amount')
             } else if (fixedAmountField && CustomerAmountField && currency !== currency2) {
                 setStepErrorMessage('Both the currency should be same')
@@ -168,6 +172,52 @@ export default function PaymentForm() {
             [e.target.name]: e.target.value
         })
     };
+
+    
+    // Method to Create new Form for merchant
+    const handleCreateForm = ()=> {
+        if (firstStepData.title === '') {
+            setStepErrorMessage('Please type your form title')
+        } else if (fixedAmountField === false && CustomerAmountField === false) {
+            setStepErrorMessage('Please select one amount field')
+        }  else if (fixedAmountField && amountFieldsData.fixedAmount === '') {
+            setStepErrorMessage('Please type fixed amount')
+        } else if (fixedAmountField && CustomerAmountField && currency !== currency2) {
+            setStepErrorMessage('Both the currency should be same')
+        } else {
+            setStepErrorMessage('')
+
+            axiosInstance.post(`api/merchant/payment/button/`, {
+                buttonTitle:   firstStepData.title,
+                buttonLabel:   firstStepData.businessName ? firstStepData.businessName : 'Business Name',
+                buttonColor:   buttonColor,
+                buttonBGColor:       buttonColor,
+                businessName:        firstStepData.businessName,
+                fixedAmountLabel:    amountFieldsData.fixedAmountLable,
+                fixedAmount:         parseInt(amountFieldsData.fixedAmount),
+                customerAmountLabel: amountFieldsData.customerAmtLabel,
+                customerAmount:      parseInt(amountFieldsData.customerAmount),
+                customerEmailLabel:  customerDetailFieldValue.email,
+                customerPhoneLabel:  customerDetailFieldValue.phoneNo
+    
+            }).then((res)=> {
+                console.log(res)
+    
+                if (res.status === 200 && res.data.success === true && res.data.message === 'Button created successfully') {
+                    alert('Payment Button Created successfully')
+
+                    setTimeout(() => {
+                        navigate('/merchant/payment/forms/')
+                    }, 1000);
+                };
+    
+            }).catch((error)=> {
+                console.log(error)
+    
+            })
+        };
+    };
+
 
     return (
         <Container maxWidth="lg" style={{ marginTop: '20px' }}>
@@ -428,7 +478,7 @@ export default function PaymentForm() {
                                         <Button
                                             variant="contained"
                                             color="primary"
-                                            onClick={() => alert('Processing complete!')}
+                                            onClick={() => handleCreateForm()}
                                         >
                                             Create Form
                                         </Button>

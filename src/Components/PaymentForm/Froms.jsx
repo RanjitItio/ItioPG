@@ -8,7 +8,9 @@ import {
         TableRow, Paper, Link, Chip, 
         Typography, Grid
     } from '@mui/material';
-
+import { useState, useEffect } from 'react';
+import axiosInstance from '../Authentication/axios';
+import PaymentButtonCode from './ButtonCode';
 
 
 
@@ -23,8 +25,34 @@ const statuses = [
 // All Payment form pages
 export default function AllPaymentForms() {
     const navigate = useNavigate();
+    const [buttonData, updateButtonData] = useState([]);  // All payment button data
+    const [open, setOpen]         = useState(false);      // Open popup
+    const [buttonID, setButtonID] = useState('');   // Unique Button ID
+
+    // Method to open the popup
+    const handleOpen = (button_id) => {
+        setOpen(true);
+        setButtonID(button_id)
+    };
+
+    // Fetch all the user created payment Button when the page loads
+    useEffect(() => {
+        axiosInstance.get(`api/merchant/payment/button/`).then((res)=> {
+            // console.log(res)
+
+            if (res.status === 200 && res.data.success === true) {
+                updateButtonData(res.data.merchant_payment_buttons)
+            };
+
+        }).catch((error)=> {
+            console.log(error)
+
+        })
+    }, []);
+    
 
     return (
+        <>
         <Box sx={{ p: 3 }}>
             <AppBar position='static' color='transparent'>
                 <Tabs value={0} sx={{ flexGrow: 1, justifyContent: 'space-between' }}>
@@ -76,48 +104,50 @@ export default function AllPaymentForms() {
                     <Button variant="contained" color="primary" fullWidth>Search</Button>
                 </Grid>
 
-                {/* <Grid item xs={12} sm={6} md={4} lg={3}>
-                    <Button variant="outlined" fullWidth>Clear</Button>
-                </Grid> */}
             </Grid>
 
             <TableContainer component={Paper} sx={{ mt: 2 }}>
                 <Table>
                     <TableHead>
                         <TableRow>
-                        <TableCell>Title</TableCell>
-                        <TableCell>Total Sales</TableCell>
-                        <TableCell>Item Name</TableCell>
-                        <TableCell>Units Sold</TableCell>
-                        <TableCell>Created At</TableCell>
-                        <TableCell>Status</TableCell>
-                        <TableCell>Actions</TableCell>
+                            <TableCell>Title</TableCell>
+                            <TableCell>Total Sales</TableCell>
+                            <TableCell>Business Name</TableCell>
+                            <TableCell>Amount</TableCell>
+                            <TableCell>Created At</TableCell>
+                            <TableCell>Status</TableCell>
+                            <TableCell>Actions</TableCell>
                         </TableRow>
                     </TableHead>
 
                     <TableBody>
-                        <TableRow>
-                            <TableCell>
-                                <Link href="#">Church Inauguration</Link>
-                            </TableCell>
+                         {buttonData.map((button, index)=> (
+                        <TableRow key={index}>
+                            <>
+                            
+                                <TableCell>
+                                    <Link href="#">{button.button_title}</Link>
+                                </TableCell>
 
-                            <TableCell>₹ 0.00</TableCell>
+                                <TableCell></TableCell>
 
-                            <TableCell>Amount</TableCell>
+                                <TableCell>{button.businessName}</TableCell>
 
-                            <TableCell>0</TableCell>
+                                <TableCell>{button.fixedAmount + button.customerAmount}</TableCell>
 
-                            <TableCell>25 Jul 2024, 02:29:48 pm</TableCell>
+                                <TableCell>25 Jul 2024, 02:29:48 pm</TableCell>
 
-                            <TableCell>
-                                <Chip label="Active" color="primary" />
-                            </TableCell>
+                                <TableCell>
+                                    <Chip label="Active" color="primary" />
+                                </TableCell>
 
-                            <TableCell>
-                                <Link href="#">GET BUTTON CODE</Link>
-                            </TableCell>
+                                <TableCell>
+                                    <Button onClick={()=> {handleOpen(button.button_id)}}>GET BUTTON CODE</Button>
+                                </TableCell>
+                            </>
 
                         </TableRow>
+                         ))}
                     </TableBody>
 
                 </Table>
@@ -128,6 +158,13 @@ export default function AllPaymentForms() {
             </Typography>
 
         </Box>
+
+        <PaymentButtonCode 
+            open={open}
+            setOpen={setOpen}
+            buttonID={buttonID}
+        />
+        </>
     );
 }
 
