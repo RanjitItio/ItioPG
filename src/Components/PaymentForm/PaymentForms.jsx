@@ -84,8 +84,8 @@ export default function PaymentForm() {
     const [amountFieldsData, updateAmoutFieldsData] = useState(initialAmountFieldData);
 
     // Amount field step Currencies
-    const [currency, setCurrency] = useState('USD');  // Currency in second step
-    const [currency2, setCurrency2] = useState('USD');  // Currency in second step
+    const [currency, setCurrency] = useState('USD');  // Fixed amount currency
+    const [currency2, setCurrency2] = useState('USD');  // Customer decided amount currency
     
 
     // Forward to Next step
@@ -106,6 +106,8 @@ export default function PaymentForm() {
                 setStepErrorMessage('Please type fixed amount')
             } else if (fixedAmountField && CustomerAmountField && currency !== currency2) {
                 setStepErrorMessage('Both the currency should be same')
+            } else if (fixedAmountField && CustomerAmountField && amountFieldsData.fixedAmountLable === amountFieldsData.customerAmtLabel) {
+                setStepErrorMessage('Please provide different labels')
             } else {
                 setStepErrorMessage('')
                 setCurrent(current + 1);
@@ -137,12 +139,14 @@ export default function PaymentForm() {
         setFields(newFields);
     };
 
+
     // Method to capture the value of Customer detail step
     const handleCustomerDetailFieldValueChange = (e)=> {
         updateCustomerDetailFieldValue({...customerDetailFieldValue, 
             [e.target.name]: e.target.value
         })
     };
+
 
     // Button name text field change method
     const handleFirstStepFieldChange = (e)=> {
@@ -193,10 +197,17 @@ export default function PaymentForm() {
                 buttonColor:   buttonColor,
                 buttonBGColor:       buttonColor,
                 businessName:        firstStepData.businessName,
+
+                isFixedAmount:       fixedAmountField,
                 fixedAmountLabel:    amountFieldsData.fixedAmountLable,
                 fixedAmount:         parseInt(amountFieldsData.fixedAmount),
+                fixedAmtCurr:        currency,
+
+                isCustomerAmt:       CustomerAmountField,
                 customerAmountLabel: amountFieldsData.customerAmtLabel,
                 customerAmount:      parseInt(amountFieldsData.customerAmount),
+                customerAmtCurr:     currency2,
+
                 customerEmailLabel:  customerDetailFieldValue.email,
                 customerPhoneLabel:  customerDetailFieldValue.phoneNo
     

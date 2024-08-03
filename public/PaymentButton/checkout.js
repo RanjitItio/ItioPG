@@ -1,18 +1,19 @@
 
+
 let button_id = document.currentScript.dataset.payment_button_id
 
-
+const button = document.createElement('button');
 
 window.onload = async () => {
     try {
-        const response = await fetch(`https://python-uat.oyefin.com/api/merchant/payment/fetch/button/?id=${button_id}`);
+        const response = await fetch(`http://127.0.0.1:8000/api/merchant/payment/fetch/button/?id=${button_id}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
         const data = await response.json();
         // console.log(data.data); 
 
-        const button = document.createElement('button');
+        
 
         button.innerHTML = `
             <div style="display: flex; align-items: center; justify-content: center;">
@@ -37,10 +38,21 @@ window.onload = async () => {
         button.style.boxShadow       = '0 4px 6px rgba(0, 0, 0, 0.1)';
         button.style.border          = 'none';
 
+        button.addEventListener('click',  (event)=> {
+            event.preventDefault();
+            console.log('clicked')
+            window.location.href = `http://localhost:5173/merchant/pg/payment/form/amount/step/?payment_button=${button_id}`
+        });
+
         document.querySelector('form').appendChild(button);
 
     } catch (error) {
         console.error('There has been a problem with your fetch operation:', error);
     };
 };
+
+
+
+
+
 

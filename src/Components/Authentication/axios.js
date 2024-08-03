@@ -10,7 +10,7 @@ if (IS_DEVELOPMENT === 'True') {
    baseURL = 'http://127.0.0.1:8000/'
 } else {
     baseURL = 'https://python-uat.oyefin.com/'
-}
+};
 
 
 

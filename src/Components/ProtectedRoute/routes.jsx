@@ -30,6 +30,7 @@ import UpdateMerchantBankAccount from "../Bank/updateBank";
 import SandBoxProcessStepper from "../Steps/steps";
 import AllPaymentForms from "../PaymentForm/Froms";
 import PaymentForm from "../PaymentForm/PaymentForms";
+import PaymentFormAllSteps from "../PaymentForm/Checkout/Steps";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -80,6 +81,10 @@ const AuthRoutes = () => {
       {
         path: "/pg/developer/docs/",
         element: <DevDocs />,
+      },
+      {
+        path: "/merchant/pg/payment/form/step/",
+        element: <PaymentFormAllSteps />,
       },
       {
         path: "/merchant/bank/NA/",

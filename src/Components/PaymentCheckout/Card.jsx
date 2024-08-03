@@ -130,7 +130,8 @@ export default function CardPayment({...props}) {
                 cardExpiry: formValues.expiry,
                 cardCvv: formValues.secretCode,
                 cardHolderName: formValues.cardHolderName,
-                MerchantOrderId: props.merchantOrderID
+                // MerchantOrderId: props.merchantOrderID
+                MerchantTransactionId: props.merchatTransactionID
             }
 
             const encoded_base64 = btoa(JSON.stringify(PAYLOAD))

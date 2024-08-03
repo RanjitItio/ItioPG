@@ -28,13 +28,14 @@ if (IS_DEVELOPMENT === 'True') {
 export default function PaymentButtonCode({open, setOpen, buttonID}) {
   const handleClose = () => setOpen(false);
 
+  const CodeSnipet = `<form><script src="${CheckoutURL}" data-payment_button_id="${buttonID}"></script></form>`
+
   // Method to copy the html content
   const handleCopy = () => {
-    navigator.clipboard.writeText('<form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-key="your_key"></script></form>');
+    navigator.clipboard.writeText(CodeSnipet);
     alert('Code copied to clipboard');
   };
 
-  const CodeSnipet = `<form><script src="${CheckoutURL}" data-payment_button_id="${buttonID}"></script></form>`
 
 
   return (

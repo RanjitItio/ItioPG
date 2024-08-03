@@ -35,7 +35,8 @@ const PaymentCheckoutPage = () => {
 
     let merchant_public_key  = '';
     let transaction_amount   = '';
-    let merchant_order_id    = '';
+    // let merchant_order_id    = '';
+    let merchant_transaction_id    = '';
     let transaction_currency = '';
 
 
@@ -45,14 +46,16 @@ const PaymentCheckoutPage = () => {
 
       merchant_public_key  = tokenValue[0]
       transaction_amount   = tokenValue[1]
-      merchant_order_id    = tokenValue[2]
+      // merchant_order_id    = tokenValue[2]
+      merchant_transaction_id = tokenValue[2]
       transaction_currency = tokenValue[3]
     };
 
     const merchantTransactionAmount   = parseFloat(atob(transaction_amount))
     const merchantTransactionCurrency = JSON.parse(atob(transaction_currency))
-    const merchantOrderID             = JSON.parse(atob(merchant_order_id))
-
+    // const merchantOrderID             = JSON.parse(atob(merchant_order_id))
+    const merchatTransactionID        = JSON.parse(atob(merchant_transaction_id))
+    
 
     // Get the available acquirer for the merchant
     useEffect(() => {
@@ -155,7 +158,8 @@ const PaymentCheckoutPage = () => {
 
               <Collapse in={cardDetail} timeout='auto' unmountOnExit>
                 <CardPayment 
-                    merchantOrderID={merchantOrderID}
+                    merchatTransactionID={merchatTransactionID}
+                    // merchantOrderID={merchantOrderID}
                     merchantTransactionAmount={merchantTransactionAmount}
                     merchantTransactionCurrency={merchantTransactionCurrency}
                     disblePayButton={disblePayButton}

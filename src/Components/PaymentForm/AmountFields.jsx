@@ -108,6 +108,7 @@ export default function AmountFields({...props}) {
                     <Input
                         placeholder="Enter Field Label"
                         name='customerAmtLabel'
+                        value={props.amountFieldsData.customerAmtLabel}
                         onChange={handleFormChange}
                         sx={{
                         '&::before': {
