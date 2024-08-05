@@ -112,7 +112,12 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
             window.location.href = redirect_url
 
         }).catch((error)=> {
+            // console.log(error)
             console.log(error)
+
+            if (error.response.data.error.message === 'No Active Acquirer available, Please contact administration') {
+                alert('No acquirer asigned please contact administrator')
+            };
 
         })
 
@@ -161,6 +166,8 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
                             type="number"
                             fullWidth
                             required
+                            id='phoneno'
+                            name='phoneno'
                             onChange={handleStepValueChange}
                             value={formValue.phoneno}
                         />
