@@ -32,7 +32,9 @@ import AllPaymentForms from "../PaymentForm/Froms";
 import PaymentForm from "../PaymentForm/PaymentForms";
 import PaymentFormAllSteps from "../PaymentForm/Checkout/Steps";
 import 'bootstrap/dist/css/bootstrap.min.css';
+// import ForgetPassword from "../Authentication/ForgotPassword";
 
+const ForgetPassword = React.lazy(()=> import('../Authentication/ForgotPassword'))
 
 
 
@@ -101,6 +103,10 @@ const AuthRoutes = () => {
       {
         path: '/signin/',
         element: <Signin />,
+      },
+      {
+        path: '/forgot-password/',
+        element: <ForgetPassword />,
       },
       {
         path: "*",
@@ -174,6 +180,10 @@ const AuthRoutes = () => {
       {
         path: "/kyc/success/",
         element: <KYCSubmission />,
+      },
+      {
+        path: "/forgot-password/",
+        element: <ForgetPassword />,
       },
     ];
   
