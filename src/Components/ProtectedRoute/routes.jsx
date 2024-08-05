@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Suspense} from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { useAuth } from "./authProvider";
 import ProtectedRoute from './protectedRoutes';
@@ -106,7 +106,11 @@ const AuthRoutes = () => {
       },
       {
         path: '/forgot-password/',
-        element: <ForgetPassword />,
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+              <ForgetPassword />
+          </Suspense>
+        )
       },
       {
         path: "*",
@@ -183,7 +187,11 @@ const AuthRoutes = () => {
       },
       {
         path: "/forgot-password/",
-        element: <ForgetPassword />,
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+              <ForgetPassword />
+          </Suspense>
+        )
       },
     ];
   

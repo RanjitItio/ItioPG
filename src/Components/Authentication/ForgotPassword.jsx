@@ -160,11 +160,6 @@ const ForgetPassword = () => {
               {successMessage && <p className="text-success">{successMessage}</p>}
 
               <Grid container justifyContent="space-between">
-                <Grid item>
-                  <Link href="#" variant="body2">
-                    Forget password
-                  </Link>
-                </Grid>
 
                 <Grid item>
                   <Link href="#" variant="body2">
