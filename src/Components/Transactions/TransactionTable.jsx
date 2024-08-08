@@ -219,7 +219,7 @@ if (emptyData) {
         <SandBoxTransactionTable businessSandboxTransactionData={businessSandboxTransactionData} />}
         
         
-        {/* <Box p={2} display="flex" justifyContent="space-between" alignItems="center">
+        <Box p={2} display="flex" justifyContent="space-between" alignItems="center">
             <div className="d-flex justify-content-start">
                 <p>
                     <b><span className='fs-3'>PAYMENTS</span></b> <br />
@@ -231,7 +231,7 @@ if (emptyData) {
         <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '0%'}}>
             <Lottie animationData={animationData} loop={true} style={{width:'200px', height: '200px'}} />
         </Box>
-        <p style={{display:'flex', justifyContent: 'center'}}>Nothing to show</p> */}
+        <p style={{display:'flex', justifyContent: 'center'}}>Nothing to show</p>
 
         </>
     )

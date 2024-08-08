@@ -4,6 +4,7 @@ import {TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Box} f
 
 
 
+
 export default function ProductionTransactionTable({businessTransactionData}) {
     const statusMap = {
         PAYMENT_INITIATED: 'PAYMENT INITIATED',
@@ -42,6 +43,7 @@ export default function ProductionTransactionTable({businessTransactionData}) {
 
 
     return (
+        <>
         <TableContainer style={{ overflowX: 'auto', maxHeight: '400px', overflowY: 'auto'}}>
             <Table stickyHeader>
                 <TableHead>
@@ -99,5 +101,8 @@ export default function ProductionTransactionTable({businessTransactionData}) {
                 </TableBody>
             </Table>
         </TableContainer>
+
+        </>
+        
     );
 };

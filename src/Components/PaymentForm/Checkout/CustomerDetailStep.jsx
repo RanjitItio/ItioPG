@@ -117,6 +117,8 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
 
             if (error.response.data.error.message === 'No Active Acquirer available, Please contact administration') {
                 alert('No acquirer asigned please contact administrator')
+            } else if (error.response.data.error.message === 'Invalid Currency: Only USD Accepted') {
+                alert('Invalid Currency Only USD accepted, Sorry for the Inconvinience')
             };
 
         })
