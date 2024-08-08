@@ -90,6 +90,7 @@ export default function PaymentFormAmountStep({current, steps, setCurrent, amoun
                             <label htmlFor="customerDecidedAmount">{amountDetails.customerAmountLabel}</label>
                             <TextField 
                                 id='customerDecidedAmount'
+                                name='customerAmt'
                                 margin="dense"
                                 label={amountDetails.customerAmountLabel}
                                 type="number"
