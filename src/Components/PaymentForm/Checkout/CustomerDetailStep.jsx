@@ -119,7 +119,9 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
                 alert('No acquirer asigned please contact administrator')
             } else if (error.response.data.error.message === 'Invalid Currency: Only USD Accepted') {
                 alert('Invalid Currency Only USD accepted, Sorry for the Inconvinience')
-            };
+            } else if (error.response.data.error.message === 'Amount should be greater than 0') {
+                alert('Amount should be greater than Zero')
+            }
 
         })
 
