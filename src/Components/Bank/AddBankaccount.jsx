@@ -105,7 +105,7 @@ export default function AddMerchantBankAccount() {
     }, []);
 
 // console.log(formData.bank_doc)
-
+    // Create Bank account
     const handleFormSubmit = ()=> {
          if (formData.acc_holder_name === '') {
             setErrorMessage('Please type Account holder name')
@@ -161,7 +161,10 @@ export default function AddMerchantBankAccount() {
 
           }).catch((error)=> {
             console.log(error)
-
+            
+            if(error.response.data.msg === 'Only Accessible by merchant') {
+                setErrorMessage('Only Merchants can add bank account')
+            };
           })
          }
     };

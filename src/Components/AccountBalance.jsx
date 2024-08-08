@@ -4,6 +4,10 @@ import CreditCardIcon from '@mui/icons-material/CreditCard';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import Box from '@mui/material/Box';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+import EuroIcon from '@mui/icons-material/Euro';
+import { useEffect } from 'react';
 
 
 
@@ -20,6 +24,11 @@ export default function AccountBalance() {
       setAnchorEl(null);
    };
 
+   // Fetch Account balance of the user when the page loads
+   useEffect(() => {
+       
+   }, []);
+   
 
 
    return (
@@ -35,9 +44,9 @@ export default function AccountBalance() {
                      aria-controls="simple-menu"
                      aria-haspopup="true"
                      onClick={handleClick}
-                     endIcon={<CreditCardIcon style={{ color: "red" }} />}
+                     endIcon={<AttachMoneyIcon style={{ color: "red" }} />}
                   >
-                  ****7189
+                    USD
                   </Button>
 
                   <Menu
@@ -48,16 +57,20 @@ export default function AccountBalance() {
                      onClose={handleClose}
                   >
                      <MenuItem onClick={handleClose}>
-                        <CreditCardIcon style={{ color: "red" }} />
-                        ****9876
+                        <AttachMoneyIcon style={{ color: "red" }} />
+                           USD
+                     </MenuItem>
+                     <MenuItem onClick={handleClose}>
+                        <CurrencyRupeeIcon style={{ color: "red" }} />
+                           INR
+                     </MenuItem>
+                     <MenuItem onClick={handleClose}>
+                        <EuroIcon style={{ color: "red" }} />
+                           EUR
                      </MenuItem>
                      <MenuItem onClick={handleClose}>
                         <CreditCardIcon style={{ color: "red" }} />
-                        ****9876
-                     </MenuItem>
-                     <MenuItem onClick={handleClose}>
-                        <CreditCardIcon style={{ color: "red" }} />
-                        ****9876
+                           GBP
                      </MenuItem>
                   </Menu>
 
@@ -96,7 +109,7 @@ export default function AccountBalance() {
                      flex: 1, 
                   }}
                >
-                  <b>Receive</b>
+                  <b>Raise Refund</b>
                </Button>
 
          </Box>

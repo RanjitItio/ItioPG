@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Collapse, Box } from '@mui/material';
 import TopBar from './TopBar';
 import AllPaymentPage from './AllPayment';
 import UPIQRCOde from './UPIQR';
 import CardPayment from './Card';
 import axiosInstance from '../Authentication/axios';
-import { useEffect } from 'react';
 import CheckoutErrorPopup from './Error';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Stack from '@mui/material/Stack';
 import Lottie from 'lottie-react';
 import animationData from '../Animations/Wallet.json';
+
+
 
 
 

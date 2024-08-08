@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import 'antd/dist/antd.js'
 import { Layout, Menu, Affix, Typography, Button, Drawer } from 'antd';
 import { MenuOutlined, CodeOutlined, FileTextOutlined, SyncOutlined } from '@ant-design/icons';
@@ -6,8 +6,8 @@ import PayAPIContent from './PayAPIContent';
 import { useState, useEffect } from 'react';
 
 
-const { Header, Content, Sider } = Layout;
-const { Title, Paragraph } = Typography;
+const { Sider } = Layout;
+const { Title } = Typography;
 
 
 

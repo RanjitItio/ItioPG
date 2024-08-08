@@ -200,7 +200,8 @@ export default function AddBusinesStep({...props}) {
               setError('URL already exists');
 
             } else if (error.response.data.msg === 'Only merchant allowed') {
-                setError('Only Merchant allowed');
+                setError('Only Merchant can create Business');
+
             } else if (error.response.data.msg === 'Account not activated yet please contact Administration') {
                 setError('Account not active, to perform the action');
             };

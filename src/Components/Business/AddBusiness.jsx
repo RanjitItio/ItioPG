@@ -202,7 +202,9 @@ export default function AddNewBusines() {
             } else if (error.response.data.msg === 'This URl has already been taken') {
               setError('URL already exists');
 
-            }
+            } else if (error.response.data.msg === 'Only merchant allowed') {
+                setError('Only merchants can create Business')
+            };
 
           });
         }

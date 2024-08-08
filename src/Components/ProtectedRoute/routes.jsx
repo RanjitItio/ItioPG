@@ -15,11 +15,11 @@ import KYCSubmission from "../Authentication/KycSubmit";
 import Signout from "../Authentication/Signout";
 import AddNewBusines from "../Business/AddBusiness";
 import UpdateMerchant from "../Business/UpdateBusiness";
-import PaymentCheckoutPage from "../PaymentCheckout/checkout";
+// import PaymentCheckoutPage from "../PaymentCheckout/checkout";
 import TestPaymentCheckoutPage from "../PaymentTestCheckout/checkout";
-import MasterCardOTPComponent from "../Mastercard/otp";
-import PaymentSuccessPage from "../PaymentStatus/Success";
-import PaymentFailedPage from "../PaymentStatus/Failed";
+// import MasterCardOTPComponent from "../Mastercard/otp";
+// import PaymentSuccessPage from "../PaymentStatus/Success";
+// import PaymentFailedPage from "../PaymentStatus/Failed";
 import MastercardPaymentStatus from "../PaymentCheckout/MCPaymentStatus";
 import DeveloperTools from "../Developer/DevTools";
 import APIKeys from "../Developer/APIKeys";
@@ -34,9 +34,12 @@ import PaymentFormAllSteps from "../PaymentForm/Checkout/Steps";
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import ForgetPassword from "../Authentication/ForgotPassword";
 
+
 const ForgetPassword = React.lazy(()=> import('../Authentication/ForgotPassword'))
-
-
+const PaymentCheckoutPage = React.lazy(()=> import('../PaymentCheckout/checkout'))
+const PaymentSuccessPage = React.lazy(()=> import('../PaymentStatus/Success'))
+const PaymentFailedPage = React.lazy(()=> import('../PaymentStatus/Failed'))
+const MasterCardOTPComponent = React.lazy(()=> import('../Mastercard/otp'))
 
 
 
@@ -44,167 +47,182 @@ const ForgetPassword = React.lazy(()=> import('../Authentication/ForgotPassword'
 // Authentication Route
 const AuthRoutes = () => {
 
-
-    const { token } = useAuth();
-    
-    const routesForPublic = [
-      {
-        path: "/kyc/",
-        element: <KYCForm />,
-      },
-      {
-        path: "/kyc/success/",
-        element: <KYCSubmission />,
-      },
-      {
-        path: "/merchant/payment/checkout/",
-        element: <PaymentCheckoutPage />,
-      },
-      {
-        path: "/merchant/payment/sb/checkout/",
-        element: <TestPaymentCheckoutPage />,
-      },
-      {
-        path: "/merchant/payment/mastercard/otp/",
-        element: <MasterCardOTPComponent />,
-      },
-      {
-        path: "/merchant/payment/success/",
-        element: <PaymentSuccessPage />,
-      },
-      {
-        path: "/merchant/payment/fail/",
-        element: <PaymentFailedPage />,
-      },
-      {
-        path: "/mastercard/payment/status/",
-        element: <MastercardPaymentStatus />,
-      },
-      {
-        path: "/pg/developer/docs/",
-        element: <DevDocs />,
-      },
-      {
-        path: "/merchant/pg/payment/form/step/",
-        element: <PaymentFormAllSteps />,
-      },
-      {
-        path: "/merchant/bank/NA/",
-        element: <div>Nothing to show</div>,
-      },
-    ];
+  const { token } = useAuth();
   
+  const routesForPublic = [
+    {
+      path: "/kyc/",
+      element: <KYCForm />,
+    },
+    {
+      path: "/kyc/success/",
+      element: <KYCSubmission />,
+    },
+    {
+      path: "/merchant/payment/checkout/",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+            <PaymentCheckoutPage />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/merchant/payment/sb/checkout/",
+      element: <TestPaymentCheckoutPage />,
+    },
+    {
+      path: "/merchant/payment/mastercard/otp/",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+            <MasterCardOTPComponent />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/merchant/payment/success/",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <PaymentSuccessPage />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/merchant/payment/fail/",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+            <PaymentFailedPage />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/mastercard/payment/status/",
+      element: <MastercardPaymentStatus />,
+    },
+    {
+      path: "/pg/developer/docs/",
+      element: <DevDocs />,
+    },
+    {
+      path: "/merchant/pg/payment/form/step/",
+      element: <PaymentFormAllSteps />,
+    },
+    {
+      path: "/merchant/bank/NA/",
+      element: <div>Nothing to show</div>,
+    },
+  ];
 
-    const routesForAuthenticatedOnly = [
-      {
-        path: '/signup/',
-        element: <Signup />,
-      },
-      {
-        path: '/signin/',
-        element: <Signin />,
-      },
-      {
-        path: '/forgot-password/',
-        element: (
-          <Suspense fallback={<div>Loading...</div>}>
-              <ForgetPassword />
-          </Suspense>
-        )
-      },
-      {
-        path: "*",
-        element: <ProtectedRoute />, 
-        children: [
-          {
-            path: "*",
-            element: (
-        <>
-                <Navbar />
-                <Routes>
 
-                  <Route exact path='/merchant/add/businesses/' element={<AddNewBusines />}></Route>
-                  <Route exact path='/merchant/update/businesses/' element={<UpdateMerchant />}></Route>
-                  <Route exact path='/merchant/developer/tools/' element={<DeveloperTools />}></Route>
-                  <Route exact path='/merchant/developer/api/keys/' element={<APIKeys />}></Route>
+  const routesForAuthenticatedOnly = [
+    {
+      path: '/signup/',
+      element: <Signup />,
+    },
+    {
+      path: '/signin/',
+      element: <Signin />,
+    },
+    {
+      path: '/forgot-password/',
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+            <ForgetPassword />
+        </Suspense>
+      )
+    },
+    {
+      path: "*",
+      element: <ProtectedRoute />, 
+      children: [
+        {
+          path: "*",
+          element: (
+      <>
+              <Navbar />
+              <Routes>
 
-                  {/* Bank Account */}
-                  <Route exact path='/add/merchant/bank/account/' element={<AddMerchantBankAccount />}></Route>
-                  <Route exact path='/update/merchant/bank/accounts/' element={<UpdateMerchantBankAccount />}></Route>
+                <Route exact path='/merchant/add/businesses/' element={<AddNewBusines />}></Route>
+                <Route exact path='/merchant/update/businesses/' element={<UpdateMerchant />}></Route>
+                <Route exact path='/merchant/developer/tools/' element={<DeveloperTools />}></Route>
+                <Route exact path='/merchant/developer/api/keys/' element={<APIKeys />}></Route>
 
-                  {/* SandBox Steps */}
-                  <Route exact path='/merchant/sandbox/steps/' element={<SandBoxProcessStepper />}></Route>
+                {/* Bank Account */}
+                <Route exact path='/add/merchant/bank/account/' element={<AddMerchantBankAccount />}></Route>
+                <Route exact path='/update/merchant/bank/accounts/' element={<UpdateMerchantBankAccount />}></Route>
 
-                  {/* SandBox Steps */}
-                  <Route exact path='/merchant/payment/forms/' element={<AllPaymentForms />}></Route>
-                  <Route exact path='/merchant/payment/form/steps/' element={<PaymentForm />}></Route>
+                {/* SandBox Steps */}
+                <Route exact path='/merchant/sandbox/steps/' element={<SandBoxProcessStepper />}></Route>
 
-                  
-                  <Route exact path='*' element={
-                    <>
+                {/* SandBox Steps */}
+                <Route exact path='/merchant/payment/forms/' element={<AllPaymentForms />}></Route>
+                <Route exact path='/merchant/payment/form/steps/' element={<PaymentForm />}></Route>
 
-                      {/* With Navbar and Welcome section   */}
-                      <WelcomeSection />
+                
+                <Route exact path='*' element={
+                  <>
 
-                      <Routes>
-                          <Route exact path='/' element={<GatewayDashboard />}></Route>
-                          <Route exact path='/merchant/business/transactions/' element={<BusinessTransactionTable />}></Route>
-                          <Route exact path='/merchant/businesses/' element={<AllBusinessTable />}></Route>
-                          <Route exact path='/merchant/bank/accounts/' element={<MerchantBankAccounts />}></Route>
-                      </Routes>
-                      
-                      </>
-                  }></Route>
-                </Routes>
-                </>
-            ),
-          },
-        ],
-      },
-    ];
+                    {/* With Navbar and Welcome section   */}
+                    <WelcomeSection />
+
+                    <Routes>
+                        <Route exact path='/' element={<GatewayDashboard />}></Route>
+                        <Route exact path='/merchant/business/transactions/' element={<BusinessTransactionTable />}></Route>
+                        <Route exact path='/merchant/businesses/' element={<AllBusinessTable />}></Route>
+                        <Route exact path='/merchant/bank/accounts/' element={<MerchantBankAccounts />}></Route>
+                    </Routes>
+                    
+                    </>
+                }></Route>
+              </Routes>
+              </>
+          ),
+        },
+      ],
+    },
+  ];
+
+
+  const routesForNotAuthenticatedOnly = [
+    {
+      path: "/signup/",
+      element: <Signup />,
+    }, 
+    {
+      path: "/signin/",
+      element: <Signin />,
+    },
+    {
+      path: "/signout/",
+      element: <Signout />,
+    },
+    {
+      path: "/kyc/",
+      element: <KYCForm />,
+    },
+    {
+      path: "/kyc/success/",
+      element: <KYCSubmission />,
+    },
+    {
+      path: "/forgot-password/",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+            <ForgetPassword />
+        </Suspense>
+      )
+    },
+  ];
+
   
+  const router = createBrowserRouter([
+    ...routesForPublic,
+    ...(!token ? routesForNotAuthenticatedOnly : []),
+    ...routesForAuthenticatedOnly,
+  ]);
+  
+  return <RouterProvider router={router} />;
 
-    const routesForNotAuthenticatedOnly = [
-      {
-        path: "/signup/",
-        element: <Signup />,
-      }, 
-      {
-        path: "/signin/",
-        element: <Signin />,
-      },
-      {
-        path: "/signout/",
-        element: <Signout />,
-      },
-      {
-        path: "/kyc/",
-        element: <KYCForm />,
-      },
-      {
-        path: "/kyc/success/",
-        element: <KYCSubmission />,
-      },
-      {
-        path: "/forgot-password/",
-        element: (
-          <Suspense fallback={<div>Loading...</div>}>
-              <ForgetPassword />
-          </Suspense>
-        )
-      },
-    ];
-  
-    
-    const router = createBrowserRouter([
-      ...routesForPublic,
-      ...(!token ? routesForNotAuthenticatedOnly : []),
-      ...routesForAuthenticatedOnly,
-    ]);
-    
-    return <RouterProvider router={router} />;
-  
-  };
+};
 
 
 

@@ -11,7 +11,7 @@ import MerchantTotalRefunds from '../DashboradComponents/TotalRefunds';
 
 
 
-
+// All the component of Dashboard/Home Page section
 export default function GatewayDashboard() {
     
     return (
