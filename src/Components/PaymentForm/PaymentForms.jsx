@@ -84,8 +84,8 @@ export default function PaymentForm() {
     const [amountFieldsData, updateAmoutFieldsData] = useState(initialAmountFieldData);
 
     // Amount field step Currencies
-    const [currency, setCurrency] = useState('USD');  // Fixed amount currency
-    const [currency2, setCurrency2] = useState('USD');  // Customer decided amount currency
+    const [currency, setCurrency] = useState(null);  // Fixed amount currency
+    const [currency2, setCurrency2] = useState(null);  // Customer decided amount currency
     
 
     // Forward to Next step
@@ -192,9 +192,9 @@ export default function PaymentForm() {
             setStepErrorMessage('')
 
             axiosInstance.post(`api/merchant/payment/button/`, {
-                buttonTitle:   firstStepData.title,
-                buttonLabel:   firstStepData.businessName ? firstStepData.businessName : 'Business Name',
-                buttonColor:   buttonColor,
+                buttonTitle:         firstStepData.title,
+                buttonLabel:         buttonText,
+                buttonColor:         buttonColor,
                 buttonBGColor:       buttonColor,
                 businessName:        firstStepData.businessName,
 

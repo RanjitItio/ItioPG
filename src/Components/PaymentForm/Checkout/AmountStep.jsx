@@ -97,7 +97,7 @@ export default function PaymentFormAmountStep({current, steps, setCurrent, amoun
                                 fullWidth
                                 required
                                 onChange={handleStepValueChange}
-                                // value={formValue.customerAmt}
+                                value={formValue.customerAmt}
                                 InputProps={{
                                     startAdornment:(
                                         <InputAdornment position="start">

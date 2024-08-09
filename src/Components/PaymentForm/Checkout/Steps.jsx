@@ -20,7 +20,6 @@ export default function PaymentFormAllSteps () {
      const queryParams = new URLSearchParams(location.search);
      const button_id = queryParams.get('payment_button')
 
-
     // Call API while the page loads to get the merchant selected amount fields and label
     useEffect(() => {
         axiosInstance.get(`api/merchant/payment/form/fields/?form_id=${button_id}`).then((res)=> {

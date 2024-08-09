@@ -45,8 +45,10 @@ const getStartDecorator = (currency) => {
 export default function PaymentFormCustomerDetailStep({current, steps, amountDetails, handleStepValueChange, formValue}) {
     const [open, setOpen] = useState(true);  // State to keep open the Dialoguebox
     const [merchantKeys, updateMerchantKeys] = useState([]);
+    const [error, setError] = useState(''); // Error Message
 
-    const totalAmount = amountDetails.fixedAmount + amountDetails.customerAmount 
+    const totalAmount = amountDetails.fixedAmount + formValue.customerAmt
+
 
     // Close the step
     const handleClose = () => {
@@ -67,64 +69,72 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
         })
     }, []);
 
-    // Merchant 
+    // Redirect to checkout page
     const handlePaymentCheckout = ()=> {
-        const MAINPAYLOAD = {
-            // Public Key
-            "merchantPublicKey": merchantKeys.public_key,     // Local Public Key
-            // Secret Key
-            "merchantSecretKey": merchantKeys.secret_key,        // Local Secret Key
-            // Merchant order Id
-            "merchantOrderId": amountDetails.button_id,     
+        if (formValue.email === '') {
+            setError('Please type your Email ID')
+        } else if (formValue.phoneno === '') {
+            setError('Please provide your Phone Number')
+        } else {
+            setError('')
 
-            'currency': amountDetails.fixedAmountCurrency,
-            
-            "amount": totalAmount * 100,   // Multiplied by 100 
-
-            // "redirectUrl": "https://mycolor.space",
-
-            // "callbackUrl": "https://webhook.site/226a3886-b0b5-4f94-91a2-a25864f0b491", 
-
-            "mobileNumber": "9999999999",
-
-            "paymentInstrument": {
-                "type": "PAY_PAGE"   
-        }
-    };
-
-    const index = '1'
-    const ENDPOINT     = "/api/pg/prod/v1/pay/"
-    const SECRET_KEY   = merchantKeys.secret_key
-    const base64String = btoa(JSON.stringify(MAINPAYLOAD))
-    const mainString   = base64String + ENDPOINT + SECRET_KEY
-    const sha256Val    = calculateSha256(mainString)
-    const checkSum     = sha256Val + '****' + index
-
-        axiosInstance.post(`${paymentURL}/api/pg/prod/v1/pay/?form_id=y1w`, {
-            request: base64String
-        }, {
-            headers: {
-                'X-AUTH': checkSum
+            // Call API for payment
+            const MAINPAYLOAD = {
+                // Public Key
+                "merchantPublicKey": merchantKeys.public_key,  // Local Public Key
+                // Secret Key
+                "merchantSecretKey": merchantKeys.secret_key,   // Local Secret Key
+                // Merchant order Id
+                "merchantOrderId": amountDetails.button_id,     
+    
+                'currency': amountDetails.fixedAmountCurrency ? amountDetails.fixedAmountCurrency : amountDetails.customerAmountCurrency,
+                
+                "amount": totalAmount * 100,   // Multiplied by 100
+    
+                // "redirectUrl": "https://mycolor.space",
+    
+                // "callbackUrl": "https://webhook.site/226a3886-b0b5-4f94-91a2-a25864f0b491", 
+    
+                "mobileNumber": "9999999999",
+    
+                "paymentInstrument": {
+                    "type": "PAY_PAGE"   
             }
-        }).then((res)=> {
-            const redirect_url = res.data.data.instrumentResponse.redirectInfo.url
-              // Redirect to the API response url
-            window.location.href = redirect_url
-
-        }).catch((error)=> {
-            // console.log(error)
-            console.log(error)
-
-            if (error.response.data.error.message === 'No Active Acquirer available, Please contact administration') {
-                alert('No acquirer asigned please contact administrator')
-            } else if (error.response.data.error.message === 'Invalid Currency: Only USD Accepted') {
-                alert('Invalid Currency Only USD accepted, Sorry for the Inconvinience')
-            } else if (error.response.data.error.message === 'Amount should be greater than 0') {
-                alert('Amount should be greater than Zero')
-            }
-
-        })
-
+        };
+    
+        const index = '1'
+        const ENDPOINT     = "/api/pg/prod/v1/pay/"
+        const SECRET_KEY   = merchantKeys.secret_key
+        const base64String = btoa(JSON.stringify(MAINPAYLOAD))
+        const mainString   = base64String + ENDPOINT + SECRET_KEY
+        const sha256Val    = calculateSha256(mainString)
+        const checkSum     = sha256Val + '****' + index
+    
+            axiosInstance.post(`${paymentURL}/api/pg/prod/v1/pay/?form_id=y1w`, {
+                request: base64String
+            }, {
+                headers: {
+                    'X-AUTH': checkSum
+                }
+            }).then((res)=> {
+                const redirect_url = res.data.data.instrumentResponse.redirectInfo.url
+                  // Redirect to the API response url
+                window.location.href = redirect_url
+    
+            }).catch((error)=> {
+                // console.log(error)
+                console.log(error)
+    
+                if (error.response.data.error.message === 'No Active Acquirer available, Please contact administration') {
+                    alert('No acquirer asigned please contact administrator')
+                } else if (error.response.data.error.message === 'Invalid Currency: Only USD Accepted') {
+                    alert('Invalid Currency Only USD accepted, Sorry for the Inconvinience')
+                } else if (error.response.data.error.message === 'Amount should be greater than 0') {
+                    alert('Amount should be greater than Zero')
+                }
+    
+            })
+        };
     };
 
     
@@ -176,10 +186,11 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
                             value={formValue.phoneno}
                         />
                 </Box>
+                {<Typography variant='p' sx={{color:'red'}}>{error && error}</Typography>}
 
                 <Box display="flex" justifyContent="space-between" alignItems="center" mt={2}>
-                    <Typography variant="h6">{getStartDecorator(amountDetails.fixedAmountCurrency)} 
-                        {amountDetails.fixedAmount + amountDetails.customerAmount}
+                    <Typography variant="h6">{getStartDecorator(amountDetails.fixedAmountCurrency ? amountDetails.fixedAmountCurrency : amountDetails.customerAmountCurrency)} 
+                        {parseInt(amountDetails.fixedAmount) + parseInt(formValue.customerAmt)}
                     </Typography>
 
                     {current === steps.length - 1 && (
