@@ -11,6 +11,14 @@ export default function TransactionLineChart({...props}) {
   const datetimes   = rows.map(transactions => transactions.createdAt)
   const dates       = datetimes.map((date=> date.split('T')[0].split('-')[2]))
 
+  // Current month
+  const now =  new Date();
+  const month = now.getMonth();
+
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+  const currentMonthName = monthNames[month]
+
 
   const dataset = dates.map((date, index) => ({
     date: date,
@@ -26,7 +34,7 @@ export default function TransactionLineChart({...props}) {
         dataKey: 'date',
         min: 1,
         max: 31,
-        label: 'July Month'
+        label: `${currentMonthName} Month`
       }]}
       series={[
         {

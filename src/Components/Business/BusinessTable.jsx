@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Button,
-  TextField, MenuItem, Select, InputLabel, FormControl, Collapse, Box, Grid, useMediaQuery
+  Box, useMediaQuery
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
@@ -165,7 +165,7 @@ if (emptyData) {
 
   return (
     <Box sx={{zIndex: 0, marginTop: -8, padding: 4}}>
-    <Card>
+    <Card sx={{borderRadius:'20px', boxShadow:'-28px -8px 9px 0px rgba(0,0,0,0.75)'}}>
       <Box p={2} display="flex" justifyContent="space-between" alignItems="center">
         {/* <TextField placeholder="Search for transaction here" variant="outlined" size="small" /> */}
         <div className="d-flex justify-content-start">

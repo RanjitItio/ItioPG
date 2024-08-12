@@ -7,9 +7,9 @@ import Signin from '../Authentication/Signin';
 import Signup from "../Authentication/Signup";
 import Navbar from '../Navbar/navBar';
 import WelcomeSection from '../HomePage/WelcomeSection';
-import GatewayDashboard from '../HomePage/Dashboard';
-import BusinessTransactionTable from '../Transactions/TransactionTable';
-import AllBusinessTable from '../Business/BusinessTable';
+// import GatewayDashboard from '../HomePage/Dashboard';
+// import BusinessTransactionTable from '../Transactions/TransactionTable';
+// import AllBusinessTable from '../Business/BusinessTable';
 import KYCForm from "../Authentication/KycForm";
 import KYCSubmission from "../Authentication/KycSubmit";
 import Signout from "../Authentication/Signout";
@@ -24,7 +24,7 @@ import MastercardPaymentStatus from "../PaymentCheckout/MCPaymentStatus";
 import DeveloperTools from "../Developer/DevTools";
 import APIKeys from "../Developer/APIKeys";
 import DevDocs from "../Developer/Devdocs";
-import MerchantBankAccounts from "../Bank/BankAccounts";
+// import MerchantBankAccounts from "../Bank/BankAccounts";
 import AddMerchantBankAccount from "../Bank/AddBankaccount";
 import UpdateMerchantBankAccount from "../Bank/updateBank";
 import SandBoxProcessStepper from "../Steps/steps";
@@ -35,12 +35,18 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // import ForgetPassword from "../Authentication/ForgotPassword";
 
 
+
+const GatewayDashboard = React.lazy(()=> import('../HomePage/Dashboard'))
 const ForgetPassword = React.lazy(()=> import('../Authentication/ForgotPassword'))
 const PaymentCheckoutPage = React.lazy(()=> import('../PaymentCheckout/checkout'))
 const PaymentSuccessPage = React.lazy(()=> import('../PaymentStatus/Success'))
 const PaymentFailedPage = React.lazy(()=> import('../PaymentStatus/Failed'))
 const MasterCardOTPComponent = React.lazy(()=> import('../Mastercard/otp'))
-
+const MerchantWithdrawalRequests = React.lazy(()=> import('../Withdrawal/AllWithdrawals'))
+const BusinessTransactionTable = React.lazy(()=> import('../Transactions/TransactionTable'))
+const AllBusinessTable = React.lazy(()=> import('../Business/BusinessTable'))
+const MerchantBankAccounts = React.lazy(()=> import('../Bank/BankAccounts'))
+import CircularProgress from '@mui/joy/CircularProgress';
 
 
 
@@ -164,12 +170,15 @@ const AuthRoutes = () => {
                     {/* With Navbar and Welcome section   */}
                     <WelcomeSection />
 
+                    <Suspense fallback={<CircularProgress sx={{display:'flex', justifyContent:'center', alignItems:'center'}}/>}>
                     <Routes>
                         <Route exact path='/' element={<GatewayDashboard />}></Route>
                         <Route exact path='/merchant/business/transactions/' element={<BusinessTransactionTable />}></Route>
                         <Route exact path='/merchant/businesses/' element={<AllBusinessTable />}></Route>
                         <Route exact path='/merchant/bank/accounts/' element={<MerchantBankAccounts />}></Route>
+                        <Route exact path='/merchant/withdrawal/requests/' element={<MerchantWithdrawalRequests />}></Route>
                     </Routes>
+                    </Suspense>
                     
                     </>
                 }></Route>

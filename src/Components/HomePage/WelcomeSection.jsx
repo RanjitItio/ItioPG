@@ -176,6 +176,17 @@ export default function WelcomeSection() {
                 >
                     Bank Accounts
                 </Button>
+
+                <Button 
+                    onClick={()=> {handleButtonClicked('/merchant/withdrawal/requests/', 'Withdrawals'); }}
+                    variant="text" 
+                    sx={{ 
+                    color: "white", 
+                    mr: 2 
+                    }}
+                >
+                    Withdrawals
+                </Button>
             </Box>
 
             <Divider sx={{width: "18rem", backgroundColor: "grey", height: "1px", mt: 1, ml: "3.5rem"}} className="green-line" />

@@ -42,6 +42,7 @@ export default function ProductionTransactionTable({businessTransactionData}) {
     };
 
 
+
     return (
         <>
         <TableContainer style={{ overflowX: 'auto', maxHeight: '400px', overflowY: 'auto'}}>
@@ -63,7 +64,7 @@ export default function ProductionTransactionTable({businessTransactionData}) {
                     <TableRow key={index}>
 
                         {/* Sl No. Column */}
-                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>{transaction.id}</TableCell>
                         {/* <TableCell>{transaction.id ? transaction.id : '-'}</TableCell> */}
 
                         {/* Date Column */}

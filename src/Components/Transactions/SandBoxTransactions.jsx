@@ -66,7 +66,7 @@ export default function SandBoxTransactionTable({businessSandboxTransactionData}
                         <TableCell>{transaction.id ? transaction.id : '-'}</TableCell>
 
                         {/* Date Column */}
-                        <TableCell>{formatDate(transaction.createdAt.split('T')[0])} &ensp; {transaction.createdAt.split('T')[1]} </TableCell>
+                        <TableCell>{formatDate(transaction.createdAt ? transaction.createdAt.split('T')[0] : new Date())} &ensp; {transaction.createdAt ? transaction.createdAt.split('T')[1] : ''} </TableCell>
 
                         {/* Merchant Order ID */}
                         <TableCell>

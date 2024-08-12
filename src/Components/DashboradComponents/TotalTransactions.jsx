@@ -12,16 +12,15 @@ import axiosInstance from '../Authentication/axios';
 export default function TotalTransactions() {
 
    const [allMerchantTransactions, updateAllMerchantTransactions] = useState([]);
-   const [duration, setDuration] = useState('');
+   const [currency, setCurrency] = useState('');
 
    // Current month
    const now =  new Date();
    const month = now.getMonth();
-
    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
    const currentMonthName = monthNames[month]
 
+   // Mechant Production Transaction
     useEffect(()=> {
         axiosInstance.get(`api/v2/merchant/all/prod/transactions/`).then((res)=> {
             // console.log(res.data.merchant_all_prod_trasactions)
@@ -33,13 +32,14 @@ export default function TotalTransactions() {
         });
     }, []);
 
-
+    // Calculte amount datas
     const amounts     = allMerchantTransactions.map(transactions => Number(transactions.amount));
     const totalAmount = amounts.reduce((accumulator, currentValue)=> accumulator + currentValue, 0)
 
-    const handleDurationChange = (event) => {
-        setDuration(event.target.value);
+    const handleCurrencyChange = (event) => {
+        setCurrency(event.target.value);
     };
+
 
     return (
         <>
@@ -60,21 +60,21 @@ export default function TotalTransactions() {
 
                     <Grid item xs={2}>
                         <FormControl sx={{ m: 1, minWidth: 90 }} size="small">
-                            <InputLabel id="demo-select-small-label">Duration</InputLabel>
+                            <InputLabel id="demo-select-small-label">Curency</InputLabel>
                             <Select
                                 labelId="demo-select-small-label"
                                 id="demo-select-small"
-                                value={duration}
-                                label="Duration"
-                                onChange={handleDurationChange}
+                                value={currency}
+                                label="Currency"
+                                onChange={handleCurrencyChange}
                             >
                                 <MenuItem value="">
                                 <em>None</em>
                                 </MenuItem>
-                                <MenuItem value={10}>Today</MenuItem>
-                                <MenuItem value={20}>Last 7 Days</MenuItem>
-                                <MenuItem value={30}>This Month</MenuItem>
-                                <MenuItem value={30}>Last Month</MenuItem>
+                                <MenuItem value={'USD'}>USD</MenuItem>
+                                <MenuItem value={'INR'}>INR</MenuItem>
+                                <MenuItem value={'EUR'}>EUR</MenuItem>
+                                <MenuItem value={'GBP'}>GBP</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>

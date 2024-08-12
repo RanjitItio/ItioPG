@@ -37,7 +37,9 @@ export default function BusinessTransactionTable () {
   };
 
   const handlePaginationChange = (event, value)=> {
-    setPaginationValue(value)
+    setPaginationValue(value);
+
+    handlePaginationTransactionData();
 };
 
 //   Method to accept transaction type of user
@@ -92,7 +94,15 @@ export default function BusinessTransactionTable () {
 
 // Method to fetch pagination Data
 const handlePaginationTransactionData = ()=> {
-    const offsetValue = 10 * paginationValue
+    let offsetValue = 0
+
+    if (paginationValue === 1) {
+        offsetValue = 0
+    } else if (paginationValue >= 1) {
+        offsetValue = 10 * paginationValue
+    };
+
+    // console.log(paginationValue)
     axiosInstance.get(`api/v2/merchant/prod/transactions/?limit=${10}&offset=${offsetValue}`).then((res)=> {
 
         if (res.status === 200) {
@@ -101,7 +111,7 @@ const handlePaginationTransactionData = ()=> {
             setIsLoading(false);
 
             if (paginationProdData.length === 0) {
-                setEmptyData(true);
+                // setEmptyData(true);
                 setIsLoading(false);
             };
         };
@@ -110,7 +120,7 @@ const handlePaginationTransactionData = ()=> {
         console.log(error)
 
         if (error.response.data.error === 'No transaction available') {
-            setEmptyData(true);
+            // setEmptyData(true);
             setIsLoading(false);
         };
     });
@@ -141,7 +151,7 @@ const handlePaginationTransactionData = ()=> {
             setEmptyData(true);
             setIsLoading(false);
         };
-    });
+    })
 
 }, []);
 
@@ -354,7 +364,7 @@ return (
             color="primary" 
             sx={{margin: 3}}
             onChange={handlePaginationChange}
-            onClick={handlePaginationTransactionData}
+            // onClick={handlePaginationTransactionData}
             />
 
     </Card>

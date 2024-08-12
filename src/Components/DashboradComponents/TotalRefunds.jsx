@@ -9,26 +9,17 @@ import TransactionLineChart from './LineChart';
 export default function MerchantTotalRefunds(){
 
     const [anchorEl, setAnchorEl] = useState(null);
-    const [duration, setDuration] = useState('');
+    const [currency, setCurrency] = useState('');
 
     // Current month
    const now =  new Date();
    const month = now.getMonth();
-
    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
    const currentMonthName = monthNames[month]
 
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
 
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    const handleDurationChange = (event) => {
-        setDuration(event.target.value);
+    const handleCurrencyChange = (event) => {
+        setCurrency(event.target.value);
     };
     
     return (
@@ -49,21 +40,21 @@ export default function MerchantTotalRefunds(){
 
                     <Box>
                     <FormControl sx={{ m: 0, minWidth: 90 }} size="small">
-                            <InputLabel id="demo-select-small-label">Duration</InputLabel>
+                            <InputLabel id="demo-select-small-label">Currency</InputLabel>
                             <Select
                                 labelId="demo-select-small-label"
                                 id="demo-select-small"
-                                value={duration}
-                                label="Duration"
-                                onChange={handleDurationChange}
+                                value={currency}
+                                label="Currency"
+                                onChange={handleCurrencyChange}
                             >
                                 <MenuItem value="">
                                 <em>None</em>
                                 </MenuItem>
-                                <MenuItem value={10}>Today</MenuItem>
-                                <MenuItem value={20}>Last 7 Days</MenuItem>
-                                <MenuItem value={30}>This Month</MenuItem>
-                                <MenuItem value={30}>Last Month</MenuItem>
+                                <MenuItem value={'USD'}>USD</MenuItem>
+                                <MenuItem value={'INR'}>INR</MenuItem>
+                                <MenuItem value={'EUR'}>EUR</MenuItem>
+                                <MenuItem value={'GBP'}>GBP</MenuItem>
                             </Select>
                         </FormControl>
                     </Box>
