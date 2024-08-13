@@ -49,7 +49,7 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
 
     const totalAmount = amountDetails.fixedAmount + formValue.customerAmt
 
-
+    console.log('merchantKeys', merchantKeys)
     // Close the step
     const handleClose = () => {
         setOpen(false);
