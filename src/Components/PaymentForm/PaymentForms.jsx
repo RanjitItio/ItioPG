@@ -108,7 +108,11 @@ export default function PaymentForm() {
                 setStepErrorMessage('Both the currency should be same')
             } else if (fixedAmountField && CustomerAmountField && amountFieldsData.fixedAmountLable === amountFieldsData.customerAmtLabel) {
                 setStepErrorMessage('Please provide different labels')
-            } else {
+            } else if (fixedAmountField && !currency) {
+                setStepErrorMessage('Please select Currency')
+            } else if (CustomerAmountField && !currency2) {
+                setStepErrorMessage('Please select Currency')
+            }else {
                 setStepErrorMessage('')
                 setCurrent(current + 1);
             }
