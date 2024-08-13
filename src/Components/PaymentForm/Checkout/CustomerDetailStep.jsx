@@ -49,7 +49,6 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
 
     const totalAmount = amountDetails.fixedAmount + formValue.customerAmt
 
-    console.log('merchantKeys', merchantKeys)
     // Close the step
     const handleClose = () => {
         setOpen(false);
@@ -133,6 +132,8 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
                     alert('Amount should be greater than Zero')
                 } else if (error.response.data.error.message == 'Invalid merchantPublicKey') {
                     alert('Invalid merchantPublicKey')
+                } else if (error.response.data.error.message == 'Inactive key, Please contact administrations') {
+                    alert("Inactive key, Please contact administrations")
                 }
     
             })
