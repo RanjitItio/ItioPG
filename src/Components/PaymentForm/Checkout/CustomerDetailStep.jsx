@@ -131,6 +131,8 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
                     alert('Invalid Currency Only USD accepted, Sorry for the Inconvinience')
                 } else if (error.response.data.error.message === 'Amount should be greater than 0') {
                     alert('Amount should be greater than Zero')
+                } else if (error.response.data.error.message == 'Invalid merchantPublicKey') {
+                    alert('Invalid merchantPublicKey')
                 }
     
             })

@@ -1,20 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Button,
   Box, useMediaQuery
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import axiosInstance from '../Authentication/axios';
-import EditIcon from '@mui/icons-material/Edit';
 import Pagination from '@mui/material/Pagination';
-import AddIcon from '@mui/icons-material/Add';
 import IosShareIcon from '@mui/icons-material/IosShare';
-import { useNavigate } from 'react-router-dom';
-import CircularProgress from '@mui/material/CircularProgress';
-import animationData from '../Animations/EmptyAnimation.json';
-import Lottie from 'lottie-react';
+
 
 
 
