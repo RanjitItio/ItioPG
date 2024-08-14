@@ -40,6 +40,7 @@ export default function MerchantWithdrawalRequests() {
       })
     }, []);
 
+
     //  Status color according to the input
     const getStatusColor = (status) => {
         switch(status){
@@ -54,6 +55,7 @@ export default function MerchantWithdrawalRequests() {
         }
     };
 
+    // Export to Excel
     const exportToExcel = async ()=> {
         if (exportData && exportData.length > 0) {
             const workbook = new ExcelJS.Workbook();
@@ -74,7 +76,7 @@ export default function MerchantWithdrawalRequests() {
             console.log('No Data available to Download')
         }
 
-        updateExportData([]);
+        
     };
 
     
