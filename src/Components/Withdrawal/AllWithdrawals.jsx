@@ -8,6 +8,8 @@ import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import axiosInstance from '../Authentication/axios';
 import Pagination from '@mui/material/Pagination';
 import IosShareIcon from '@mui/icons-material/IosShare';
+import ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver';
 
 
 
@@ -20,12 +22,13 @@ export default function MerchantWithdrawalRequests() {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     const [withdrawalRequests, updateWithdrawalRequests] = useState([]);   // All withdrawal request data
+    const [exportData, updateExportData] = useState([]); // Excel Data
 
     
     // Get all the Withdrawal requests raised by merchant
     useEffect(() => {
       axiosInstance.get(`/api/v3/merchant/withdrawal/`).then((res)=> {
-        console.log(res)
+        // console.log(res)
 
         if (res.status === 200 && res.data.success === true) {
             updateWithdrawalRequests(res.data.merchantWithdrawalRequests)
@@ -42,11 +45,56 @@ export default function MerchantWithdrawalRequests() {
         switch(status){
             case 'Approved':
                 return 'success'
-            case 'Cancelled':
+            case 'Rejected':
                 return 'danger'
             case 'Pending':
                 return 'warning'
+            case 'Hold':
+                return 'info'
         }
+    };
+
+    const exportToExcel = async ()=> {
+        if (exportData && exportData.length > 0) {
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('sheet1')
+
+            const headers = Object.keys(exportData[0])
+
+            worksheet.addRow(headers)
+
+            exportData.forEach((item)=> {
+                worksheet.addRow(Object.values(item))
+            })
+
+            const buffer = await workbook.xlsx.writeBuffer();
+            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            saveAs(blob, 'withdrawals.xlsx');
+        } else {
+            console.log('No Data available to Download')
+        }
+
+        updateExportData([]);
+    };
+
+    
+    // Download all withdrawal requests
+    const handleDownloadWithdrawals = ()=> {
+        axiosInstance.get(`/api/v3/merchant/withdrawal/`).then((res)=> {
+            // console.log(res)
+    
+            if (res.status === 200 && res.data.success === true) {
+                updateExportData(res.data.merchantWithdrawalRequests);
+
+                setTimeout(() => {
+                    exportToExcel();
+                }, 1000);
+            }
+    
+          }).catch((error)=> {
+            console.log(error)
+    
+          })
     };
 
     
@@ -72,9 +120,8 @@ export default function MerchantWithdrawalRequests() {
                     </>
                 ) : (
                     <>
-                    
 
-                    <Button variant="contained" style={{ marginLeft: 10 }} startIcon={<IosShareIcon />}>
+                    <Button onClick={handleDownloadWithdrawals} variant="contained" style={{ marginLeft: 10 }} startIcon={<IosShareIcon />}>
                         Download
                     </Button>
                     </>
@@ -130,7 +177,6 @@ export default function MerchantWithdrawalRequests() {
                                 <TableCell>
                                     <p className={`text-${getStatusColor(withdrawal.status)}`}>{withdrawal.status}</p>
                                 </TableCell>
-
 
                             </TableRow>
                             ))}

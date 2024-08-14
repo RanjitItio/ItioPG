@@ -23,6 +23,8 @@
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "crypto-js": "^4.2.0",
+    "exceljs": "^4.4.0",
+    "file-saver": "^2.0.5",
     "lottie-react": "^2.4.0",
     "material-ui-popup-state": "^5.1.2",
     "qrcode.react": "^3.1.0",
