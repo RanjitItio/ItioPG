@@ -152,7 +152,7 @@ export default function WelcomeSection() {
                     mr: 2 
                     }}
                 >
-                    Transaction
+                    Transactions
                 </Button>
 
                 <Button 
@@ -186,6 +186,17 @@ export default function WelcomeSection() {
                     }}
                 >
                     Withdrawals
+                </Button>
+
+                <Button 
+                    onClick={()=> {handleButtonClicked('/merchant/refund/requests/', 'Refunds'); }}
+                    variant="text" 
+                    sx={{ 
+                    color: "white", 
+                    mr: 2 
+                    }}
+                >
+                    Refunds
                 </Button>
             </Box>
 

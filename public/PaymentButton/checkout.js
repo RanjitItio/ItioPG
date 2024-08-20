@@ -12,7 +12,6 @@ window.onload = async () => {
         }
         const data = await response.json();
         // console.log(data.data); 
-
         
 
         button.innerHTML = `

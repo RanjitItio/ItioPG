@@ -122,7 +122,6 @@ export default function MerchantWithdrawalRequests() {
                     </>
                 ) : (
                     <>
-
                     <Button onClick={handleDownloadWithdrawals} variant="contained" style={{ marginLeft: 10 }} startIcon={<IosShareIcon />}>
                         Download
                     </Button>

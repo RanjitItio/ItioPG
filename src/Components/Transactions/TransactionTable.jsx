@@ -3,7 +3,6 @@ import {
   Card,Button,TextField, MenuItem, Select, InputLabel, FormControl, Collapse, Box, Grid,
 } from '@mui/material';
 import FormHelperText from '@mui/material/FormHelperText';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import axiosInstance from '../Authentication/axios';
 import Pagination from '@mui/material/Pagination';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -16,6 +15,7 @@ import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import IconButton from '@mui/material/IconButton';
 import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
+import { useTheme } from '@mui/material/styles';
 
 
 
@@ -24,38 +24,28 @@ import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
 // All Business Transaction Data
 export default function BusinessTransactionTable () {
 
+  const theme = useTheme();
+
   const [filterOpen, setFilterOpen] = useState(false);  // Open filter fields state
   const [businessTransactionData, updateBusinessTransactionData] = useState([])  // Production Transaction data state
   const [businessSandboxTransactionData, updateBusinessSandboxTransactionData] = useState([])  // Production Transaction data state
   const [isLoading, setIsLoading] = useState(true);
   const [emptyData, setEmptyData] = useState(false);
-  const [paginationValue, setPaginationValue] = useState(0);   // Pagination Value state
   const [SwitchTransaction, setSwitchTransaction] = useState(true);
   const [transactionModeName, setTransactionModeName] = useState('');
   const [exportData, updateExportData] = useState([]); // Excel Data
   const [searchText, updateSearchText] = useState();    // User searched text
+  const [rowCount, setRowCount] = useState(0);
   const [error, setError] = useState('');
 
-
-  
-   
-  // Method to open Filter fields
-  const handleFilterClick = () => {
-    setFilterOpen(!filterOpen);
-  };
-
-  // Uppdate Pagination value
-  const handlePaginationChange = (event, value)=> {
-    setPaginationValue(value);
-
-    handlePaginationTransactionData();
-};
+  let countPagination = Math.ceil(rowCount);
 
 //   Method to accept transaction type of user
   const handleSwitchTransactions = (event)=> {
       setSwitchTransaction(event.target.checked)
 
   };
+
 
   // Set transaction mode
   useEffect(() => {
@@ -68,9 +58,8 @@ export default function BusinessTransactionTable () {
   
 
   
-
-
   // Call API for all sandBox transaction data
+  // ##########################################
   useEffect(() => {
 
     if (!SwitchTransaction) {
@@ -80,6 +69,7 @@ export default function BusinessTransactionTable () {
             if (res.status === 200) {
                 const sandBoxData = res.data.merchant_sandbox_trasactions
                 updateBusinessSandboxTransactionData(sandBoxData);
+                setRowCount(res.data.total_rows)
                 setIsLoading(false);
     
                 if (sandBoxData.length === 0) {
@@ -101,43 +91,8 @@ export default function BusinessTransactionTable () {
   }, [SwitchTransaction])
   
 
-
-// Method to fetch pagination Data
-const handlePaginationTransactionData = ()=> {
-    let offsetValue = 0
-
-    if (paginationValue === 1) {
-        offsetValue = 0
-    } else if (paginationValue >= 1) {
-        offsetValue = 10 * paginationValue
-    };
-
-    // console.log(paginationValue)
-    axiosInstance.get(`api/v2/merchant/prod/transactions/?limit=${10}&offset=${offsetValue}`).then((res)=> {
-
-        if (res.status === 200) {
-            const paginationProdData = res.data.merchant_prod_trasactions
-            updateBusinessTransactionData(paginationProdData);
-            setIsLoading(false);
-
-            if (paginationProdData.length === 0) {
-                // setEmptyData(true);
-                setIsLoading(false);
-            };
-        };
-
-    }).catch((error)=> {
-        console.log(error)
-
-        if (error.response.data.error === 'No transaction available') {
-            // setEmptyData(true);
-            setIsLoading(false);
-        };
-    });
-};
-
-
-  // Fetch all the production transaction data of merchant
+  // Fetch all the production transaction data of merchant //
+  //########################################################
   useEffect(() => {
 
     axiosInstance.get(`api/v2/merchant/prod/transactions/?limit=${10}&offset=${0}`).then((res)=> {
@@ -146,6 +101,7 @@ const handlePaginationTransactionData = ()=> {
           
             const prodData = res.data.merchant_prod_trasactions
             updateBusinessTransactionData(prodData);
+            setRowCount(res.data.total_rows)
             setIsLoading(false);
 
             if (prodData.length === 0) {
@@ -164,6 +120,65 @@ const handlePaginationTransactionData = ()=> {
     })
 
 }, []);
+
+
+
+// Uppdate Pagination value
+const handlePaginationChange = (event, value)=> {
+   
+    let limit = 10
+    let offset = limit * value
+
+    if (transactionModeName === 'Production Mode') {
+
+        axiosInstance.get(`api/v2/merchant/prod/transactions/?limit=${limit}&offset=${offset}`).then((res)=> {
+    
+            if (res.status === 200) {
+                const paginationProdData = res.data.merchant_prod_trasactions
+                updateBusinessTransactionData(paginationProdData);
+                setIsLoading(false);
+    
+                if (paginationProdData.length === 0) {
+                    // setEmptyData(true);
+                    setIsLoading(false);
+                };
+            };
+    
+        }).catch((error)=> {
+            console.log(error)
+    
+            if (error.response.data.error === 'No transaction available') {
+                // setEmptyData(true);
+                setIsLoading(false);
+            };
+        })
+
+    } else if (transactionModeName === 'Test Mode') {
+        axiosInstance.get(`api/v2/merchant/sandbox/transactions/?limit=${limit}&offset=${offset}`).then((res)=> {
+
+            if (res.status === 200) {
+                const sandBoxData = res.data.merchant_sandbox_trasactions
+                updateBusinessSandboxTransactionData(sandBoxData);
+                setRowCount(res.data.total_rows)
+                setIsLoading(false);
+    
+                if (sandBoxData.length === 0) {
+                    setEmptyData(true);
+                    setIsLoading(false);
+                };
+            }
+
+        }).catch((error)=> {
+            console.log(error)
+
+            if (error.response.data.error === 'No transaction available') {
+                setEmptyData(true);
+                setIsLoading(false);
+            };
+
+        })
+    };
+};
 
 
 
@@ -255,7 +270,7 @@ if (isLoading) {
             {/* <TextField placeholder="Search for transaction here" variant="outlined" size="small" /> */}
             <div className="d-flex justify-content-start">
                 <p>
-                    <b><span className='fs-3'>PAYMENTS</span></b> <br />
+                    <b><span className='fs-3'>PAYMENT</span></b> <br />
                     <small>List of all payments received from customers</small>
                 </p>
             </div>
@@ -276,16 +291,16 @@ if (emptyData) {
         <>
        
        <Grid container p={2} justifyContent="space-between" alignItems="center">
-            <Grid item xs={6} sm={4} md={3} lg={3}>
+            <Grid item xs={12} sm={4} md={3} lg={3}>
                 <div className="d-flex justify-content-start">
                 <p>
-                    <b><span className='fs-3'>PAYMENTS</span></b> <br />
+                    <b><span className='fs-3'>PAYMENT</span></b> <br />
                     <small>List of all payments received from customers</small>
                 </p>
                 </div>
             </Grid>
 
-            <Grid item xs={6} sm={8} md={9} lg={9} textAlign="right">
+            <Grid item xs={12} sm={8} md={9} lg={9} textAlign="right">
                 <Grid container justifyContent="flex-end">
 
                 <Grid item>
@@ -330,39 +345,31 @@ return (
     <Box sx={{zIndex: 0, marginTop: -8, padding: 4}}>
     <Card sx={{borderRadius:'20px', boxShadow:'-28px -8px 9px 0px rgba(0,0,0,0.75)'}}>
         <Grid container p={2} justifyContent="space-between" alignItems="center">
-            <Grid item xs={6} sm={4} md={3} lg={3}>
+            <Grid item xs={12} sm={4} md={3} lg={3}>
                 <div className="d-flex justify-content-start">
                 <p>
-                    <b><span className='fs-3'>PAYMENTS</span></b> <br />
+                    <b><span className='fs-3'>PAYMENT</span></b> <br />
                     <small>List of all payments received from customers</small>
                 </p>
                 </div>
             </Grid>
 
-            <Grid item xs={6} sm={8} md={9} lg={9} textAlign="right">
-                <Grid container justifyContent="flex-end">
+            <Grid item xs={12} sm={8} md={9} lg={9} textAlign="right">
+                <TextField
+                    id="standard-basic" 
+                    label="Search Transactions" 
+                    variant="standard"
+                    onChange={(e)=> handleSearchedText(e)}
+                    />
 
-                <Grid item>
-                    <TextField
-                        id="standard-basic" 
-                        label="Search Transactions" 
-                        variant="standard"
-                        onChange={(e)=> handleSearchedText(e)}
-                        />
+                <IconButton aria-label="delete" size="large" onClick={handleFetchSearchedTransaction}>
+                    <ContentPasteSearchIcon fontSize="inherit" color='primary' />
+                </IconButton>
 
-                    <IconButton aria-label="delete" size="large" onClick={handleFetchSearchedTransaction}>
-                        <ContentPasteSearchIcon fontSize="inherit" color='primary' />
-                    </IconButton>
-                </Grid>
-
-                <Grid item>
-                    <Button variant="contained" style={{ marginLeft: 10 }} onClick={handleDownloadTransactions}>
-                        Export
-                    </Button>
-                </Grid>
-
-                </Grid>
-            </Grid>
+                <Button variant="contained" onClick={handleDownloadTransactions}>
+                    Export
+                </Button>
+            </Grid> 
         </Grid>
 
         <Collapse in={filterOpen}>
@@ -375,7 +382,6 @@ return (
                           labelId="demo-simple-select-currency-label"
                           id="demo-simple-select-currency"
                           value={'USD'}
-                          // onChange={handleChange}
                         >
                         <MenuItem value={'USD'}>USD</MenuItem>
                         <MenuItem value={'INR'}>INR</MenuItem>
@@ -392,7 +398,6 @@ return (
                           labelId="demo-simple-select-helper-label"
                           id="demo-simple-select-helper"
                           value={'Business 1'}
-                          // onChange={handleChange}
                         >
                             <MenuItem value={'Business 1'}>Business 1</MenuItem>
                             <MenuItem value={'Business 2'}>Business 2</MenuItem>
@@ -429,23 +434,42 @@ return (
 
         {/* Production and Sandbox Transaction table */}
         {SwitchTransaction ? 
-          <ProductionTransactionTable businessTransactionData={businessTransactionData} /> 
+          <ProductionTransactionTable 
+                businessTransactionData={businessTransactionData} 
+                /> 
         : 
         <SandBoxTransactionTable businessSandboxTransactionData={businessSandboxTransactionData} />}
 
-        <Box sx={{display:'flex', justifyContent:'space-between'}}>
-            <Pagination 
-                count={10} 
-                color="primary" 
-                sx={{margin: 3}}
-                onChange={handlePaginationChange}
-                />
-
-            <SandBoxProductionTransactionSwitch 
-                handleSwitchTransactions={handleSwitchTransactions} 
-                transactionModeName={transactionModeName}
+        
+        <Box sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap', 
+            gap: 2, 
+            margin: '20px 0'
+            }}>
+            <Pagination
+                count={countPagination ? countPagination : 10}
+                color="primary"
+                sx={{
+                [theme.breakpoints.down('sm')]: {
+                    margin: 2, 
+                    width: '100%', 
+                }
+                }}
+                onChange={(e, value)=> {handlePaginationChange(e, value)}}
             />
-        </Box>
+
+            <SandBoxProductionTransactionSwitch
+                handleSwitchTransactions={handleSwitchTransactions}
+                transactionModeName={transactionModeName}
+                sx={{
+                [theme.breakpoints.down('sm')]: {
+                    marginBottom: 2,
+                }
+                }}
+            />
+            </Box>
 
     </Card>
     </Box>

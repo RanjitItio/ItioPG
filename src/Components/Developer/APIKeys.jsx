@@ -44,6 +44,7 @@ export default function APIKeys() {
         })
     }, []);
 
+    
     // Method to generate new keys
     const handleGenerateKeys = ()=> {
         axiosInstance.get(`api/merchant/genearte/keys/`).then((res)=> {
@@ -75,6 +76,19 @@ export default function APIKeys() {
     if (dateTimeString) {
         [date, time] = dateTimeString.split("T");
         [time] = time.split('.')
+    };
+
+    // Status according to API response
+    const getStatus = (status)=> {
+        switch (status) {
+            case true:
+                return <span style={{color:'green'}}>Production Mode</span>
+            case false:
+                return <span style={{color:'orange'}}>Production Mode</span>
+            default:
+                'None'
+                break
+        }
     };
 
 
@@ -114,6 +128,7 @@ export default function APIKeys() {
                             <StyledTableCell><b>Generated At</b></StyledTableCell>
                             <StyledTableCell><b>Public Key</b></StyledTableCell>
                             <StyledTableCell><b>Secret Key</b></StyledTableCell>
+                            <StyledTableCell><b>Status</b></StyledTableCell>
                         </TableRow>
                     </TableHead>
 
@@ -125,6 +140,8 @@ export default function APIKeys() {
                             <TableCell>{keys? keys.merchantPublicKey : newKeys.public_key}</TableCell>
 
                             <TableCell>{keys? keys.merchantSecretKey : newKeys.secret_key}</TableCell>
+
+                            <TableCell>{keys? getStatus(keys.status) : getStatus(newKeys.status)}</TableCell>
 
                         </TableRow>
                     </TableBody>

@@ -32,21 +32,24 @@ import AllPaymentForms from "../PaymentForm/Froms";
 import PaymentForm from "../PaymentForm/PaymentForms";
 import PaymentFormAllSteps from "../PaymentForm/Checkout/Steps";
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import ForgetPassword from "../Authentication/ForgotPassword";
 
 
 
-const GatewayDashboard = React.lazy(()=> import('../HomePage/Dashboard'))
-const ForgetPassword = React.lazy(()=> import('../Authentication/ForgotPassword'))
-const PaymentCheckoutPage = React.lazy(()=> import('../PaymentCheckout/checkout'))
-const PaymentSuccessPage = React.lazy(()=> import('../PaymentStatus/Success'))
-const PaymentFailedPage = React.lazy(()=> import('../PaymentStatus/Failed'))
-const MasterCardOTPComponent = React.lazy(()=> import('../Mastercard/otp'))
-const MerchantWithdrawalRequests = React.lazy(()=> import('../Withdrawal/AllWithdrawals'))
-const BusinessTransactionTable = React.lazy(()=> import('../Transactions/TransactionTable'))
-const AllBusinessTable = React.lazy(()=> import('../Business/BusinessTable'))
-const MerchantBankAccounts = React.lazy(()=> import('../Bank/BankAccounts'))
 import CircularProgress from '@mui/joy/CircularProgress';
+const GatewayDashboard = React.lazy(()=> import('../HomePage/Dashboard'));
+const ForgetPassword = React.lazy(()=> import('../Authentication/ForgotPassword'));
+const PaymentCheckoutPage = React.lazy(()=> import('../PaymentCheckout/checkout'));
+const PaymentSuccessPage = React.lazy(()=> import('../PaymentStatus/Success'));
+const PaymentFailedPage = React.lazy(()=> import('../PaymentStatus/Failed'));
+const MasterCardOTPComponent = React.lazy(()=> import('../Mastercard/otp'));
+const MerchantWithdrawalRequests = React.lazy(()=> import('../Withdrawal/AllWithdrawals'));
+const BusinessTransactionTable = React.lazy(()=> import('../Transactions/TransactionTable'));
+const AllBusinessTable = React.lazy(()=> import('../Business/BusinessTable'));
+const MerchantBankAccounts = React.lazy(()=> import('../Bank/BankAccounts'));
+const APILogs = React.lazy(()=> import('../APILogs/APILog'));
+const AllMerchantRefundRequests = React.lazy(()=> import('../Refund/AllRefunds'));
+
+
 
 
 
@@ -145,6 +148,7 @@ const AuthRoutes = () => {
           element: (
       <>
               <Navbar />
+              <Suspense fallback={<CircularProgress sx={{display:'flex', justifyContent:'center', alignItems:'center'}}/>}>
               <Routes>
 
                 <Route exact path='/merchant/add/businesses/' element={<AddNewBusines />}></Route>
@@ -163,6 +167,9 @@ const AuthRoutes = () => {
                 <Route exact path='/merchant/payment/forms/' element={<AllPaymentForms />}></Route>
                 <Route exact path='/merchant/payment/form/steps/' element={<PaymentForm />}></Route>
 
+                {/* API Logs */}
+                <Route exact path='/merchant/api/logs/' element={<APILogs />}></Route>
+
                 
                 <Route exact path='*' element={
                   <>
@@ -170,19 +177,23 @@ const AuthRoutes = () => {
                     {/* With Navbar and Welcome section   */}
                     <WelcomeSection />
 
-                    <Suspense fallback={<CircularProgress sx={{display:'flex', justifyContent:'center', alignItems:'center'}}/>}>
+                    {/* <Suspense fallback={<CircularProgress sx={{display:'flex', justifyContent:'center', alignItems:'center'}}/>}> */}
                     <Routes>
                         <Route exact path='/' element={<GatewayDashboard />}></Route>
                         <Route exact path='/merchant/business/transactions/' element={<BusinessTransactionTable />}></Route>
                         <Route exact path='/merchant/businesses/' element={<AllBusinessTable />}></Route>
                         <Route exact path='/merchant/bank/accounts/' element={<MerchantBankAccounts />}></Route>
                         <Route exact path='/merchant/withdrawal/requests/' element={<MerchantWithdrawalRequests />}></Route>
+                        {/* Refunds */}
+                        <Route exact path='/merchant/refund/requests/' element={<AllMerchantRefundRequests />}></Route>
+
                     </Routes>
-                    </Suspense>
+                    {/* </Suspense> */}
                     
                     </>
                 }></Route>
               </Routes>
+              </Suspense>
               </>
           ),
         },
@@ -225,7 +236,7 @@ const AuthRoutes = () => {
   
   const router = createBrowserRouter([
     ...routesForPublic,
-    ...(!token ? routesForNotAuthenticatedOnly : []),
+    ...(token ? [] : routesForNotAuthenticatedOnly),
     ...routesForAuthenticatedOnly,
   ]);
   

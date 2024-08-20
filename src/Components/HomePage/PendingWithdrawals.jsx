@@ -22,7 +22,7 @@ const columns = [
     {
       title: 'Date',
       dataIndex: 'createdAt',
-      key: 'createdAt',
+      key: 'createdDate',
       render: (createdAt) => {
         return <span>{createdAt.split('T')[0]}</span>;
       }
@@ -30,7 +30,7 @@ const columns = [
     {
       title: 'Time',
       dataIndex: 'createdAt',
-      key: 'createdAt',
+      key: 'createdTime',
       render: (createdAt) => {
         return <span>{createdAt.split('T')[1]}</span>;
       }
@@ -77,8 +77,13 @@ export default function MerchantPendingWithdrawals() {
             // console.log(res)
     
             if (res.status === 200 && res.data.success === true) {
-                updatePendingWithdrawal(res.data.merchantPendingWithdrawals)
-            }
+                
+                const dataWithKeys = res.data.merchantPendingWithdrawals.map((item, index) => ({
+                  ...item,
+                  key: index,
+                }));
+                updatePendingWithdrawal(dataWithKeys);
+            };
     
         }).catch((error)=> {
             console.log(error)

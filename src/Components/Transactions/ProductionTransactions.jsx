@@ -1,11 +1,37 @@
+import { Suspense, useState, lazy } from 'react';
 import {TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Box} from '@mui/material';
+import ReplayIcon from '@mui/icons-material/Replay';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import CircularProgress from '@mui/joy/CircularProgress';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+
+const RefundFrom = lazy(()=> import('../Refund/RefundForm'));
 
 
 
-
-
-
+// Production Transaction Table
 export default function ProductionTransactionTable({businessTransactionData}) {
+    const [openRefund, setOpenRefund] = useState(false);  // Refund form state
+    const [refundTransactionData, updateRefundTransactionData] = useState([]);
+
+
+    // Open Refund Form
+   const handleClickOpenRefundForm = () => {
+        setOpenRefund(true);
+    };
+
+
+    // Close Refund form
+   const handleCloseRefundForm = () => {
+        setOpenRefund(false);
+    };
+
+    const handleRefundTransactionData = (transaction)=> {
+        updateRefundTransactionData(transaction)
+    };
+
+
     const statusMap = {
         PAYMENT_INITIATED: 'PAYMENT INITIATED',
         PAYMENT_FAILED: 'PAYMENT FAILED',
@@ -29,6 +55,7 @@ export default function ProductionTransactionTable({businessTransactionData}) {
         }
     };
 
+
     const formatDate = (dateString)=> {
         let date = new Date(dateString)
 
@@ -40,7 +67,6 @@ export default function ProductionTransactionTable({businessTransactionData}) {
 
         return formatter.format(date);
     };
-
 
 
     return (
@@ -55,7 +81,10 @@ export default function ProductionTransactionTable({businessTransactionData}) {
                         <TableCell><b>Itio Transaction ID</b></TableCell>
                         <TableCell><b>MOP</b></TableCell>
                         <TableCell><b>Amount</b></TableCell>
+                        <TableCell><b>Fee</b></TableCell>
+                        <TableCell><b>Payout Balance</b></TableCell>
                         <TableCell><b>Status</b></TableCell>
+                        <TableCell><b>Initiate Refund</b></TableCell>
                     </TableRow>
                 </TableHead>
 
@@ -69,32 +98,63 @@ export default function ProductionTransactionTable({businessTransactionData}) {
 
                         {/* Date Column */}
                         <TableCell>
-                            {formatDate(transaction.createdAt.split('T')[0])} &ensp; {transaction.createdAt.split('T')[1]}
+                            <small>{formatDate(transaction.createdAt.split('T')[0])} &ensp; {transaction.createdAt.split('T')[1]}</small>
                         </TableCell>
 
                         {/* Merchant Order ID */}
                         <TableCell>
                             <Box display="flex" alignItems="center">
                                 <Box>
-                                    <div>{transaction.merchantOrderId}</div>
+                                    <div><small>{transaction.merchantOrderId}</small></div>
                                 </Box>
                             </Box>
                         </TableCell>
 
                         {/* Transaction ID Column */}
-                        <TableCell>{transaction.transaction_id}</TableCell>
+                        <TableCell>
+                            <small>{transaction.transaction_id}</small>
+                        </TableCell>
 
                         {/* Payment Mode Column */}
-                        <TableCell>{transaction.payment_mode}</TableCell>
+                        <TableCell>
+                            <small>{transaction.payment_mode}</small>
+                        </TableCell>
 
                         {/* Amount Column */}
-                        <TableCell>{transaction.amount} {transaction.currency}</TableCell>
+                        <TableCell>
+                            <small>{transaction.amount} {transaction.currency}</small>
+                        </TableCell>
+
+                        {/* Fee Column */}
+                        <TableCell>
+                            <small>{transaction.amount} {transaction.currency}</small>
+                        </TableCell>
+
+                        {/* Payout Balance */}
+                        <TableCell>
+                            <small>{transaction.amount} {transaction.currency}</small>
+                        </TableCell>
 
                         {/* Status */}
                         <TableCell>
                             <span className={`text-${getStatusColor(transaction.status)}` }>
-                                {statusMap[transaction.status] || 'UNKNOWN STATUS'}
+                                <small>{statusMap[transaction.status] || 'UNKNOWN STATUS'}</small>
                             </span>
+                        </TableCell>
+
+                        <TableCell>
+                            {transaction.status === 'PAYMENT_SUCCESS' ?
+                            <Tooltip title="Initiate Refund" arrow>
+                                <IconButton onClick={()=> {handleClickOpenRefundForm(); handleRefundTransactionData(transaction);}}>
+                                    <ReplayIcon color='primary' />
+                                </IconButton>
+                            </Tooltip>
+                            :
+                            <Tooltip title={transaction.status} arrow>
+                                <CheckBoxOutlineBlankIcon color='disabled' />
+                            </Tooltip>
+                            }
+                            
                         </TableCell>
 
                     </TableRow>
@@ -102,6 +162,15 @@ export default function ProductionTransactionTable({businessTransactionData}) {
                 </TableBody>
             </Table>
         </TableContainer>
+
+        <Suspense fallback={<CircularProgress sx={{display:'flex', justifyContent:'center', alignItems:'center'}}/>}>
+            <RefundFrom 
+                open={openRefund} 
+                handleClickOpen={handleClickOpenRefundForm} 
+                handleClose={handleCloseRefundForm}
+                refundTransactionData={refundTransactionData}
+            />
+        </Suspense>
 
         </>
         
