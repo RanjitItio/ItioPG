@@ -98,7 +98,7 @@ export default function ProductionTransactionTable({businessTransactionData}) {
 
                         {/* Date Column */}
                         <TableCell>
-                            <small>{formatDate(transaction?.createdAt.split('T')[0] || '')} &ensp; {transaction.createdAt?.split('T')[1] || ''}</small>
+                            <small>{formatDate(transaction.createdAt ? transaction.createdAt.split('T')[0] : '')} &ensp; {transaction.createdAt ? transaction.createdAt.split('T')[1] : ''}</small>
                         </TableCell>
 
                         {/* Merchant Order ID */}
