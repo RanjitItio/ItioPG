@@ -98,41 +98,41 @@ export default function ProductionTransactionTable({businessTransactionData}) {
 
                         {/* Date Column */}
                         <TableCell>
-                            <small>{formatDate(transaction.createdAt.split('T')[0])} &ensp; {transaction.createdAt.split('T')[1]}</small>
+                            <small>{formatDate(transaction?.createdAt.split('T')[0] || '')} &ensp; {transaction.createdAt?.split('T')[1] || ''}</small>
                         </TableCell>
 
                         {/* Merchant Order ID */}
                         <TableCell>
                             <Box display="flex" alignItems="center">
                                 <Box>
-                                    <div><small>{transaction.merchantOrderId}</small></div>
+                                    <div><small>{transaction?.merchantOrderId || ''}</small></div>
                                 </Box>
                             </Box>
                         </TableCell>
 
                         {/* Transaction ID Column */}
                         <TableCell>
-                            <small>{transaction.transaction_id}</small>
+                            <small>{transaction?.transaction_id || ''}</small>
                         </TableCell>
 
                         {/* Payment Mode Column */}
                         <TableCell>
-                            <small>{transaction.payment_mode}</small>
+                            <small>{transaction?.payment_mode || ''}</small>
                         </TableCell>
 
                         {/* Amount Column */}
                         <TableCell>
-                            <small>{transaction.amount} {transaction.currency}</small>
+                            <small>{transaction?.amount || ''} {transaction?.currency || ''}</small>
                         </TableCell>
 
                         {/* Fee Column */}
                         <TableCell>
-                            <small>{transaction.amount} {transaction.currency}</small>
+                            <small>{transaction?.amount || ''} {transaction?.currency || ''}</small>
                         </TableCell>
 
                         {/* Payout Balance */}
                         <TableCell>
-                            <small>{transaction.amount} {transaction.currency}</small>
+                            <small>{transaction?.amount || ''} {transaction?.currency || ''}</small>
                         </TableCell>
 
                         {/* Status */}

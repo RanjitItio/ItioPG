@@ -72,19 +72,19 @@ export default function SandBoxTransactionTable({businessSandboxTransactionData}
                         <TableCell>
                             <Box display="flex" alignItems="center">
                                 <Box>
-                                    <div>{transaction.merchantOrderId}</div>
+                                    <div>{transaction?.merchantOrderId || ''}</div>
                                 </Box>
                             </Box>
                         </TableCell>
 
                         {/* Transaction ID Column */}
-                        <TableCell>{transaction.transaction_id}</TableCell>
+                        <TableCell>{transaction?.transaction_id || ''}</TableCell>
 
                         {/* Payment Mode Column */}
-                        <TableCell>{transaction.payment_mode}</TableCell>
+                        <TableCell>{transaction?.payment_mode || ''}</TableCell>
 
                         {/* Amount Column */}
-                        <TableCell>{transaction.currency} {transaction.amount}</TableCell>
+                        <TableCell>{transaction?.currency || ''} {transaction?.amount || ''}</TableCell>
 
                         {/* Status */}
                         <TableCell>
