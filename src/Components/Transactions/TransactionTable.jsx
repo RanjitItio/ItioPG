@@ -127,7 +127,7 @@ export default function BusinessTransactionTable () {
 const handlePaginationChange = (event, value)=> {
    
     let limit = 10
-    let offset = limit * value
+    let offset = (value - 1) * limit
 
     if (transactionModeName === 'Production Mode') {
 
@@ -220,10 +220,12 @@ const handleDownloadTransactions = ()=> {
       })
 };
 
+
 // Searched text value
 const handleSearchedText = (e)=> {
     updateSearchText(e.target.value);
 };
+
 
 // Fetch all the searched transactions
 const handleFetchSearchedTransaction = ()=> {
@@ -234,16 +236,16 @@ const handleFetchSearchedTransaction = ()=> {
             if (res.status === 200 && res.data.success === true) {
                 updateBusinessTransactionData(res.data.merchant_searched_transactions)
             };
-    
+
          }).catch((error)=> {
             console.log(error)
     
             if (error.response.data.message === 'No transaction found') {
-                setEmptyData(true);
+                // setEmptyData(true);
             }
          });
 
-         // If Mode is Test Mode
+    // If Mode is Test Mode
     } else if (transactionModeName === 'Test Mode') {
         axiosInstance.get(`/api/v2/merchant/search/sb/transactions/?query=${searchText}`).then((res)=> {
             // console.log(res)
@@ -255,7 +257,7 @@ const handleFetchSearchedTransaction = ()=> {
             console.log(error)
     
             if (error.response.data.message === 'No transaction found') {
-                setEmptyData(true);
+                // setEmptyData(true);
             }
         })
     }
@@ -372,7 +374,7 @@ return (
             </Grid> 
         </Grid>
 
-        <Collapse in={filterOpen}>
+        {/* <Collapse in={filterOpen}>
             <Box p={1}>
             <Grid container spacing={0}>
                 <Grid item xs={12} sm={6} md={3}>
@@ -430,7 +432,7 @@ return (
                 
             </Grid>
             </Box>
-        </Collapse>
+        </Collapse> */}
 
         {/* Production and Sandbox Transaction table */}
         {SwitchTransaction ? 

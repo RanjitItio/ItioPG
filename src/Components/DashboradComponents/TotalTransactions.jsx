@@ -20,6 +20,7 @@ export default function TotalTransactions() {
    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
    const currentMonthName = monthNames[month]
 
+   
    // Mechant Production Transaction
     useEffect(()=> {
         axiosInstance.get(`api/v2/merchant/all/prod/transactions/`).then((res)=> {

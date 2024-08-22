@@ -33,6 +33,7 @@ export default function RefundFrom({open, handleClose, refundTransactionData}) {
         updateRefundAmount(refundTransactionData?.amount)
     }, [open]);
 
+
    
     // Merchant input
     const handleMerchantRefundInput = (e)=> {
@@ -68,6 +69,7 @@ export default function RefundFrom({open, handleClose, refundTransactionData}) {
         }
     };
 
+
     // Visible Comment section
     const handleVisibleComment = ()=> {
         setVisibleComment(true);
@@ -84,8 +86,8 @@ export default function RefundFrom({open, handleClose, refundTransactionData}) {
             axiosInstance.post(`/api/v6/merchant/refund/`, {
                 transaction_id: refundTransactionData?.transaction_id || '',
                 refund_amt:     parseFloat(refundAmount),
-                instant_refund: instantRefund,
                 comment:        commentData
+                // instant_refund: instantRefund,
 
             }).then((res)=> {
                 console.log(res)
@@ -162,7 +164,7 @@ export default function RefundFrom({open, handleClose, refundTransactionData}) {
             />
             </Box>
 
-            <FormControlLabel
+            {/* <FormControlLabel
                 control={<Checkbox defaultChecked onClick={handleInstantRefund} />}
                 label={
                     <Box display="flex" alignItems="center">
@@ -172,16 +174,16 @@ export default function RefundFrom({open, handleClose, refundTransactionData}) {
                     </Typography>
                     </Box>
                 }
-                />
+                /> */}
 
 
-                {instantRefund && 
+                {/* {instantRefund && 
                     <Box mt={1} mb={2}>
                         <Typography variant="body2" color="textSecondary">
                             Amount to be deducted from your account: {getCurrencyIcon(refundTransactionData?.currency)}{sumInstantRefund}
                         </Typography>
                     </Box>
-                }
+                } */}
 
             <Box>
                 <Button variant="text" color="primary" onClick={handleVisibleComment}>
@@ -221,13 +223,13 @@ export default function RefundFrom({open, handleClose, refundTransactionData}) {
             </Button>
         </DialogActions>
 
-        {instantRefund && 
+        {/* {instantRefund && 
         <Box textAlign="center" mt={2} mb={2}>
             <Typography variant="caption" color="textSecondary">
                 Refund will be processed instantly.
             </Typography>
         </Box>
-        }
+        } */}
         
         </DialogContent>
 

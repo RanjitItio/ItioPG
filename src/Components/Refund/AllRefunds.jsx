@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Button,
-  Box, useMediaQuery
+  Box, useMediaQuery, TextField, Grid
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
@@ -13,6 +13,8 @@ import { saveAs } from 'file-saver';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import Chip from '@mui/material/Chip';
+import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
+import DownloadIcon from '@mui/icons-material/Download';
 
 
 
@@ -26,6 +28,7 @@ export default function AllMerchantRefundRequests() {
     const [refundRequests, updateRefundRequests] = useState([]);   // All withdrawal request data
     const [exportData, updateExportData] = useState([]); // Excel Data
     const [totalRowCount, setTotalRowCount] = useState(0);
+    const [searchQuery, updateSearchQuery] = useState('');  // Search Query state
     
     let countPagination = Math.ceil(totalRowCount)
    
@@ -113,7 +116,7 @@ export default function AllMerchantRefundRequests() {
       
       // Set pagination Data
       const handlePaginationCount = (e, value)=> {
-
+            
             let limit = 10;
             let offset = (value - 1) * limit;
 
@@ -130,37 +133,86 @@ export default function AllMerchantRefundRequests() {
             })
       };
 
+      // Get merchant input search text
+      const handleSearchedText = (e)=> {
+        updateSearchQuery(e.target.value);
+      };
+
+      // Search Withdrawal Transactions
+    const handleSearch = ()=> {
+        axiosInstance.get(`api/v6/merchant/search/refunds/?query=${searchQuery}`).then((res)=> {
+            // console.log(res)
+            if (res.status === 200 && res.data.success === true) {
+                updateRefundRequests(res.data.searched_merchant_refunds)
+            };
+
+        }).catch((error)=> {
+            console.log(error)
+
+        })
+    };
+
 
 
     return (
         <Box sx={{zIndex: 0, marginTop: -8, padding: 4}}>
             <Card sx={{borderRadius:'20px', boxShadow:'-28px -8px 9px 0px rgba(0,0,0,0.75)'}}>
-            <Box p={2} display="flex" justifyContent="space-between" alignItems="center">
-                {/* <TextField placeholder="Search for transaction here" variant="outlined" size="small" /> */}
-                <div className="d-flex justify-content-start">
+            <Grid container p={2} justifyContent="space-between" alignItems="center">
+                <Grid item xs={12} sm={4} md={3} lg={3}>
+                    <div className="d-flex justify-content-start">
                     <p>
                         <b><span className='fs-3'>All Refunds</span></b> <br />
                         <small>List of all your Refunds Requests in one place</small>
                     </p>
-                </div>
+                    </div>
+                </Grid>
 
-                <Box>
-                {isSmallScreen ? (
-                    <>
-                    <IconButton style={{ marginLeft: 0 }}>
-                        <FileUploadOutlinedIcon />
-                    </IconButton>
-                    </>
-                ) : (
-                    <>
+                <Grid item xs={12} sm={8} md={9} lg={9} textAlign="right">
 
-                    <Button onClick={handleDownloadRefunds} variant="contained" style={{ marginLeft: 10 }} startIcon={<IosShareIcon />}>
-                        Download
-                    </Button>
-                    </>
-                )}
-                </Box>
-            </Box>
+                        {isSmallScreen ? (
+                        <Grid container direction="row" alignItems="center">
+                            <Grid item xs={7}>
+                                <TextField
+                                    id="standard-basic" 
+                                    label="Search Transactions" 
+                                    variant="standard"
+                                    onChange={(e)=> handleSearchedText(e)}
+                                    />
+                            </Grid>
+
+                            <Grid item xs={3}>
+                                <IconButton aria-label="delete" size="large" onClick={handleSearch}>
+                                    <ContentPasteSearchIcon fontSize="inherit" color='primary' />
+                                </IconButton>
+                            </Grid>
+
+                            <Grid item xs={2}>
+                                <IconButton style={{ marginLeft: 0 }} onClick={handleDownloadRefunds}>
+                                    <DownloadIcon fontSize='small' />
+                                </IconButton>
+                            </Grid>
+
+                        </Grid>
+                    ) : (
+                        <>
+                        <TextField
+                            id="standard-basic" 
+                            label="Search Transactions" 
+                            variant="standard"
+                            onChange={(e)=> handleSearchedText(e)}
+                            />
+
+                        <IconButton aria-label="delete" size="large" onClick={handleSearch}>
+                            <ContentPasteSearchIcon fontSize="inherit" color='primary' />
+                        </IconButton>
+
+                        <Button onClick={handleDownloadRefunds} variant="contained" style={{ marginLeft: 10 }} startIcon={<IosShareIcon />}>
+                            Download
+                        </Button>
+                        </>
+                    )}
+                </Grid> 
+            </Grid>
 
                 <TableContainer style={{ overflowX: 'auto', maxHeight: '400px', overflowY: 'auto'}}>
                     <Table stickyHeader>
@@ -172,7 +224,7 @@ export default function AllMerchantRefundRequests() {
                                 <TableCell><b>Transaction ID</b></TableCell>
                                 <TableCell><b>Transaction Amount</b></TableCell>
                                 <TableCell><b>Refund Amount</b></TableCell>
-                                <TableCell><b>Instant Refund</b></TableCell>
+                                {/* <TableCell><b>Instant Refund</b></TableCell> */}
                                 <TableCell><b>Status</b></TableCell>
                             </TableRow>
                         </TableHead>
@@ -195,16 +247,17 @@ export default function AllMerchantRefundRequests() {
                                 {/* Transaction ID Column */}
                                 <TableCell>{refunds.transaction_id}</TableCell>
 
+                                {/* Refund amount Column */}
+                                <TableCell>{refunds.transaction_amount} {refunds.transaction_currency}</TableCell>
+                                
                                 {/* Transaction Amount Column */}
                                 <TableCell>{refunds.amount} {refunds.currency}</TableCell>
 
-                                {/* Refund amount Column */}
-                                <TableCell>{refunds.transaction_amount} {refunds.transaction_currency}</TableCell>
 
                                 {/* Instant Refund */}
-                                <TableCell>
+                                {/* <TableCell>
                                     {refunds.instant_refund ? <TaskAltIcon color='success'/>: <HighlightOffIcon color='error'/>}
-                                </TableCell>
+                                </TableCell> */}
 
                                 {/* Status Column */}
                                 <TableCell>

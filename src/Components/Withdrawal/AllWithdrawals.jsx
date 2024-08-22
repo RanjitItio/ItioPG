@@ -23,7 +23,9 @@ export default function MerchantWithdrawalRequests() {
 
     const [withdrawalRequests, updateWithdrawalRequests] = useState([]);   // All withdrawal request data
     const [exportData, updateExportData] = useState([]); // Excel Data
+    const [totalRows, updateTotalRows]   = useState(0);
 
+    const countPagination = Math.ceil(totalRows);
     
     // Get all the Withdrawal requests raised by merchant
     useEffect(() => {
@@ -32,6 +34,7 @@ export default function MerchantWithdrawalRequests() {
 
         if (res.status === 200 && res.data.success === true) {
             updateWithdrawalRequests(res.data.merchantWithdrawalRequests)
+            updateTotalRows(res.data.total_row_count)
         }
 
       }).catch((error)=> {
@@ -98,6 +101,28 @@ export default function MerchantWithdrawalRequests() {
     
           })
     };
+
+
+    // Fetch paginated data
+    const handlePaginationData = (e, value)=> {
+            
+        let limit = 10;
+        let offset = (value - 1) * limit;
+
+        axiosInstance.get(`/api/v3/merchant/withdrawal/?limit=${limit}&offset=${offset}`).then((res) => {
+
+            if (res.status === 200 && res.data.success === true) {
+                updateWithdrawalRequests(res.data.merchantWithdrawalRequests);
+            }
+
+        }).catch((error) => {
+            console.log(error);
+
+            if (error.response?.data?.message === 'No refund requests available') {
+                // Handle case when no refund requests are available
+            }
+        })
+  };
 
     
     return (
@@ -186,7 +211,12 @@ export default function MerchantWithdrawalRequests() {
                     </Table>
                 </TableContainer>
 
-                <Pagination count={10} color="primary" sx={{margin: 3}}/>
+                <Pagination 
+                    count={countPagination} 
+                    onChange={(e, value)=> {handlePaginationData(e, value);}} 
+                    color="primary" 
+                    sx={{margin: 3}}
+                    />
             </Card>
         </Box>
     );

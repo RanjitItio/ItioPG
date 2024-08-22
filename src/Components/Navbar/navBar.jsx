@@ -137,7 +137,7 @@ export default function Navbar() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>Change Password</MenuItem>
       <MenuItem onClick={()=> {handleMenuClose(); handleLogoutUser(); }}>Logout</MenuItem>
     </Menu>
   );

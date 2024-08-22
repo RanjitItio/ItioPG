@@ -5,6 +5,8 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import CircularProgress from '@mui/joy/CircularProgress';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const RefundFrom = lazy(()=> import('../Refund/RefundForm'));
 
@@ -55,7 +57,8 @@ export default function ProductionTransactionTable({businessTransactionData}) {
         }
     };
 
-
+    
+    // Format Date
     const formatDate = (dateString)=> {
         let date = new Date(dateString)
 
@@ -68,6 +71,13 @@ export default function ProductionTransactionTable({businessTransactionData}) {
         return formatter.format(date);
     };
 
+    // Calculate Payout amount
+    const CalculatePayoutBalance = (transactionAmount, transactionFee)=> {
+        const chargedAmount = (transactionAmount / 100) * transactionFee
+        const payoutBalance = transactionAmount - chargedAmount
+
+        return payoutBalance;
+    };
 
     return (
         <>
@@ -84,7 +94,7 @@ export default function ProductionTransactionTable({businessTransactionData}) {
                         <TableCell><b>Fee</b></TableCell>
                         <TableCell><b>Payout Balance</b></TableCell>
                         <TableCell><b>Status</b></TableCell>
-                        <TableCell><b>Initiate Refund</b></TableCell>
+                        <TableCell><b>Refund</b></TableCell>
                     </TableRow>
                 </TableHead>
 
@@ -127,12 +137,12 @@ export default function ProductionTransactionTable({businessTransactionData}) {
 
                         {/* Fee Column */}
                         <TableCell>
-                            <small>{transaction?.amount || ''} {transaction?.currency || ''}</small>
+                            <small>{transaction?.transaction_fee || ''}%</small>
                         </TableCell>
 
                         {/* Payout Balance */}
                         <TableCell>
-                            <small>{transaction?.amount || ''} {transaction?.currency || ''}</small>
+                            <small>{CalculatePayoutBalance(transaction?.amount, transaction?.transaction_fee)}</small>
                         </TableCell>
 
                         {/* Status */}
@@ -143,18 +153,28 @@ export default function ProductionTransactionTable({businessTransactionData}) {
                         </TableCell>
 
                         <TableCell>
-                            {transaction.status === 'PAYMENT_SUCCESS' ?
+                            {transaction.status === 'PAYMENT_SUCCESS' &&  (transaction.is_refunded === false || transaction.is_refunded === null || transaction.is_refunded === undefined) ?
+                            (
                             <Tooltip title="Initiate Refund" arrow>
                                 <IconButton onClick={()=> {handleClickOpenRefundForm(); handleRefundTransactionData(transaction);}}>
                                     <ReplayIcon color='primary' />
                                 </IconButton>
                             </Tooltip>
-                            :
+                            )
+                            : 
+                            transaction.is_refunded ? 
+                            (
                             <Tooltip title={transaction.status} arrow>
-                                <CheckBoxOutlineBlankIcon color='disabled' />
+                                <CheckCircleIcon color='success' />
                             </Tooltip>
+                            )
+                             :
+                            (
+                            <Tooltip title={transaction.status} arrow>
+                                <CancelIcon color='error' />
+                            </Tooltip>
+                                )
                             }
-                            
                         </TableCell>
 
                     </TableRow>
