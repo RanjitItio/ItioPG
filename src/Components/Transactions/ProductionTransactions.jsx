@@ -142,7 +142,7 @@ export default function ProductionTransactionTable({businessTransactionData}) {
 
                         {/* Payout Balance */}
                         <TableCell>
-                            <small>{CalculatePayoutBalance(transaction?.amount, transaction?.transaction_fee)}</small>
+                            <small>{transaction.status === 'PAYMENT_SUCCESS' ? CalculatePayoutBalance(transaction?.amount, transaction?.transaction_fee) : 0.00}</small>
                         </TableCell>
 
                         {/* Status */}

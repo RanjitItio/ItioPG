@@ -33,12 +33,14 @@ export default function AllBusinessTable () {
     const [loader, setLoader]         = useState(true);   // Waiting for API data state
     const [emptyData, setEmptyData] = useState(false);    // Empty API response state
     const [businesssData, setBusinessData] = useState([]);
+    const [totalRows, setTotalRows]        = useState(0);  // All business rows
+
+    const countPagination = Math.ceil(totalRows);
 
     // Method to open and close the Filter button fields
     const handleFilterClick = () => {
        setFilterOpen(!filterOpen);
     };
-
 
 
      // Get all the Businesses created by the user
@@ -47,6 +49,7 @@ export default function AllBusinessTable () {
           // console.log(res.data.data)
           if (res.status === 200 && res.data.data) {
               setBusinessData(res.data.data)
+              setTotalRows(res.data.total_row_count)
               setLoader(false)
           };
 
@@ -80,16 +83,35 @@ const getStatusColor = (status) => {
   }
 };
 
+  // Redirect to Add new business page
+  const handleAddNewBusiness = ()=> {
+        navigate('/merchant/add/businesses/')
+    };
 
-const handleAddNewBusiness = ()=> {
-      navigate('/merchant/add/businesses/')
+  // Redirect to Business update page
+  const handleBusinessUpdate = (merchant, curr) => {
+      const merch    = merchant
+      const currency = curr
+      navigate('/merchant/update/businesses/', {state: {merchant_details: merch, currency: currency}})
   };
 
 
-const handleBusinessUpdate = (merchant, curr) => {
-    const merch    = merchant
-    const currency = curr
-    navigate('/merchant/update/businesses/', {state: {merchant_details: merch, currency: currency}})
+   // Fetch paginated data
+   const handlePaginationData = (e, value)=> {
+            
+    let limit = 10;
+    let offset = (value - 1) * limit;
+
+    axiosInstance.get(`api/v4/user/all/merchants/?limit=${limit}&offset=${offset}`).then((res) => {
+      // console.log(res)
+
+        if (res.status === 200 && res.data.data) {
+          setBusinessData(res.data.data);
+        }
+
+    }).catch((error) => {
+        console.log(error);
+    })
 };
 
 
@@ -355,7 +377,12 @@ if (emptyData) {
             </Table>
         </TableContainer>
 
-        <Pagination count={10} color="primary" sx={{margin: 3}}/>
+        <Pagination 
+            count={countPagination} 
+            onChange={(e, value)=> {handlePaginationData(e, value); }}
+            color="primary" 
+            sx={{margin: 3}}
+            />
     </Card>
     </Box>
   );
