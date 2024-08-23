@@ -112,6 +112,9 @@ export default function PaymentForm() {
                 setStepErrorMessage('Please select Currency')
             } else if (CustomerAmountField && !currency2) {
                 setStepErrorMessage('Please select Currency')
+
+            } else if (fixedAmountField === true && CustomerAmountField === true) {
+                setStepErrorMessage('Please select only one Field')
             }else {
                 setStepErrorMessage('')
                 setCurrent(current + 1);

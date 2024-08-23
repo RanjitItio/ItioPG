@@ -35,7 +35,7 @@ export default function AllPaymentForms() {
         setButtonID(button_id)
     };
 
-    // Fetch all the user created payment Button when the page loads
+    // Fetch all the user created payment Forms
     useEffect(() => {
         axiosInstance.get(`api/merchant/payment/button/`).then((res)=> {
             // console.log(res)
@@ -49,6 +49,24 @@ export default function AllPaymentForms() {
 
         })
     }, []);
+
+
+    // Convert date time format
+    const ConverDateTime = (dateTime)=> {
+        const date = new Date(dateTime);
+
+        const formatedDate = date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true,
+        })
+
+        return formatedDate;
+    };
     
 
     return (
@@ -108,15 +126,15 @@ export default function AllPaymentForms() {
 
             <TableContainer component={Paper} sx={{ mt: 2 }}>
                 <Table>
-                    <TableHead>
+                    <TableHead style={{backgroundColor:'#dcf5ff'}}>
                         <TableRow>
-                            <TableCell>Title</TableCell>
-                            <TableCell>Total Sales</TableCell>
-                            <TableCell>Business Name</TableCell>
-                            <TableCell>Amount</TableCell>
-                            <TableCell>Created At</TableCell>
-                            <TableCell>Status</TableCell>
-                            <TableCell>Actions</TableCell>
+                            <TableCell><b>Title</b></TableCell>
+                            <TableCell><b>Total Sales</b></TableCell>
+                            <TableCell><b>Business Name</b></TableCell>
+                            <TableCell><b>Form Amount</b></TableCell>
+                            <TableCell><b>Created At</b></TableCell>
+                            <TableCell><b>Status</b></TableCell>
+                            <TableCell><b>Actions</b></TableCell>
                         </TableRow>
                     </TableHead>
 
@@ -129,16 +147,16 @@ export default function AllPaymentForms() {
                                     <Link href="#">{button.button_title}</Link>
                                 </TableCell>
 
-                                <TableCell></TableCell>
+                                <TableCell>{button.total_sales} {button?.form_currency}</TableCell>
 
                                 <TableCell>{button.businessName}</TableCell>
 
-                                <TableCell>{button.fixedAmount + button.customerAmount}</TableCell>
+                                <TableCell>{button.fixedAmount + button.customerAmount} {button?.form_currency}</TableCell>
 
-                                <TableCell>25 Jul 2024, 02:29:48 pm</TableCell>
+                                <TableCell>{button.cretedAt ? ConverDateTime(button.cretedAt) : ''}</TableCell>
 
                                 <TableCell>
-                                    <Chip label="Active" color="primary" />
+                                    <Chip label={button.status ? (button.status === true ? 'Active' : 'Inactive') : 'Active'} color="primary" />
                                 </TableCell>
 
                                 <TableCell>

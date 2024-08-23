@@ -164,11 +164,8 @@ export default function AddNewBusines() {
           setError('Please type your URL');
         } else if (formData.currency === '') {
           setError('Please select your transaction Currency');
-        } else if (formData.message === '') {
-          setError('Please type your Message');
         } else {
           setError(''); 
-      
           
           const FormDataObj = new FormData();
           FormDataObj.append('bsn_name', formData.business_name);
@@ -177,7 +174,7 @@ export default function AddNewBusines() {
           FormDataObj.append('bsn_msg', formData.message);
           FormDataObj.append('logo', formData.img);
       
-          // Make API call using Axios
+          // Create new business
           axiosInstance.post(`api/v4/user/merchant/`, FormDataObj, {
             headers: {
               'Content-Type': 'multipart/form-data'
