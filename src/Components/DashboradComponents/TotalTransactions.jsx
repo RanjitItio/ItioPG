@@ -33,6 +33,7 @@ export default function TotalTransactions() {
         });
     }, []);
 
+
     // Calculte amount datas
     const amounts     = allMerchantTransactions.map(transactions => Number(transactions.amount));
     const totalAmount = amounts.reduce((accumulator, currentValue)=> accumulator + currentValue, 0)
