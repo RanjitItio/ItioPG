@@ -84,7 +84,7 @@ export default function APIKeys() {
             case true:
                 return <span style={{color:'green'}}>Production Mode</span>
             case false:
-                return <span style={{color:'orange'}}>Production Mode</span>
+                return <span style={{color:'orange'}}>Sandbox Mode</span>
             default:
                 'None'
                 break
