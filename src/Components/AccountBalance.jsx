@@ -137,7 +137,7 @@ export default function AccountBalance() {
             </div>
 
          <Typography variant="h5" component="div" style={{ marginTop: '1rem', marginBottom: '1rem' }}>
-            {getCurrencyIcon(selctedCurrency)} {filteredBalance ? filteredBalance.amount : 0.00}
+             {getCurrencyIcon(selctedCurrency)} {filteredBalance ? (filteredBalance.amount ? parseFloat(filteredBalance.amount).toFixed(3) : 0.00) : 0.00}
          </Typography>
 
          <Box
