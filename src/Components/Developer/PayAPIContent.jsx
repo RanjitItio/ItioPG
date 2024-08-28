@@ -2,6 +2,8 @@ import { Layout,Typography, Card, Button} from 'antd';
 import { Table } from 'antd';
 import { useState, useEffect } from 'react';
 import { CopyOutlined } from '@ant-design/icons';
+import { ResponseHeaderTable, ResponseHeaderTabledata, 
+         ResponseParameterColumn, ResponseParameterTabledata } from './ColumnData';
 
 
 const { Header, Content, Sider } = Layout;
@@ -188,6 +190,28 @@ const sampleRequestPayload = `
 }
 `;
 
+const sampleResponsePayload = `
+{
+    "success": True,
+    "status": "PAYMENT_INITIATED",
+    "message": "Payment Initiated",
+    "data": {
+        "merchantPublicKey": "1722830923-28TMTX6G89BI",
+        "merchantOrderId": "eJxLdwQBp9xiNyfv5PJ4",
+        "transactionID":  "JxLdwQBp9xiNyfv5PJ4dfghj567",
+        "amount": 90,
+        'currency': 'USD',
+        "instrumentResponse": {
+            "type": "PAY_PAGE",
+            "redirectInfo": {
+                "url": "https://react-payment.oyefin.com/merchant/payment/checkout/?token=IjE3MjI4MzA5MjMtMjhUTVRYNkc4OUJJIg==,NC4w,ImFkNjIzYmY1ZWMwYzRlNmFhYmZlODY0YTQwMDM5NDY5MTkxIg==,IlVTRCI=",
+            }
+        }
+    }
+}`;
+
+
+
 const sampleRequestBase64EncodedPayload = `
 {
   "request": "ewogICJtZXJjaGFudElkIjogIlBHVEVTVFBBWVVBVCIsCiAgIm1lcmNoYW50VHJhbnNhY3Rpb25JZCI6ICJNVDc4NTA1OTAwNjgxODgxMDQiLAogICJtZXJjaGFudFVzZXJJZCI6ICJNVUlEMTIzIiwKICAiYW1vdW50IjogMTAwMDAsCiAgInJlZGlyZWN0VXJsIjogImh0dHBzOi8vd2ViaG9vay5zaXRlL3JlZGlyZWN0LXVybCIsCiAgInJlZGlyZWN0TW9kZSI6ICJSRURJUkVDVCIsCiAgImNhbGxiYWNrVXJsIjogImh0dHBzOi8vd2ViaG9vay5zaXRlL2NhbGxiYWNrLXVybCIsCiAgIm1vYmlsZU51bWJlciI6ICI5OTk5OTk5OTk5IiwKICAicGF5bWVudEluc3RydW1lbnQiOiB7CiAgICAidHlwZSI6ICJQQVlfUEFHRSIKICB9Cn0=",
@@ -207,6 +231,7 @@ export default function PayAPIContent() {
         return () => window.removeEventListener('resize', handleResize);
 
       }, []);
+
 
       const handleRequestPayLoadCopy = () => {
         navigator.clipboard.writeText(samplePayload);
@@ -303,12 +328,13 @@ export default function PayAPIContent() {
                         {sampleRequestPayload}
                         </pre>
                         <Button
-                        icon={<CopyOutlined />}
-                        style={{ position: 'absolute', top: '16px', right: '16px' }}
-                        onClick={handleRequestPayLoadCopy}
-                        />
+                          icon={<CopyOutlined />}
+                          style={{ position: 'absolute', top: '16px', right: '16px' }}
+                          onClick={handleRequestPayLoadCopy}
+                          />
                     </Card>
                 </Card>
+
                 <Paragraph style={{ marginTop: '16px' }}>
                     Convert the JSON Payload to Base64 Encoded Payload
                 </Paragraph>
@@ -332,13 +358,12 @@ export default function PayAPIContent() {
                         {sampleRequestBase64EncodedPayload}
                         </pre>
                         <Button
-                        icon={<CopyOutlined />}
-                        style={{ position: 'absolute', top: '16px', right: '16px' }}
-                        onClick={handleRequestPayLoadCopy}
-                        />
+                          icon={<CopyOutlined />}
+                          style={{ position: 'absolute', top: '16px', right: '16px' }}
+                          onClick={handleRequestPayLoadCopy}
+                          />
                     </Card>
                 </Card>
-
 
                 <Title level={5}>How to Calculate X-AUTH/Checksum header</Title>
 
@@ -387,7 +412,52 @@ export default function PayAPIContent() {
                     d7a8e4458caa6fcd781166bbdc85fec76740c18cb9baa9a4c48cf2387d554180###1
                 </Paragraph>
 
+
+                <Title level={3}>Response Details</Title>
+                    <Title level={5}>Sample Response</Title>
+                    <Card
+                        style={{
+                        backgroundColor: '#f5f5f5',
+                        padding: '1px',
+                        borderRadius: '10px',
+                        position: 'relative'
+                        }}
+                    >
+                        <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word', marginBottom: '0' }}>
+                            {sampleResponsePayload}
+                        </pre>
+                        <Button
+                          icon={<CopyOutlined />}
+                          style={{ position: 'absolute', top: '16px', right: '16px' }}
+                          onClick={handleRequestPayLoadCopy}
+                          />
+                    </Card>
+
+                    {/* Response Header */}
+                    <Typography style={{marginTop:15}}>
+                        <Title level={5}>Response Headers</Title>
+
+                        <Table 
+                            columns={ResponseHeaderTable} 
+                            dataSource={ResponseHeaderTabledata} 
+                            scroll={{ x: 700 }}
+                            pagination={false}
+                            />
+                    </Typography>
+
+                    {/* Response Parameters */}
+                    <Typography style={{marginTop:20}}>
+                        <Title level={5}>Response Parameters</Title>
+
+                        <Table 
+                            columns={ResponseParameterColumn} 
+                            dataSource={ResponseParameterTabledata} 
+                            pagination={false}
+                            scroll={{ x: 800 }}
+                          />
+                    </Typography>
                 </div>
+
             </Content>
         </Layout>
     );

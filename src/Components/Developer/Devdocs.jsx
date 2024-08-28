@@ -4,6 +4,8 @@ import { Layout, Menu, Affix, Typography, Button, Drawer } from 'antd';
 import { MenuOutlined, CodeOutlined, FileTextOutlined, SyncOutlined } from '@ant-design/icons';
 import PayAPIContent from './PayAPIContent';
 import { useState, useEffect } from 'react';
+import Introduction from './Intro';
+import S2SCallBack from './S2S';
 
 
 const { Sider } = Layout;
@@ -15,9 +17,10 @@ const { Title } = Typography;
 // Developer Tools
 export default function DevDocs() {
 
-    const [visible, setVisible] = useState(false);
+    const [visible, setVisible]     = useState(false);
     const [collapsed, setCollapsed] = useState(false);
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const [isMobile, setIsMobile]   = useState(window.innerWidth < 768);
+    const [selectedKey, setSelectedKey] = useState('1');  // Clicked bar state
 
     const toggleDrawer = () => {
         setVisible(!visible);
@@ -35,6 +38,31 @@ export default function DevDocs() {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    // Method to check the clicked bar
+    const handleMenuClick = (key) => {
+      setSelectedKey(key);
+    };
+
+      let content;
+      switch (selectedKey) {
+        case '1':
+          content = <Introduction />;
+          break;
+        case '2':
+          content = <PayAPIContent />;
+          break;
+        case '3':
+          content = <S2SCallBack />;
+          break;
+        case '4':
+          content = <S2SCallBack />;
+          break;
+        case '5':
+          content = <PayAPIContent />;
+          break;
+        default:
+          content = <PayAPIContent />;
+      }
 
 
   return (
@@ -49,8 +77,9 @@ export default function DevDocs() {
                 >
                 <Menu
                     mode="inline"
-                    defaultSelectedKeys={['1']}
+                    defaultSelectedKeys={[selectedKey]}
                     style={{ height: '100%', borderRight: 0 }}
+                    onClick={({key}) => handleMenuClick(key)}
                     items={[
                     {
                         key: '1',
@@ -97,8 +126,9 @@ export default function DevDocs() {
           >
             <Menu
                 mode="inline"
-                defaultSelectedKeys={['1']}
+                defaultSelectedKeys={[selectedKey]}
                 style={{ height: '100%', borderRight: 0 }}
+                onClick={({ key }) => handleMenuClick(key)}
                 items={[
                 {
                     key: '1',
@@ -133,7 +163,10 @@ export default function DevDocs() {
 
 
       {/* Payment API Content */}
-      <PayAPIContent />
+
+      <Layout.Content style={{ padding: '16px' }}>
+        {content}
+      </Layout.Content>
 
       {!isMobile && (
         <Sider

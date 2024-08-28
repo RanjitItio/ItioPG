@@ -63,6 +63,7 @@ export default function AccountBalance() {
        })
    }, []);
 
+
    // Assign selected currency value to the state
    const handleSelctedCurrency = (currency)=> {
       setSelectedCurrency(currency)
@@ -161,9 +162,9 @@ export default function AccountBalance() {
                      padding: '4px 6px',
                   }}
                >
-                  <b>Withdraw</b>
+                  <b>Withdraw Request</b>
                </Button>
-
+{/* 
                <Button
                   variant="outlined"
                   color="primary"
@@ -176,7 +177,7 @@ export default function AccountBalance() {
                   }}
                >
                   <b>Raise Refund</b>
-               </Button>
+               </Button> */}
 
          </Box>
 
