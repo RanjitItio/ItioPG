@@ -1,8 +1,15 @@
+import { Tag } from "antd";
+
 export const ResponseHeaderTable = [
     {
         title: 'Header Name',
         dataIndex: 'headerName',
-      }
+        render: (text)=> (<Tag color="geekblue">{text}</Tag>)
+      },
+    {
+        title: 'Header Value',
+        dataIndex: 'headerValue',
+      },
 ]
 
 
@@ -10,8 +17,8 @@ export const ResponseHeaderTabledata = [
     {
         key: '1',
         headerName: 'Content-Type',
-        headerValue: 'application/json'
-      }
+        headerValue: 'application/json',
+      },
 ];
 
 
@@ -20,11 +27,13 @@ export const ResponseParameterColumn = [
         title: 'Parameter Name',
         dataIndex: 'parameterName',
         width: 180,
+        render: (text)=> (<Tag color="geekblue">{text}</Tag>)
       },
       {
         title: 'Data Type',
         dataIndex: 'dataType',
-        width: 100
+        width: 100,
+        render: (text)=> (<Tag color="geekblue">{text}</Tag>)
       },
       {
         title: 'Description',

@@ -45,19 +45,17 @@ export default function DevDocs() {
 
       let content;
       switch (selectedKey) {
+        
         case '1':
-          content = <Introduction />;
+          content = <PayAPIContent />;
           break;
         case '2':
-          content = <PayAPIContent />;
+          content = <S2SCallBack />;
           break;
         case '3':
           content = <S2SCallBack />;
           break;
         case '4':
-          content = <S2SCallBack />;
-          break;
-        case '5':
           content = <PayAPIContent />;
           break;
         default:
@@ -81,28 +79,24 @@ export default function DevDocs() {
                     style={{ height: '100%', borderRight: 0 }}
                     onClick={({key}) => handleMenuClick(key)}
                     items={[
+                    
                     {
                         key: '1',
-                        icon: <FileTextOutlined />,
-                        label: 'Introduction',
-                    },
-                    {
-                        key: '2',
                         icon: <CodeOutlined />,
                         label: 'PAY API',
                     },
                     {
-                        key: '3',
+                        key: '2',
                         icon: <SyncOutlined />,
                         label: 'UI Callback',
                     },
                     {
-                        key: '4',
+                        key: '3',
                         icon: <SyncOutlined />,
                         label: 'Server to Server Callback',
                     },
                     {
-                        key: '5',
+                        key: '4',
                         icon: <SyncOutlined />,
                         label: 'Check Status',
                     },
@@ -164,7 +158,7 @@ export default function DevDocs() {
 
       {/* Payment API Content */}
 
-      <Layout.Content style={{ padding: '16px' }}>
+      <Layout.Content style={{ padding: '0px' }}>
         {content}
       </Layout.Content>
 

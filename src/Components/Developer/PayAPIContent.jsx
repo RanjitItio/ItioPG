@@ -1,13 +1,17 @@
-import { Layout,Typography, Card, Button} from 'antd';
+import { Layout,Typography, Card, Button, Tag} from 'antd';
 import { Table } from 'antd';
 import { useState, useEffect } from 'react';
 import { CopyOutlined } from '@ant-design/icons';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { coy } from 'react-syntax-highlighter/dist/esm/styles/prism'; 
 import { ResponseHeaderTable, ResponseHeaderTabledata, 
          ResponseParameterColumn, ResponseParameterTabledata } from './ColumnData';
 
 
+
 const { Header, Content, Sider } = Layout;
 const { Title, Paragraph } = Typography;
+
 
 const columns = [
     {
@@ -28,6 +32,7 @@ const RequestheaderColumns = [
     {
       title: 'Header Name',
       dataIndex: 'headerName',
+      render: (headerName)=> <Tag style={{ color: 'geekblue' }}>{headerName}</Tag>
     },
     {
       title: 'Header Value',
@@ -40,11 +45,13 @@ const RequestParameterColumns = [
       title: 'Parameter Name',
       dataIndex: 'parameterName',
       width: 180,
+      render: (text)=> (<Tag color='geekblue'>{text}</Tag>)
     },
     {
       title: 'Data Type',
       dataIndex: 'dataType',
-      width: 100
+      width: 100,
+      render: (text)=> (<Tag color='geekblue'>{text}</Tag>)
     },
     {
       title: 'Description',
@@ -54,6 +61,7 @@ const RequestParameterColumns = [
     {
       title: 'Required',
       dataIndex: 'required',
+      render: (text)=> (<Tag color='geekblue'>{text}</Tag>)
     },
   ];
 
@@ -78,15 +86,17 @@ const RequestHeaderdata = [
   {
     key: '1',
     headerName: 'Content-Type',
-    headerValue: 'application/json'
+    headerValue: 'application/json',
+
   },
   {
     key: '2',
     headerName: 'X-AUTH',
-    headerValue: `SHA256(base64 encoded payload + “/api/pg/sandbox/v1/pay/” + secret key) + **** + index`
-  },
-
+    headerValue: `SHA256(base64 encoded payload + “/api/pg/sandbox/v1/pay/” + secret key) + **** + index`,
+    
+  }
 ];
+
 
 const RequestParameterdata = [
   {
@@ -218,7 +228,7 @@ const sampleRequestBase64EncodedPayload = `
 }
 `;
 
-
+// PAY API Docs
 export default function PayAPIContent() {
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
@@ -240,8 +250,9 @@ export default function PayAPIContent() {
 
     return (
         <Layout style={{ marginRight: isMobile ? 0 : 295 }}>
+
             <Header style={{ background: '#fff', padding: 0 }}>
-                <Title level={2} style={{ margin: '26px' }}>PAY API</Title>
+                <Title level={2} style={{ margin: '15px' }}>PAY API</Title>
             </Header>
 
             <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
@@ -257,7 +268,7 @@ export default function PayAPIContent() {
                        />
                 </Typography>
 
-                <Typography>
+                <Typography style={{marginTop:20}}>
                     <Title level={3}>Request Details</Title>
                     <Paragraph>
                         Request details
@@ -269,10 +280,9 @@ export default function PayAPIContent() {
                         <li>Sample Request for Pay Page</li>
                         <li>How to Calculate X-AUTH/Checksum header</li>
                     </ul>
-
                 </Typography>
 
-                <Typography>
+                <Typography style={{marginTop:20}}>
                     <Title level={3}>Response Details</Title>
                     <Paragraph>
                         Response details
@@ -297,11 +307,12 @@ export default function PayAPIContent() {
                          columns={RequestheaderColumns} 
                          dataSource={RequestHeaderdata} 
                          scroll={{ x: 700 }}
+                         pagination={false}
                          />
                 </Typography>
 
                 {/* Request Parameters */}
-                <Typography>
+                <Typography style={{marginTop:20}}>
                     <Title level={5}>Request Parameters</Title>
 
                     <Table 
@@ -312,21 +323,26 @@ export default function PayAPIContent() {
                          />
                 </Typography>
 
+                {/* Sample Request for Pay Page */}
                 <Title level={5}>Sample Request for Pay Page</Title>
 
-                <Card style={{ margin: '16px', padding: '16px', borderRadius: '8px' }}>
-                    <Title level={5}>Sample Payload - Base64 Decoded</Title>
+                <Card style={{ margin: '16px', padding: '2px', borderRadius: '8px' }}>
+                    <p>Sample Payload - Base64 Decoded</p>
                     <Card
                         style={{
                         backgroundColor: '#f5f5f5',
-                        padding: '16px',
+                        padding: '0px',
                         borderRadius: '8px',
                         position: 'relative'
                         }}
                     >
-                        <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word', marginBottom: '0' }}>
-                        {sampleRequestPayload}
-                        </pre>
+                        {/* <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word', marginBottom: '0' }}>
+                          {sampleRequestPayload}
+                        </pre> */}
+                        <SyntaxHighlighter language="json" style={coy} showLineNumbers>
+                          {sampleRequestPayload}
+                        </SyntaxHighlighter>
+
                         <Button
                           icon={<CopyOutlined />}
                           style={{ position: 'absolute', top: '16px', right: '16px' }}
@@ -334,6 +350,7 @@ export default function PayAPIContent() {
                           />
                     </Card>
                 </Card>
+
 
                 <Paragraph style={{ marginTop: '16px' }}>
                     Convert the JSON Payload to Base64 Encoded Payload
@@ -344,19 +361,20 @@ export default function PayAPIContent() {
                     and then the request should be sent in the below format.
                 </Paragraph>
 
-                <Card style={{ margin: '16px', padding: '16px', borderRadius: '8px' }}>
-                    <Title level={5}>Sample Request -  Base64 Encoded</Title>
+                <Card style={{ margin: '16px', padding: '0px', borderRadius: '8px' }}>
+                    <p>Sample Request -  Base64 Encoded</p>
                     <Card
                         style={{
                         backgroundColor: '#f5f5f5',
-                        padding: '16px',
+                        padding: '0px',
                         borderRadius: '8px',
                         position: 'relative'
                         }}
                     >
-                        <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word', marginBottom: '0' }}>
-                        {sampleRequestBase64EncodedPayload}
-                        </pre>
+                        <SyntaxHighlighter language="json" style={coy} showLineNumbers>
+                          {sampleRequestBase64EncodedPayload}
+                        </SyntaxHighlighter>
+
                         <Button
                           icon={<CopyOutlined />}
                           style={{ position: 'absolute', top: '16px', right: '16px' }}
@@ -374,12 +392,14 @@ export default function PayAPIContent() {
                 <Title level={5}>Base64 encoded payload:</Title>
 
                 <Paragraph style={{ marginTop: '16px' }}>
+                    <i>
                         ewogICJtZXJjaGFudElkIjogIlBHVEVTVFBBWVVBVCIsCiAgIm1lcmNoYW50VHJhbnNhY3Rpb25JZCI6ICJNVDc4
                         NTA1OTAwNjgxODgxMDQiLAogICJtZXJjaGFudFVzZXJJZCI6ICJNVUlEM
                         TIzIiwKICAiYW1vdW50IjogMTAwMDAsCiAgInJlZGlyZWN0VXJsIjogImh0dHBzOi8vd2ViaG9vay5zaXRlL3JlZGlyZWN0LXVybCIsCi
                         AgInJlZGlyZWN0TW9kZSI6ICJSRURJUkVDVCIsCiAgImNhbGxiYWNrVXJsIjogImh0dHBzOi8vd
                         2ViaG9vay5zaXRlL2NhbGxiYWNrLXVybCIsCiAgIm1vYmlsZU51bWJlciI6ICI5OTk5OTk5OTk5
                         IiwKICAicGF5bWVudEluc3RydW1lbnQiOiB7CiAgICAidHlwZSI6ICJQQVlfUEFHRSIKICB9Cn0=
+                    </i>
                 </Paragraph>
 
                 <Title level={5}>API End Point</Title>
@@ -403,7 +423,16 @@ export default function PayAPIContent() {
                 <Title level={5}>Final Computation</Title>
 
                 <Paragraph style={{ marginTop: '16px' }}>
-                    <b>SHA256</b>(ewogICJtZXJjaGFudElkIjogIlBHVEVTVFBBWVVBVCIsCiAgIm1lcmNoYW50VHJhbnNhY3Rpb25JZCI6ICJNVDc4NTA1OTAwNjgxODgxMDQiLAogICJtZXJjaGFudFVzZXJJZCI6ICJNVUlEMTIzIiwKICAiYW1vdW50IjogMTAwMDAsCiAgInJlZGlyZWN0VXJsIjogImh0dHBzOi8vd2ViaG9vay5zaXRlL3JlZGlyZWN0LXVybCIsCiAgInJlZGlyZWN0TW9kZSI6ICJSRURJUkVDVCIsCiAgImNhbGxiYWNrVXJsIjogImh0dHBzOi8vd2ViaG9vay5zaXRlL2NhbGxiYWNrLXVybCIsCiAgIm1vYmlsZU51bWJlciI6ICI5OTk5OTk5OTk5IiwKICAicGF5bWVudEluc3RydW1lbnQiOiB7CiAgICAidHlwZSI6ICJQQVlfUEFHRSIKICB9Cn0=/pg/v1/pay099eb0cd-02cf-4e2a-8aca-3e6c6aff0399) + ### + 1
+                    <i>
+                      <b>SHA256</b>
+                      (ewogICJtZXJjaGFudElkIjogIlBHVEVTVFBBWVVBVCIsCiAgIm1lcmNoYW50VHJhbnNhY3Rpb25
+                      JZCI6ICJNVDc4NTA1OTAwNjgxODgxMDQiLAogICJtZXJjaGFudFVzZXJJZCI6ICJNVUlEMTIzIiw
+                      KICAiYW1vdW50IjogMTAwMDAsCiAgInJlZGlyZWN0VXJsIjogImh0dHBzOi8vd2ViaG9vay5zaXRl
+                      L3JlZGlyZWN0LXVybCIsCiAgInJlZGlyZWN0TW9kZSI6ICJSRURJUkVDVCIsCiAgImNhbGxiYWNrVX
+                      JsIjogImh0dHBzOi8vd2ViaG9vay5zaXRlL2NhbGxiYWNrLXVybCIsCiAgIm1vYmlsZU51bWJlciI6IC
+                      I5OTk5OTk5OTk5IiwKICAicGF5bWVudEluc3RydW1lbnQiOiB7CiAgICAidHlwZSI6ICJQQVlfUEFHRSI
+                      KICB9Cn0=/pg/v1/pay099eb0cd-02cf-4e2a-8aca-3e6c6aff0399) + ### + 1
+                    </i>
                 </Paragraph>
 
                 <Title level={5}>Checksum Value</Title>
@@ -423,9 +452,10 @@ export default function PayAPIContent() {
                         position: 'relative'
                         }}
                     >
-                        <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word', marginBottom: '0' }}>
+                        <SyntaxHighlighter language="json" style={coy} showLineNumbers>
                             {sampleResponsePayload}
-                        </pre>
+                        </SyntaxHighlighter>
+                        
                         <Button
                           icon={<CopyOutlined />}
                           style={{ position: 'absolute', top: '16px', right: '16px' }}
