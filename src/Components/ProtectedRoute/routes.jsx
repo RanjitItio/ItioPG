@@ -23,7 +23,6 @@ import TestPaymentCheckoutPage from "../PaymentTestCheckout/checkout";
 import MastercardPaymentStatus from "../PaymentCheckout/MCPaymentStatus";
 import DeveloperTools from "../Developer/DevTools";
 import APIKeys from "../Developer/APIKeys";
-import DevDocs from "../Developer/Devdocs";
 // import MerchantBankAccounts from "../Bank/BankAccounts";
 import AddMerchantBankAccount from "../Bank/AddBankaccount";
 import UpdateMerchantBankAccount from "../Bank/updateBank";
@@ -48,6 +47,8 @@ const AllBusinessTable = React.lazy(()=> import('../Business/BusinessTable'));
 const MerchantBankAccounts = React.lazy(()=> import('../Bank/BankAccounts'));
 const APILogs = React.lazy(()=> import('../APILogs/APILog'));
 const AllMerchantRefundRequests = React.lazy(()=> import('../Refund/AllRefunds'));
+const DevDocs = React.lazy(()=> import('../Developer/Docs/Devdocs'));
+
 
 
 

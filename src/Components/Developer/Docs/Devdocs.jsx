@@ -1,11 +1,10 @@
-// import React from 'react';
 import 'antd/dist/antd.js'
 import { Layout, Menu, Affix, Typography, Button, Drawer } from 'antd';
-import { MenuOutlined, CodeOutlined, FileTextOutlined, SyncOutlined } from '@ant-design/icons';
+import { MenuOutlined, CodeOutlined, SyncOutlined } from '@ant-design/icons';
 import PayAPIContent from './PayAPIContent';
 import { useState, useEffect } from 'react';
-import Introduction from './Intro';
 import S2SCallBack from './S2S';
+import CheckStatusAPIDocs from './CheckStatus';
 
 
 const { Sider } = Layout;
@@ -53,10 +52,7 @@ export default function DevDocs() {
           content = <S2SCallBack />;
           break;
         case '3':
-          content = <S2SCallBack />;
-          break;
-        case '4':
-          content = <PayAPIContent />;
+          content = <CheckStatusAPIDocs />;
           break;
         default:
           content = <PayAPIContent />;
@@ -88,15 +84,10 @@ export default function DevDocs() {
                     {
                         key: '2',
                         icon: <SyncOutlined />,
-                        label: 'UI Callback',
-                    },
-                    {
-                        key: '3',
-                        icon: <SyncOutlined />,
                         label: 'Server to Server Callback',
                     },
                     {
-                        key: '4',
+                        key: '3',
                         icon: <SyncOutlined />,
                         label: 'Check Status',
                     },
@@ -126,26 +117,16 @@ export default function DevDocs() {
                 items={[
                 {
                     key: '1',
-                    icon: <FileTextOutlined />,
-                    label: 'Introduction',
-                },
-                {
-                    key: '2',
                     icon: <CodeOutlined />,
                     label: 'PAY API',
                 },
                 {
-                    key: '3',
-                    icon: <SyncOutlined />,
-                    label: 'UI Callback',
-                },
-                {
-                    key: '4',
+                    key: '2',
                     icon: <SyncOutlined />,
                     label: 'Server to Server Callback',
                 },
                 {
-                    key: '5',
+                    key: '3',
                     icon: <SyncOutlined />,
                     label: 'Check Status',
                 },
@@ -157,10 +138,10 @@ export default function DevDocs() {
 
 
       {/* Payment API Content */}
-
       <Layout.Content style={{ padding: '0px' }}>
-        {content}
+          {content}
       </Layout.Content>
+
 
       {!isMobile && (
         <Sider

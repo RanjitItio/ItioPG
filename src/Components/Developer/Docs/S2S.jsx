@@ -1,7 +1,9 @@
-import { Layout,Typography, Card, Button} from 'antd';
+import { Layout,Typography, Card, Button, Divider } from 'antd';
 import { Table } from 'antd';
 import { useState, useEffect } from 'react';
 import { CopyOutlined } from '@ant-design/icons';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { coy } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { CallbackHeaderColumn, CallbackTableData, Base64DecodedCallbackResponse,
         sampleCallbackURLResponse } from './ColumnData';
 
@@ -17,6 +19,7 @@ const { Title, Paragraph } = Typography;
 export default function S2SCallBack() {
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
+
     useEffect(() => {
         const handleResize = () => {
           setIsMobile(window.innerWidth < 768);
@@ -28,39 +31,78 @@ export default function S2SCallBack() {
       }, []);
 
 
-      const handleRequestPayLoadCopy = () => {
-        navigator.clipboard.writeText(samplePayload);
-      };
+      // Copy the Content
+      const handleCopy = (text) => {
+        if (text === 'sampleCallbackURLResponse'){
+            navigator.clipboard.writeText(JSON.stringify(sampleCallbackURLResponse));
+        } else if (text === 'sampleCallbackURLResponse') {
+            navigator.clipboard.writeText(JSON.stringify(sampleCallbackURLResponse));
+        } else if (text === 'Base64DecodedCallbackResponse') {
+            navigator.clipboard.writeText(JSON.stringify(Base64DecodedCallbackResponse));
+        } else if (text === 'Base64DecodedCallbackResponse') {
+            navigator.clipboard.writeText(JSON.stringify(Base64DecodedCallbackResponse));
+        }
+       };
 
 
     return (
         <Layout style={{ marginRight: isMobile ? 0 : 295 }}>
 
-            <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
+            <Content style={{ margin: '24px 16px 0' }}>
                 <div style={{ padding: 24, background: '#fff', minHeight: '80vh' }}>
                 <Typography>
-                    <Title level={3}>Server to Server Callback</Title>
-                    <ul>
+                    <Title style={{ color: '#1890ff' }} level={3}>Server to Server Callback</Title>
+                    <Divider />
+
+                    <Paragraph style={{ fontSize: '16px', lineHeight: '1.7' }}>
+                    <ul style={{ paddingLeft: '20px', listStyle: 'disc' }}>
                         <li>Server to server callbacks are initiated from the Itio server to the URL provided by the merchant when the payment reaches any terminal state (SUCCESS or FAIL)</li>
 
                         <li>There are two ways to enable the server to server callbacks.</li>
                     </ul>
+                    </Paragraph>
 
-                    <ol>
-                        <li>Either Register your static callback URL with PhonePe. This is a one-time process.</li>
-                        <li>Or, Send the callback URL along with each payment request</li>
+                    <Paragraph style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '12px' }}>
+                        Options to enable callbacks:
+                    </Paragraph>
+
+                    <ol style={{ marginLeft: '20px' }}>
+                        <li>
+                            <Paragraph>
+                                Either Register your static callback URL with Itio. This is a one-time process.
+                            </Paragraph>
+                        </li>
+                        <li>
+                            <Paragraph>
+                                Or, Send the callback URL along with each payment request
+                            </Paragraph>
+                        </li>
                     </ol>
 
-                    <p>The URL is specified in the request parameter callbackUrl</p>
+                    <Divider />
+                    <Paragraph>
+                        <strong>Note:</strong> The URL is specified in the request parameter <code>callbackUrl</code>
+                    </Paragraph>
+
                 </Typography>
 
+            
                 <Typography>
-                    <Title level={3}>Payload</Title>
-                    <p>The payload that is going to be sent to the merchant on the specified callback URL will have a base64 encoded JSON.</p>
-                    <p>Upon base64 decoding the response, you should get a JSON with a format similar to the response returned by transaction status API.</p>
+                    <Title level={3} style={{ textAlign: 'start', marginBottom: '20px' }}>Payload</Title>
+                    <Paragraph style={{ fontSize: '16px', color: '#595959' }}>
+                        The payload that is going to be sent to the merchant on the specified callback URL will have a <strong>base64 encoded JSON</strong>.
+                    </Paragraph>
 
-                    <p>This is the best case callback that would be sent from the Itio server to the merchants’ server. In the event of a callback failure, the onus is on the merchants to use the transaction status API and take the transaction to closure.</p>
+                    <Paragraph style={{ fontSize: '16px', color: '#595959' }}>
+                        Upon base64 decoding the response, you should get a JSON with a format similar to the response returned by the <strong>transaction status API</strong>.
+                    </Paragraph>
+
+                    <Paragraph style={{ fontSize: '16px', color: '#595959' }}>
+                        This is the best-case callback that would be sent from the Itio server to the merchants’ server. In the event of a callback failure, the merchants must use the <strong>transaction status API</strong> and take the transaction to closure.
+                    </Paragraph>
+
                 </Typography>
+
 
                 {/* Callbac Headers */}
                 <Typography>
@@ -85,13 +127,15 @@ export default function S2SCallBack() {
                         borderRadius: '10px',
                         position: 'relative'
                         }}>
-                        <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word', marginBottom: '0' }}>
+                        
+                        <SyntaxHighlighter language="json" style={coy} showLineNumbers>
                             {JSON.stringify(sampleCallbackURLResponse, null, 2)}
-                        </pre>
+                        </SyntaxHighlighter>
+
                         <Button
                             icon={<CopyOutlined />}
                             style={{ position: 'absolute', top: '16px', right: '16px' }}
-                            onClick={handleRequestPayLoadCopy}
+                            onClick={()=> {handleCopy('sampleCallbackURLResponse')}}
                             />
                     </Card>
                 </Typography>
@@ -105,13 +149,14 @@ export default function S2SCallBack() {
                         borderRadius: '10px',
                         position: 'relative'
                         }}>
-                        <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word', marginBottom: '0' }}>
+                        <SyntaxHighlighter language="json" style={coy} showLineNumbers>
                             {JSON.stringify(Base64DecodedCallbackResponse, null, 2)}
-                        </pre>
+                        </SyntaxHighlighter>
+
                         <Button
                             icon={<CopyOutlined />}
                             style={{ position: 'absolute', top: '16px', right: '16px' }}
-                            onClick={handleRequestPayLoadCopy}
+                            onClick={()=> {handleCopy('Base64DecodedCallbackResponse')}}
                             />
                     </Card>
                 </Typography>
@@ -127,13 +172,14 @@ export default function S2SCallBack() {
                         borderRadius: '10px',
                         position: 'relative'
                         }}>
-                        <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word', marginBottom: '0' }}>
+                        <SyntaxHighlighter language="json" style={coy} showLineNumbers>
                             {JSON.stringify(sampleCallbackURLResponse, null, 2)}
-                        </pre>
+                        </SyntaxHighlighter>
+
                         <Button
                             icon={<CopyOutlined />}
                             style={{ position: 'absolute', top: '16px', right: '16px' }}
-                            onClick={handleRequestPayLoadCopy}
+                            onClick={()=> {handleCopy('sampleCallbackURLResponse')}}
                             />
                     </Card>
                 </Typography>
@@ -147,13 +193,14 @@ export default function S2SCallBack() {
                         borderRadius: '10px',
                         position: 'relative'
                         }}>
-                        <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word', marginBottom: '0' }}>
+                        <SyntaxHighlighter language="json" style={coy} showLineNumbers>
                             {JSON.stringify(Base64DecodedCallbackResponse, null, 2)}
-                        </pre>
+                        </SyntaxHighlighter>
+                        
                         <Button
                             icon={<CopyOutlined />}
                             style={{ position: 'absolute', top: '16px', right: '16px' }}
-                            onClick={handleRequestPayLoadCopy}
+                            onClick={()=> {handleCopy('Base64DecodedCallbackResponse')}}
                             />
                     </Card>
                 </Typography>
