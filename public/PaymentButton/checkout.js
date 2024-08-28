@@ -39,7 +39,6 @@ window.onload = async () => {
 
         button.addEventListener('click',  (event)=> {
             event.preventDefault();
-            console.log('clicked')
             window.location.href = `https://react-payment.oyefin.com/merchant/pg/payment/form/step/?payment_button=${button_id}`
         });
 

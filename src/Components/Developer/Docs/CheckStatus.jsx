@@ -48,6 +48,13 @@ export default function CheckStatusAPIDocs() {
             <div style={{ padding: 24, background: '#fff', minHeight: '80vh' }}>
             <Typography>
                 <Title style={{ color: '#1890ff' }} level={3}>Check Status API</Title>
+                <div style={{display:'flex', justifyContent:'center'}}>
+                    <Button shape="circle" style={{background:'#00c9a7', color:'white', width:'50px'}}>
+                        POST
+                    </Button>
+                    <Paragraph>https://python-uat.oyefin.com/api/v1/pg/prod/merchant/transaction/status/{'{merchantPublicUrl}'}/{'{merchantOrderID}'}</Paragraph>
+                </div>
+
                 <Paragraph>This API is used for checking the status of an existing transaction.</Paragraph>
 
                 <Divider />

@@ -82,9 +82,9 @@ export default function PayAPIContent() {
     return (
         <Layout style={{ marginRight: isMobile ? 0 : 295 }}>
 
-            <Header style={{ background: '#fff', padding: 0 }}>
-                <Title level={2} style={{ margin: '15px' }}>PAY API</Title>
-            </Header>
+            <div style={{ background: '#fff' }}>
+              <Title level={2} style={{ margin: '15px' }}>PAY API</Title>
+            </div>
 
             <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
                 <div style={{ padding: 24, background: '#fff', minHeight: '80vh' }}>

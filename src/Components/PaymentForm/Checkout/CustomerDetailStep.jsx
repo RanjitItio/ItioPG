@@ -49,6 +49,8 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
 
     const totalAmount = amountDetails.fixedAmount + formValue.customerAmt
 
+    // console.log('amountDetails', amountDetails.redirectURL)
+
     // Close the step
     const handleClose = () => {
         setOpen(false);
@@ -67,6 +69,8 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
 
         })
     }, []);
+
+    
 
     // Redirect to checkout page
     const handlePaymentCheckout = ()=> {
@@ -90,9 +94,9 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
                 
                 "amount": totalAmount * 100,   // Multiplied by 100
     
-                // "redirectUrl": "https://mycolor.space",
+                "redirectUrl": amountDetails?.redirectURL || '' ,
     
-                // "callbackUrl": "https://webhook.site/226a3886-b0b5-4f94-91a2-a25864f0b491", 
+                "callbackUrl": "",
     
                 "mobileNumber": "9999999999",
     

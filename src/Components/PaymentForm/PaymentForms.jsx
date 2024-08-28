@@ -73,7 +73,7 @@ export default function PaymentForm() {
 
     const [fixedAmountField, setFixedAmountField]       = useState(false);    // Fixed amount field
     const [CustomerAmountField, setCustomerAmountField] = useState(false); // Customer decided amount
-    const [firstStepData, updateFirstStepData]          = useState({title: '', businessName: ''})    // Button step state
+    const [firstStepData, updateFirstStepData]          = useState({title: '', businessName: '', redirectUrl: ''})    // Button step state
     const [stepErorMessage, setStepErrorMessage]        = useState(true);   // Step wise fields error Message
 
 
@@ -112,7 +112,6 @@ export default function PaymentForm() {
                 setStepErrorMessage('Please select Currency')
             } else if (CustomerAmountField && !currency2) {
                 setStepErrorMessage('Please select Currency')
-
             } else if (fixedAmountField === true && CustomerAmountField === true) {
                 setStepErrorMessage('Please select only one Field')
             }else {
@@ -205,6 +204,8 @@ export default function PaymentForm() {
                 buttonBGColor:       buttonColor,
                 businessName:        firstStepData.businessName,
 
+                redirectUrl:         firstStepData.redirectUrl,
+
                 isFixedAmount:       fixedAmountField,
                 fixedAmountLabel:    amountFieldsData.fixedAmountLable,
                 fixedAmount:         parseInt(amountFieldsData.fixedAmount),
@@ -275,6 +276,15 @@ export default function PaymentForm() {
                                             margin="normal"
                                             name='businessName'
                                             value={firstStepData.businessName}
+                                            onChange={handleFirstStepChange}
+                                        />
+                                        <TextField
+                                            fullWidth
+                                            label="Redirect URL"
+                                            placeholder="Redirect page after payment completion"
+                                            margin="normal"
+                                            name='redirectUrl'
+                                            value={firstStepData.redirectUrl}
                                             onChange={handleFirstStepChange}
                                         />
 
