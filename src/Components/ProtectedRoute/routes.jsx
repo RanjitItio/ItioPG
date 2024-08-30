@@ -110,7 +110,11 @@ const AuthRoutes = () => {
     },
     {
       path: "/pg/developer/docs/",
-      element: <DevDocs />,
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <DevDocs />
+        </Suspense>
+        ),
     },
     {
       path: "/merchant/pg/payment/form/step/",
