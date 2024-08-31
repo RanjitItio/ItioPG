@@ -100,10 +100,28 @@ export default function Navbar() {
     setMobileMoreAnchorEl(null);
   };
 
+  // Close the menu
   const handleMenuClose = () => {
     setAnchorEl(null);
     handleMobileMenuClose();
   };
+
+  // Change password Clicked Method
+  const handleChangePassword = ()=> {
+    setAnchorEl(null);
+    handleMobileMenuClose();
+
+    navigate('/change/password/')
+  };
+
+  // Change profile page
+  const handleProfilePage = ()=> {
+    setAnchorEl(null);
+    handleMobileMenuClose();
+
+    navigate('/merchant/profile/')
+  };
+
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
@@ -136,8 +154,8 @@ export default function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Change Password</MenuItem>
+      <MenuItem onClick={handleProfilePage}>Profile</MenuItem>
+      <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>
       <MenuItem onClick={()=> {handleMenuClose(); handleLogoutUser(); }}>Logout</MenuItem>
     </Menu>
   );

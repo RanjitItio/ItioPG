@@ -48,6 +48,9 @@ const MerchantBankAccounts = React.lazy(()=> import('../Bank/BankAccounts'));
 const APILogs = React.lazy(()=> import('../APILogs/APILog'));
 const AllMerchantRefundRequests = React.lazy(()=> import('../Refund/AllRefunds'));
 const DevDocs = React.lazy(()=> import('../Developer/Docs/Devdocs'));
+const ChangePassword = React.lazy(()=> import('../Authentication/ChangePassword'));
+const MerchantProfilePage = React.lazy(()=> import('../MerchantProfile/profilePage'));
+const UpdateMerchantProfile = React.lazy(()=> import('../MerchantProfile/updateProfile'));
 
 
 
@@ -174,6 +177,13 @@ const AuthRoutes = () => {
 
                 {/* API Logs */}
                 <Route exact path='/merchant/api/logs/' element={<APILogs />}></Route>
+
+                {/* Change Password */}
+                <Route exact path='/change/password/' element={<ChangePassword />}></Route>
+
+                {/* Profile page */}
+                <Route exact path='/merchant/profile/' element={<MerchantProfilePage />}></Route>
+                <Route exact path='/update/merchant/profile/' element={<UpdateMerchantProfile />}></Route>
 
                 
                 <Route exact path='*' element={
