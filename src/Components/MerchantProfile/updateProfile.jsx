@@ -265,6 +265,7 @@ export default function UpdateMerchantProfile() {
                     <TextField 
                         type='date' 
                         id="dob" 
+                        label='DOB'
                         variant="outlined"
                         fullWidth 
                         name='dob'

@@ -41,16 +41,20 @@ const MerchantProfilePage = () => {
   // Get the image file
   const handleUpdateProfilePic = (file)=> {
     updateProfilePic(file);
-
-    handleUploadImage();
+    
   };
 
+  // Trigger upload image method
+  useEffect(() => {
+    if (profilePic) {
+        handleUploadImage();
+    } 
+}, [profilePic]);
   
 
   // Upload image into DB
   const handleUploadImage = ()=> {
-       
-      if (profilePic) {
+     
         const file = profilePic
         const validFormats = ['image/jpeg', 'image/png', 'image/bmp', 'image/gif', 'image/svg+xml'];
 
@@ -87,9 +91,6 @@ const MerchantProfilePage = () => {
 
           })
         }
-      } else {
-        setImageError('Invalid Image')
-      }
   };
 
 
@@ -97,6 +98,7 @@ const MerchantProfilePage = () => {
    const handleEditPageRedirect = (user_data)=> {
         navigate('/update/merchant/profile/', {state: {user: user_data}})
    };
+
 
 
   return (
@@ -121,7 +123,7 @@ const MerchantProfilePage = () => {
                     <input 
                       type="file" 
                       id="contained-button-file" 
-                      multiple 
+                      multiple={false}
                       style={{display:'none'}}
                       onChange={(e)=> {handleUpdateProfilePic(e.target.files[0])}}
                     />
