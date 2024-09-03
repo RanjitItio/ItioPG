@@ -436,7 +436,11 @@ const KYCForm = () => {
 
       if (error.response.data.msg === 'Please upload document') {
           setError('Please upload document');
-      };
+      } else if (error.response.data.message === 'Kyc already applied') {
+        setError('KYC already applied, can not reapply');
+      } else if (error.response.status === 413) {
+        setError('File size too large')
+      }
     }
   };
 

@@ -4,9 +4,10 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import CircularProgress from '@mui/joy/CircularProgress';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import Chip from '@mui/material/Chip';
+// import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 
 const RefundFrom = lazy(()=> import('../Refund/RefundForm'));
 
@@ -45,9 +46,9 @@ export default function ProductionTransactionTable({businessTransactionData}) {
     const getStatusColor = (status)=> {
         switch (status) {
             case 'PAYMENT_INITIATED':
-                return 'warning'
+                return 'primary'
             case 'PAYMENT_FAILED':
-                return 'danger' 
+                return 'error' 
             case 'PAYMENT_SUCCESS':
                 return 'success' 
             case 'PAYMENT_PENDING':
@@ -147,9 +148,7 @@ export default function ProductionTransactionTable({businessTransactionData}) {
 
                         {/* Status */}
                         <TableCell>
-                            <span className={`text-${getStatusColor(transaction.status)}` }>
-                                <small>{statusMap[transaction.status] || 'UNKNOWN STATUS'}</small>
-                            </span>
+                            <Chip label={statusMap[transaction.status] || 'UNKNOWN STATUS'} color={getStatusColor(transaction.status)} />
                         </TableCell>
 
                         <TableCell>

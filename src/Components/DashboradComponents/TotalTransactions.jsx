@@ -50,8 +50,7 @@ export default function TotalTransactions() {
                 boxShadow: "0px 0px 10px rgba(0,0,0,0.1)", 
                 "&:hover": {
                 boxShadow: "0px 1px 20px rgba(0,0,0,0.3)" 
-                },
-                border: '1px solid black'
+                }
             }}>
         <CardContent style={{ overflow: "auto", maxHeight: "18rem" }}>
                

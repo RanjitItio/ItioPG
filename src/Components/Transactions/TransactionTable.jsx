@@ -345,7 +345,7 @@ if (emptyData) {
 return (
 
     <Box sx={{zIndex: 0, marginTop: -8, padding: 4}}>
-    <Card sx={{borderRadius:'20px', boxShadow:'-28px -8px 9px 0px rgba(0,0,0,0.75)'}}>
+    <Card sx={{borderRadius:'20px', boxShadow:'-28px -8px 9px 0px rgba(0,0,0,0.25)'}}>
         <Grid container p={2} justifyContent="space-between" alignItems="center">
             <Grid item xs={12} sm={4} md={3} lg={3}>
                 <div className="d-flex justify-content-start">

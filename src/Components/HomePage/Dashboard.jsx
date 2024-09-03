@@ -7,6 +7,8 @@ import AccountBalance from '../AccountBalance';
 import TotalTransactions from '../DashboradComponents/TotalTransactions';
 import RecentActivity from '../Recentactivity';
 import MerchantPendingWithdrawals from './PendingWithdrawals';
+import StatsComponent from './Stats';
+import RecentTransactions from './RecentTransactions';
 
 
 
@@ -22,49 +24,49 @@ export default function GatewayDashboard() {
             <Box sx={{zIndex: 0, marginTop: -8, padding: 4}}>
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={4}>
-
                         {/* Total Balance */}
                             <AccountBalance />
-
                         <Grid container>
                             <Grid item xs={12} my={2}>
-
                                 {/* Pocket Plan */}
-                                    <MerchantPendingWithdrawals />
-
+                                <MerchantPendingWithdrawals />
                             </Grid>
                         </Grid>
                     </Grid>
 
                     <Grid item xs={12} md={8}>
 
-                        {/* Total Transactions */}
-                            <TotalTransactions />
+                        <Grid container spacing={1}>
+                            <Grid item xs={12} sm={7}>
+                                {/* Pocket Plan */}
+                                <StatsComponent />
+                            </Grid>
 
-                        <Grid container spacing={2}>
-                            <Grid item xs={12} md={12} my={3}>
+                            <Grid item xs={12} sm={5}>
+                                {/* Pocket Plan */}
+                                <RecentTransactions />
+                            </Grid>
 
-                                {/* Total Refund */}
-                                    <MerchantTotalRefunds />
-
+                            <Grid item xs={12}>
+                                {/* Pocket Plan */}
+                                <TotalTransactions />
                             </Grid>
                         </Grid>
+
+                        {/* <TotalTransactions /> */}
 
                     </Grid>
                 </Grid>
 
-                <Grid container spacing={2} mt={2}>
+                {/* <Grid container spacing={2} mt={2}>
                     <Grid item xs={12} md={6} my={2}>
-
-                        {/* Recent Activity */}
-                            <RecentActivity />
-
+                        <RecentActivity />
                     </Grid>
 
                     <Grid item xs={12} md={6} my={2}>
                         <Currency /> 
                     </Grid>
-                </Grid>
+                </Grid> */}
             </Box>
         </>
     );

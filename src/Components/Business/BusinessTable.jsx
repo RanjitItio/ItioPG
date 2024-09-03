@@ -187,7 +187,7 @@ if (emptyData) {
 
   return (
     <Box sx={{zIndex: 0, marginTop: -8, padding: 4}}>
-    <Card sx={{borderRadius:'20px', boxShadow:'-28px -8px 9px 0px rgba(0,0,0,0.75)'}}>
+    <Card sx={{borderRadius:'20px', boxShadow:'-28px -8px 9px 0px rgba(0,0,0,0.25)'}}>
       <Box p={2} display="flex" justifyContent="space-between" alignItems="center">
         {/* <TextField placeholder="Search for transaction here" variant="outlined" size="small" /> */}
         <div className="d-flex justify-content-start">

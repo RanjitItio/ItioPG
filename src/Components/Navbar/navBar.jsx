@@ -5,28 +5,27 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
-import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import MoreIcon from '@mui/icons-material/MoreVert';
 import { useState } from 'react';
 import FitbitIcon from '@mui/icons-material/Fitbit';
 import Button from '@mui/material/Button';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Signout from '../Authentication/Signout';
+// import Badge from '@mui/material/Badge';
+// import SearchIcon from '@mui/icons-material/Search';
+// import MailIcon from '@mui/icons-material/Mail';
+// import NotificationsIcon from '@mui/icons-material/Notifications';
+// import MoreIcon from '@mui/icons-material/MoreVert';
 
 
 
 
 const pages = [ 
   {title: 'Developer', url: '/merchant/developer/tools/'}, 
-  {title: 'Blog', url: ''}
 ];
 
 
@@ -178,16 +177,16 @@ export default function Navbar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
+      {/* <MenuItem>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="error">
             <MailIcon />
           </Badge>
         </IconButton>
         <p>Messages</p>
-      </MenuItem>
+      </MenuItem> */}
     
-      <MenuItem>
+      {/* <MenuItem>
         <IconButton
           size="large"
           aria-label="show 17 new notifications"
@@ -198,7 +197,7 @@ export default function Navbar() {
           </Badge>
         </IconButton>
         <p>Notifications</p>
-      </MenuItem>
+      </MenuItem> */}
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           size="large"
@@ -227,6 +226,7 @@ export default function Navbar() {
           >
             <FitbitIcon />
           </IconButton>
+
           <Typography
             variant="h6"
             noWrap
@@ -237,7 +237,7 @@ export default function Navbar() {
           </Typography>
 
           {/* Search Bar */}
-          <Search>
+          {/* <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
@@ -245,11 +245,11 @@ export default function Navbar() {
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
             />
-          </Search>
+          </Search> */}
           <Box sx={{ flexGrow: 1 }} />
 
           {/* Nav Items for Small Device */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -260,6 +260,7 @@ export default function Navbar() {
             >
               <MenuIcon />
             </IconButton>
+
             <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
@@ -303,12 +304,13 @@ export default function Navbar() {
 
 
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+            {/* <IconButton size="large" aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="error">
                 <MailIcon />
               </Badge>
-            </IconButton>
-            <IconButton
+            </IconButton> */}
+
+            {/* <IconButton
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
@@ -316,7 +318,8 @@ export default function Navbar() {
               <Badge badgeContent={17} color="error">
                 <NotificationsIcon />
               </Badge>
-            </IconButton>
+            </IconButton> */}
+
             <IconButton
               size="large"
               edge="end"
@@ -328,7 +331,9 @@ export default function Navbar() {
             >
               <AccountCircle />
             </IconButton>
+
           </Box>
+
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -338,9 +343,10 @@ export default function Navbar() {
               onClick={handleMobileMenuOpen}
               color="inherit"
             >
-              <MoreIcon />
+              <AccountCircle />
             </IconButton>
           </Box>
+
         </Toolbar>
       </AppBar>
       {renderMobileMenu}

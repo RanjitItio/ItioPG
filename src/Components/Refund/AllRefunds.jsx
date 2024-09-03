@@ -4,14 +4,11 @@ import {
   Box, useMediaQuery, TextField, Grid
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import axiosInstance from '../Authentication/axios';
 import Pagination from '@mui/material/Pagination';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
-import TaskAltIcon from '@mui/icons-material/TaskAlt';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import Chip from '@mui/material/Chip';
 import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -156,7 +153,7 @@ export default function AllMerchantRefundRequests() {
 
     return (
         <Box sx={{zIndex: 0, marginTop: -8, padding: 4}}>
-            <Card sx={{borderRadius:'20px', boxShadow:'-28px -8px 9px 0px rgba(0,0,0,0.75)'}}>
+            <Card sx={{borderRadius:'20px', boxShadow:'-28px -8px 9px 0px rgba(0,0,0,0.25)'}}>
             <Grid container p={2} justifyContent="space-between" alignItems="center">
                 <Grid item xs={12} sm={4} md={3} lg={3}>
                     <div className="d-flex justify-content-start">
@@ -253,17 +250,10 @@ export default function AllMerchantRefundRequests() {
                                 {/* Transaction Amount Column */}
                                 <TableCell>{refunds.amount} {refunds.currency}</TableCell>
 
-
-                                {/* Instant Refund */}
-                                {/* <TableCell>
-                                    {refunds.instant_refund ? <TaskAltIcon color='success'/>: <HighlightOffIcon color='error'/>}
-                                </TableCell> */}
-
                                 {/* Status Column */}
                                 <TableCell>
                                     <Chip label={refunds.status} 
-                                            color={getStatusColor(refunds.status)}
-                                            variant="outlined"
+                                        color={getStatusColor(refunds.status)}
                                     />
                                 </TableCell>
                             </TableRow>

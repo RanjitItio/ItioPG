@@ -10,7 +10,9 @@ import Pagination from '@mui/material/Pagination';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
-
+import Chip from '@mui/material/Chip';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import WithdrawalFrom from './withdrawalForm';
 
 
 
@@ -24,9 +26,12 @@ export default function MerchantWithdrawalRequests() {
     const [withdrawalRequests, updateWithdrawalRequests] = useState([]);   // All withdrawal request data
     const [exportData, updateExportData] = useState([]); // Excel Data
     const [totalRows, updateTotalRows]   = useState(0);
+    const [openWithdrawl, setOpenWithdrawal]     = useState(false); // Withdrawal form state
+    const [accountBalance, updateAccountBalance] = useState([]); // Merchant Account balance state
 
     const countPagination = Math.ceil(totalRows);
     
+
     // Get all the Withdrawal requests raised by merchant
     useEffect(() => {
       axiosInstance.get(`/api/v3/merchant/withdrawal/`).then((res)=> {
@@ -44,13 +49,43 @@ export default function MerchantWithdrawalRequests() {
     }, []);
 
 
+    // Fetch Account balance of the user when the page loads
+   useEffect(() => {
+        axiosInstance.get(`/api/v5/merchant/account/balance/`).then((res)=> {
+        // console.log(res)
+
+            if (res.status === 200 && res.data.success === true) {
+                updateAccountBalance(res.data.merchantAccountBalance)
+             }
+            }).catch((error)=> {
+            console.log(error)
+            
+            if (error.response.data.error === 'No Merchant Balance availabel') {
+                //  MerchantAccountBalance = 0
+           };
+
+        })
+    }, []);
+
+    // Open Withdrawal Form
+    const handleClickOpenWithdrawalForm = () => {
+        setOpenWithdrawal(true);
+    };
+
+
+    // Close Withdrawal form
+    const handleCloseWithdrawalForm = () => {
+        setOpenWithdrawal(false);
+     };
+
+
     //  Status color according to the input
     const getStatusColor = (status) => {
         switch(status){
             case 'Approved':
                 return 'success'
             case 'Rejected':
-                return 'danger'
+                return 'error'
             case 'Pending':
                 return 'warning'
             case 'Hold':
@@ -126,29 +161,40 @@ export default function MerchantWithdrawalRequests() {
 
     
     return (
+        <>
         <Box sx={{zIndex: 0, marginTop: -8, padding: 4}}>
-            <Card sx={{borderRadius:'20px', boxShadow:'-28px -8px 9px 0px rgba(0,0,0,0.75)'}}>
+            <Card sx={{borderRadius:'20px', boxShadow:'-28px -8px 9px 0px rgba(0,0,0,0.25)'}}>
             <Box p={2} display="flex" justifyContent="space-between" alignItems="center">
                 {/* <TextField placeholder="Search for transaction here" variant="outlined" size="small" /> */}
                 <div className="d-flex justify-content-start">
-                    <p>
+                    <div>
                         <b><span className='fs-3'>All Withdrawals</span></b> <br />
-                        <small>List of all your Withdrawal Requests in one place</small>
-                    </p>
+                        <p>List of all your withdrawal requests</p>
+                    </div>
                 </div>
 
                 <Box>
+                    {/* If Small screen */}
                 {isSmallScreen ? (
                     <>
 
                     <IconButton style={{ marginLeft: 0 }}>
-                        <FileUploadOutlinedIcon />
+                        <FileDownloadIcon />
+                    </IconButton>
+
+                    <IconButton style={{ marginLeft: 0 }}>
+                        <IosShareIcon />
                     </IconButton>
                     </>
                 ) : (
                     <>
-                    <Button onClick={handleDownloadWithdrawals} variant="contained" style={{ marginLeft: 10 }} startIcon={<IosShareIcon />}>
+                    {/* Large Screen */}
+                    <Button onClick={handleDownloadWithdrawals} variant="contained" style={{ marginLeft: 10 }} startIcon={<FileDownloadIcon />}>
                         Download
+                    </Button>
+
+                    <Button onClick={handleClickOpenWithdrawalForm} variant="contained" style={{ marginLeft: 10 }} startIcon={<IosShareIcon />}>
+                        Withdrawal
                     </Button>
                     </>
                 )}
@@ -201,7 +247,7 @@ export default function MerchantWithdrawalRequests() {
 
                                 {/* Status Column */}
                                 <TableCell>
-                                    <p className={`text-${getStatusColor(withdrawal.status)}`}>{withdrawal.status}</p>
+                                    <Chip label={withdrawal.status} color={getStatusColor(withdrawal.status)} />
                                 </TableCell>
 
                             </TableRow>
@@ -219,5 +265,15 @@ export default function MerchantWithdrawalRequests() {
                     />
             </Card>
         </Box>
+
+        {/* // Withdrawal Form */}
+            <WithdrawalFrom 
+                open={openWithdrawl} 
+                handleClickOpen={handleClickOpenWithdrawalForm} 
+                handleClose={handleCloseWithdrawalForm}
+                accountBalance={accountBalance}
+                setOpen={setOpenWithdrawal}
+            />
+    </>
     );
 };

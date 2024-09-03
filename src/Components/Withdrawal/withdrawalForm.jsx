@@ -10,12 +10,9 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import FormHelperText from '@mui/material/FormHelperText';
 import NativeSelect from '@mui/material/NativeSelect';
 import axiosInstance from '../Authentication/axios';
 import { Link } from 'react-router-dom';
-
-
 
 
 
@@ -107,6 +104,7 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
     // Capture the Account balance currency Value
     const handleAccountBalanceCurrencyChange = (e)=> {
         setBalanceCurrency(e.target.value);
+        console.log(e.target.value)
     };
     
     
@@ -301,7 +299,7 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
                             <FormControl>
                                 <NativeSelect
                                     onChange={(e)=> {handleAccountBalanceCurrencyChange(e);}}
-                                    defaultValue='USD'
+                                    defaultValue={balanceCurrency}
                                     size='small'
                                     inputProps={{
                                         name: 'Currency',
