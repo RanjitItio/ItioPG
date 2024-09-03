@@ -1,5 +1,6 @@
 import React from 'react';
-import { Grid, Paper, Typography, Box } from '@mui/material';
+import { Grid, Paper, Typography, Box, 
+        InputLabel, Select, FormControl, MenuItem } from '@mui/material';
 import { AccountBalanceWallet, AttachMoney, TrendingDown } from '@mui/icons-material';
 
 const stats = [
@@ -8,6 +9,13 @@ const stats = [
   { id: 3, label: 'Current Rate', value: 25.35, icon: <AttachMoney />, color: 'green' },
   { id: 4, label: 'Total Refund', value: 22.56, icon: <TrendingDown />, color: 'red' },
 ];
+
+
+const currencies = [
+    { value: 'USD', label: 'USD' },
+    { value: 'EUR', label: 'EUR' },
+    { value: 'INR', label: 'INR' },
+  ];
 
 const StatCard = ({ label, value, icon, color }) => (
   <Paper
@@ -49,9 +57,22 @@ const StatCard = ({ label, value, icon, color }) => (
 export default function StatsComponent() {
     return (
         <Paper sx={{ padding: '20px', mb:3, height:{md:'21.4rem'} }}>
-            <Typography variant="h6" gutterBottom>
-                Stats
-            </Typography>
+            <Box sx={{ display:'flex', justifyContent:'space-between', mb:1}}>
+                <Typography variant="h6" gutterBottom>
+                    Stats
+                </Typography>
+           
+                <FormControl size="small">
+                    <InputLabel id="currency-label">Currency</InputLabel>
+                    <Select labelId="currency-label" id="currency" label="Currency">
+                    {currencies.map((currency) => (
+                        <MenuItem key={currency.value} value={currency.value}>
+                            {currency.label}
+                        </MenuItem>
+                    ))}
+                    </Select>
+                </FormControl>
+            </Box>
 
             <Grid container spacing={4}>
                 {stats.map((stat) => (
