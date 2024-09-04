@@ -289,7 +289,7 @@ const StepContent = ({ step, formData, handleChange, handleZipCodeChange, handle
                 <label htmlFor='idProof'>Upload Document</label>
                 <TextField 
                     type='file' 
-                    id='idProof'  
+                    id='idProof' 
                     fullWidth 
                     size='small' 
                     InputLabelProps={{ shrink: true }}
@@ -364,7 +364,7 @@ const KYCForm = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     let validationError = [];
-
+    
     if (!formData.firstName.trim()) validationError.push('Please fill your First Name');
     if (!formData.lastName.trim()) validationError.push('Please fill your Last Name');
     if (!formData.dob.trim()) validationError.push('Please fill your Date of Birth');
@@ -382,6 +382,9 @@ const KYCForm = () => {
     if (!formData.idType.trim()) validationError.push('Please select your ID Type');
     if (!formData.idNumber.trim()) validationError.push('Please type your ID Number');
     if (!formData.idExpiryDate.trim()) validationError.push('Please fill in ID Expiry Date');
+    if (formData.document && formData.document.size > 1024 * 1024) {
+      validationError.push('Document size exceeds 1MB');
+    }
 
     if (validationError.length > 0) {
       setError(validationError.join(', '));
@@ -617,6 +620,7 @@ const KYCForm = () => {
             >
               Previous
             </Button>
+
             <Button
               // onClick={activeStep === steps.length ? handleReset : handleNext}
               onClick={activeStep === steps.length - 1 ? handleFormSubmit : handleNext}

@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-  Button,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
@@ -50,11 +48,6 @@ function KYCSubmission(params) {
           </Typography>
         </DialogContentText>
       </DialogContent>
-      {/* <DialogActions>
-        <Button onClick={() => {}} color="primary">
-          Close
-        </Button>
-      </DialogActions> */}
     </Dialog>
   );
 }

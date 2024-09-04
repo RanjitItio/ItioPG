@@ -51,6 +51,7 @@ const DevDocs = React.lazy(()=> import('../Developer/Docs/Devdocs'));
 const ChangePassword = React.lazy(()=> import('../Authentication/ChangePassword'));
 const MerchantProfilePage = React.lazy(()=> import('../MerchantProfile/profilePage'));
 const UpdateMerchantProfile = React.lazy(()=> import('../MerchantProfile/updateProfile'));
+const AdminLogin = React.lazy(()=> import('../Authentication/AdminLogin'));
 
 
 
@@ -127,6 +128,14 @@ const AuthRoutes = () => {
       path: "/merchant/bank/NA/",
       element: <div>Nothing to show</div>,
     },
+    {
+      path: "/admin/merchant/login/",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+            <AdminLogin />
+        </Suspense>
+      ),
+    },
   ];
 
 
@@ -184,7 +193,6 @@ const AuthRoutes = () => {
                 {/* Profile page */}
                 <Route exact path='/merchant/profile/' element={<MerchantProfilePage />}></Route>
                 <Route exact path='/update/merchant/profile/' element={<UpdateMerchantProfile />}></Route>
-
                 
                 <Route exact path='*' element={
                   <>

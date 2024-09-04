@@ -78,12 +78,27 @@ const StatCard = ({ label, icon, color, currency }) => {
             {icon}
             </Box>
 
-            <Box>
-                <Typography variant="h5" fontWeight="bold">
+            <Box sx={{flexGrow:1, minWidth:0}}>
+                <Typography 
+                    variant="h6" 
+                    fontWeight="bold"
+                    sx={{
+                        whiteSpace: 'nowrap', 
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis', 
+                    }}>
                     {getAmount(label)}
                 </Typography>
 
-                <Typography variant="subtitle2" color="textSecondary">
+                <Typography 
+                    variant="subtitle2" 
+                    color="textSecondary"
+                    sx={{
+                        whiteSpace:'nowrap',
+                        overflow:'hidden',
+                        textOverflow: 'ellipsis'
+                    }}
+                    >
                     {label}
                 </Typography>
             </Box>
