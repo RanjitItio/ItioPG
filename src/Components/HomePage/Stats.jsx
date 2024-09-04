@@ -41,13 +41,13 @@ const StatCard = ({ label, icon, color, currency }) => {
     const getAmount = (label) => {
         switch (label) {
             case 'Total Balance':
-                return statsData[0]?.merchant_account_balance[0]?.amount ?? 0;
+                return parseInt(statsData[0]?.merchant_account_balance[0]?.amount).toFixed(2) ?? 0;
             case 'Total Withdrawal':
-                return statsData[0]?.merchant_withdrawals[0]?.amount || 0;
+                return parseInt(statsData[0]?.merchant_withdrawals[0]?.amount).toFixed(2) || 0;
             case 'Pending Withdrawals':
-                return statsData[0]?.merchant_pending_withdrawals[0].amount || 0;
+                return parseInt(statsData[0]?.merchant_pending_withdrawals[0].amount).toFixed(2) || 0;
             case 'Total Refund':
-                return statsData[0]?.merchant_refunds[0]?.amount ?? 0;
+                return parseInt(statsData[0]?.merchant_refunds[0]?.amount).toFixed(2) ?? 0;
             default:
                 return 0;
             }
