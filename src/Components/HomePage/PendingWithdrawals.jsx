@@ -77,7 +77,6 @@ export default function MerchantPendingWithdrawals() {
             // console.log(res)
     
             if (res.status === 200 && res.data.success === true) {
-                
                 const dataWithKeys = res.data.merchantPendingWithdrawals.map((item, index) => ({
                   ...item,
                   key: index,
