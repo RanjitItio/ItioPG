@@ -9,11 +9,11 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import FitbitIcon from '@mui/icons-material/Fitbit';
 import Button from '@mui/material/Button';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Signout from '../Authentication/Signout';
 // import Badge from '@mui/material/Badge';
 // import SearchIcon from '@mui/icons-material/Search';
@@ -74,6 +74,22 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function Navbar() {
 
   const navigate = useNavigate();
+  const Querylocation = useLocation();
+
+  const QueryParams = new URLSearchParams(Querylocation.search);
+  const refresh     = QueryParams.get('refresh');
+
+  // Refresh the if query contains refresh value
+  // While redeirecting admin to merchant page to get the data from server
+  useEffect(() => {
+    if (refresh === 'true') {
+      QueryParams.delete('refresh');
+      navigate({pathname: QueryParams.toString() });
+      location.reload(true);
+    }
+  }, []);
+
+
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);

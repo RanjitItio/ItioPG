@@ -27,7 +27,7 @@ export default function AdminLogin() {
             localStorage.setItem('is_merchant', isMerchant)
     
             setTimeout(() => {
-                navigate('/')
+                navigate('/?refresh=true')
             }, 2000);
     
         } else {
