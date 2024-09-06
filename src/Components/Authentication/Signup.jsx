@@ -432,8 +432,7 @@ export default function Signup() {
                                             <JoyCheckbox
                                                 label={
                                                 <React.Fragment>
-                                                        <small>By creating an account means you agree to the Terms & Conditions and our Privacy Policy</small>
-                                                    {/* <Typography sx={{ fontWeight: 'md' }}>terms and conditions</Typography>. */}
+                                                    <small>By creating an account means you agree to the Terms & Conditions and our Privacy Policy</small>
                                                 </React.Fragment>
                                                 }
                                             />

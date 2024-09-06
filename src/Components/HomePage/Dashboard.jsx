@@ -6,9 +6,10 @@ import MerchantTotalRefunds from '../DashboradComponents/TotalRefunds';
 import AccountBalance from '../AccountBalance';
 import TotalTransactions from '../DashboradComponents/TotalTransactions';
 import RecentActivity from '../Recentactivity';
-import MerchantPendingWithdrawals from './PendingWithdrawals';
+import MerchantMonthlyTransaction from './MonthyTransaction';
 import StatsComponent from './Stats';
 import RecentTransactions from './RecentTransactions';
+import TransactionStatistics from './TransactionStatitics';
 
 
 
@@ -29,7 +30,7 @@ export default function GatewayDashboard() {
                         <Grid container>
                             <Grid item xs={12} my={2}>
                                 {/* Pocket Plan */}
-                                <MerchantPendingWithdrawals />
+                                <MerchantMonthlyTransaction />
                             </Grid>
                         </Grid>
                     </Grid>
@@ -44,16 +45,19 @@ export default function GatewayDashboard() {
 
                             <Grid item xs={12} sm={5}>
                                 {/* Pocket Plan */}
-                                <RecentTransactions />
+                                <TransactionStatistics />
                             </Grid>
 
                             <Grid item xs={12}>
                                 {/* Pocket Plan */}
+                                <RecentTransactions />
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                {/*  Total Transaction */}
                                 <TotalTransactions />
                             </Grid>
                         </Grid>
-
-                        {/* <TotalTransactions /> */}
 
                     </Grid>
                 </Grid>
