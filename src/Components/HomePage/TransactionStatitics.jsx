@@ -3,22 +3,26 @@ import { Doughnut } from 'react-chartjs-2';
 import { Box, Typography, Select, MenuItem } from '@mui/material';
 import { styled } from '@mui/system';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { useState, useEffect } from 'react';
+import axiosInstance from '../Authentication/axios';
+
 
 // Register the chart components (necessary from Chart.js v3 onwards)
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 
 // Dummy data for the chart
-const data = {
-  labels: ['Male', 'Female'],
-  datasets: [
-    {
-      data: [20000, 25000],
-      backgroundColor: ['#4285F4', '#FBBC05'],
-      hoverOffset: 4,
-    },
-  ],
-};
+// const data = {
+//   labels: ['Success Transaction', 'Withdrawals'],
+
+//   datasets: [
+//     {
+//       data: [20000, 25000],
+//       backgroundColor: ['#4285F4', '#FBBC05'],
+//       hoverOffset: 4,
+//     },
+//   ],
+// };
 
 
 // Options for the chart
@@ -30,6 +34,7 @@ const options = {
     },
   },
 };
+
 
 // Styled component for the percentage circles
 const PercentageCircle = styled(Box)(({ top, left }) => ({
@@ -51,7 +56,78 @@ const PercentageCircle = styled(Box)(({ top, left }) => ({
 
 
 export default function TransactionStatistics() {
-  const [timeRange, setTimeRange] = React.useState('Yearly');
+  const [timeRange, setTimeRange] = useState('Yearly');
+  const [transactinData, updateTransactionData] = useState([]);
+  const [currencies, updateCurrenies] = useState([]);
+  const [selectedCurrency, setSelectedCurrency] = useState('');
+
+  
+  // get currency value
+  const handleCurrencyChange = (e)=> {
+      setSelectedCurrency(e.target.value);
+  };
+
+
+
+  // Fetch all the available currencies
+  useEffect(() => {
+    axiosInstance.get(`/api/v2/currency/`).then((res)=> {
+        if (res.status === 200) {
+          updateCurrenies(res.data.currencies)
+        }
+
+      }).catch((error)=> {
+        console.log(error)
+
+      });
+  }, [])
+  
+
+  // Fetch transaction and withdrawal amount
+  useEffect(() => {
+    axiosInstance.get(`/api/v6/merchant/dash/transaction/withdrawal/chart/`).then((res)=> {
+           if (res.status === 200) {
+              updateTransactionData(res.data)
+           }
+    }).catch((error)=> {
+        console.log(error)
+    });
+
+  }, []);
+
+
+
+  /// Fetch transaction and withdrawal amount currency wise
+  useEffect(() => {
+    if (selectedCurrency) {
+      axiosInstance.get(`/api/v6/merchant/dash/transaction/withdrawal/chart/?currency=${selectedCurrency}`).then((res)=> {
+        // console.log(res.data)
+
+          if (res.status === 200) {
+            updateTransactionData(res.data)
+          }
+      }).catch((error)=> {
+        console.log(error)
+      });
+    }
+  }, [selectedCurrency])
+  
+     
+  
+  // Dougnut Chart
+  const data = {
+    labels: ['Success Transaction', 'Withdrawals'],
+  
+    datasets: [
+      {
+        data: [transactinData?.success_transaction || 0, transactinData?.withdrawal_amount || 0],
+        backgroundColor: ['#4285F4', '#FBBC05'],
+        hoverOffset: 4,
+      },
+    ],
+  };
+  
+  
 
   return (
     <Box sx={{ p: 1, backgroundColor: '#f5f7fb', borderRadius: '10px', maxWidth: 400}}>
@@ -61,12 +137,16 @@ export default function TransactionStatistics() {
             Transaction Statistics
         </Typography>
         <Select
-          value={timeRange}
-          onChange={(e) => setTimeRange(e.target.value)}
+          value={selectedCurrency}
+          onChange={(e) => {handleCurrencyChange(e);}}
           size="small"
         >
-          <MenuItem value="Yearly">Yearly</MenuItem>
-          <MenuItem value="Monthly">Monthly</MenuItem>
+          {currencies.map((curr, index)=> {
+            return (
+              <MenuItem key={index} value={curr.name}>{curr.name}</MenuItem>
+            )
+          })}
+          
         </Select>
       </Box>
 
@@ -75,10 +155,12 @@ export default function TransactionStatistics() {
         <Doughnut data={data} options={options} />
 
         <PercentageCircle top="17%" left="10%">
-          +25%
+            {((parseInt(transactinData.success_transaction) + parseInt(transactinData.withdrawal_amount)) === 0) ? 0 : (((parseInt(transactinData.withdrawal_amount) * 100) / (parseInt(transactinData.success_transaction) + parseInt(transactinData.withdrawal_amount))).toFixed(1))}%
         </PercentageCircle>
+
+
         <PercentageCircle top="75%" left="69%">
-          +30%
+        {((parseInt(transactinData.success_transaction) + parseInt(transactinData.withdrawal_amount)) === 0) ? 0 : (((parseInt(transactinData.success_transaction) * 100) / (parseInt(transactinData.success_transaction) + parseInt(transactinData.withdrawal_amount))).toFixed(1))}%
         </PercentageCircle>
       </Box>
 
@@ -87,13 +169,13 @@ export default function TransactionStatistics() {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Box sx={{ width: 10, height: 10, backgroundColor: '#4285F4', mr: 1 }} />
           <Typography variant="body2">
-            Transactions: <strong>20,000</strong>
+            Transactions: <strong>{transactinData.success_transaction}</strong>
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Box sx={{ width: 10, height: 10, backgroundColor: '#FBBC05', mr: 1 }} />
           <Typography variant="body2">
-            Withdrawals: <strong>25,000</strong>
+            Withdrawals: <strong>{transactinData.withdrawal_amount}</strong>
           </Typography>
         </Box>
       </Box>

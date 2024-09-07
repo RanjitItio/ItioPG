@@ -1,15 +1,15 @@
 import React, { Suspense } from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import Currency from '../currency';
-import MerchantTotalRefunds from '../DashboradComponents/TotalRefunds';
 import AccountBalance from '../AccountBalance';
 import TotalTransactions from '../DashboradComponents/TotalTransactions';
-import RecentActivity from '../Recentactivity';
 import MerchantMonthlyTransaction from './MonthyTransaction';
 import StatsComponent from './Stats';
 import RecentTransactions from './RecentTransactions';
 import TransactionStatistics from './TransactionStatitics';
+// import Currency from '../currency';
+// import MerchantTotalRefunds from '../DashboradComponents/TotalRefunds';
+// import RecentActivity from '../Recentactivity';
 
 
 

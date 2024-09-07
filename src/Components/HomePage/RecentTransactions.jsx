@@ -6,6 +6,11 @@ import {
   Table, TableHead, TableBody, TableRow, TableCell, Avatar, Chip, Typography,
   TableContainer, Paper, Box
 } from '@mui/material';
+import PaidIcon from '@mui/icons-material/Paid';
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+import EuroIcon from '@mui/icons-material/Euro';
+import CurrencyPoundIcon from '@mui/icons-material/CurrencyPound';
+import CurrencyRubleIcon from '@mui/icons-material/CurrencyRuble';
 
 
 
@@ -19,7 +24,7 @@ const statusColors = {
 const orders = [
   {
     user: 'Dianne Russell',
-    avatar: '/path/to/avatar1.jpg', // Replace with correct paths or icons
+    avatar: 'https://python-uat.oyefin.com/media/transaction.jpeg', // Replace with correct paths or icons
     invoice: '#6352148',
     item: 'iPhone 14 max',
     qty: 2,
@@ -28,7 +33,7 @@ const orders = [
   },
   {
     user: 'Wade Warren',
-    avatar: '/path/to/avatar2.jpg',
+    avatar: 'https://python-uat.oyefin.com/media/transaction.jpeg',
     invoice: '#6352148',
     item: 'Laptop HPH',
     qty: 3,
@@ -37,7 +42,7 @@ const orders = [
   },
   {
     user: 'Albert Flores',
-    avatar: '/path/to/avatar3.jpg',
+    avatar: 'https://python-uat.oyefin.com/media/transaction.jpeg',
     invoice: '#6352148',
     item: 'Smart Watch',
     qty: 7,
@@ -65,24 +70,6 @@ const orders = [
 ];
 
 
-// Assign icon according to currency
-const getCurrencyIcon = (currency)=> {
-  switch(currency) {
-    case 'USD':
-      return PaidIcon;
-    case 'INR':
-      return CurrencyRupeeIcon;
-    case 'EURO':
-      return EuroIcon;
-    case 'GBP':
-      return CurrencyPoundIcon;
-    case 'Rub':
-      return CurrencyRubleIcon;
-    default:
-      return PaidIcon;
-  };
-};
-
 
 
 // Get payment status Label 
@@ -107,6 +94,7 @@ const RecentTransactions = () => {
   const navigate = useNavigate();
   const [recentTransactions, updateRecentTransaction] = useState([]); // Recent Transactions
 
+
   useEffect(() => {
     axiosInstance.get(`api/v6/merchant/recent/transactions/`).then((res)=> {
         // console.log(res);
@@ -119,43 +107,58 @@ const RecentTransactions = () => {
          console.log(error);
     })
   }, []);
+
+
+  // Calculate payout balance
+  const calculatePayoutBalance = (amount, fee)=> {
+       let transaction_amount = amount
+       let transaction_fee    = fee
+
+       let payoutBalance = transaction_amount - ((transaction_amount / 100) * transaction_fee)
+
+       return payoutBalance;
+  };
   
+
 
   return (
        
     <Paper sx={{maxHeight:'25rem', overflow:'auto'}}>
-      <Typography variant="h6" sx={{ padding: '16px', fontWeight: 'bold' }}>
-          Recent Orders
+      <Typography variant="p" sx={{ padding: '18px', fontWeight: 'bold', mt:5 }}>
+          Recent Transactions
       </Typography>
 
-      <TableContainer component={Paper} sx={{ maxHeight: '20rem' }}>
+      <TableContainer component={Paper} sx={{ maxHeight: '20rem', marginTop:'18px' }}>
           <Table stickyHeader>
-            <TableHead sx={{backgroundColor:'#f6f7f9'}}>
+            <TableHead>
               <TableRow>
-                <TableCell><strong>Date</strong></TableCell>
-                <TableCell><strong>Time</strong></TableCell>
-                <TableCell><strong>Transaction Id</strong></TableCell>
-                <TableCell><strong>Order Id</strong></TableCell>
-                <TableCell><strong>Amount</strong></TableCell>
-                <TableCell><strong>Fee</strong></TableCell>
-                <TableCell><strong>Payout</strong></TableCell>
-                <TableCell><strong>Status</strong></TableCell>
+                <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Date</strong></TableCell>
+                <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Time</strong></TableCell>
+                <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Transaction Id</strong></TableCell>
+                <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Order Id</strong></TableCell>
+                <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Amount</strong></TableCell>
+                <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Fee</strong></TableCell>
+                <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Payout</strong></TableCell>
+                <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Status</strong></TableCell>
               </TableRow>
             </TableHead>
 
             <TableBody>
-              {orders.map((order, index) => (
+              {recentTransactions.map((order, index) => (
+               
                 <TableRow key={index}>
-                  <TableCell>
-                    <Avatar src={order.avatar} alt={order.user} sx={{ marginRight: 2 }} />
-                    {order.user}
+                  <TableCell sx={{display:'flex', justifyContent:'center'}}>
+                      <Avatar src='https://python-uat.oyefin.com/media/transaction.jpeg' alt='Date' sx={{ marginRight: 2 }} />
+                      <b>{order.createdAt.split('T')[0]}</b>
                   </TableCell>
-                  <TableCell>{order.invoice}</TableCell>
-                  <TableCell>{order.item}</TableCell>
-                  <TableCell>{order.qty}</TableCell>
-                  <TableCell>{order.amount}</TableCell>
+                  <TableCell>{order?.createdAt?.split('T')[1] || 'Date'}</TableCell>
+                  <TableCell>{`${order.transaction_id?.substring(0, 15)}...`}</TableCell>
+                  <TableCell>{`${order.merchantOrderID?.substring(0, 15)}...`}</TableCell>
+                  <TableCell>{order?.transaction_amount || 0} {order.currency}</TableCell>
+                  <TableCell>{order?.transaction_fee}%</TableCell>
+                  <TableCell>{calculatePayoutBalance(order?.transaction_amount || 0, order?.transaction_fee || 0)} {order.currency || 'None'}</TableCell>
                   <TableCell>
-                        <Chip label={order.status} color="success" variant="outlined" />
+                        <Chip label={getPaymentStatusLabel(order.status || 'NONE')} color={statusColors[order.status]} variant="outlined" />
                   </TableCell>
                 </TableRow>
               ))}
