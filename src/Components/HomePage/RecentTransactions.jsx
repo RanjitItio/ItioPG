@@ -163,7 +163,7 @@ const RecentTransactions = () => {
           Recent Transactions
       </Typography>
 
-      <TableContainer component={Paper} sx={{ height: '27rem', marginTop:'18px' }}>
+      <TableContainer component={Paper} sx={{ height: '30rem', marginTop:'18px' }}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>
