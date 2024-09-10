@@ -152,7 +152,7 @@ export default function Signup() {
                 }
 
                 setError('');
-                setSuccessMessage(`Dear ${formData.first_name} ${formData.last_name} you have been Registered Successfully Please fill the KYC details`);
+                setSuccessMessage(`Dear ${formData.first_name} ${formData.last_name} you have been Registered Successfully Please verify your email Address by clicking on the link sent to the given email Address`);
                 const queryString = new URLSearchParams(filteredFormData).toString();
         
                 setTimeout(() => {

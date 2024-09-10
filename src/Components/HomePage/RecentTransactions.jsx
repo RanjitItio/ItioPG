@@ -6,11 +6,12 @@ import {
   Table, TableHead, TableBody, TableRow, TableCell, Avatar, Chip, Typography,
   TableContainer, Paper, Box
 } from '@mui/material';
-import PaidIcon from '@mui/icons-material/Paid';
-import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
-import EuroIcon from '@mui/icons-material/Euro';
-import CurrencyPoundIcon from '@mui/icons-material/CurrencyPound';
-import CurrencyRubleIcon from '@mui/icons-material/CurrencyRuble';
+import InboxIcon from '@mui/icons-material/Inbox';
+// import PaidIcon from '@mui/icons-material/Paid';
+// import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+// import EuroIcon from '@mui/icons-material/Euro';
+// import CurrencyPoundIcon from '@mui/icons-material/CurrencyPound';
+// import CurrencyRubleIcon from '@mui/icons-material/CurrencyRuble';
 
 
 
@@ -91,7 +92,6 @@ const getPaymentStatusLabel = (status) => {
 // Recent Transaction in Dashboard section
 const RecentTransactions = () => {
 
-  const navigate = useNavigate();
   const [recentTransactions, updateRecentTransaction] = useState([]); // Recent Transactions
 
 
@@ -108,7 +108,6 @@ const RecentTransactions = () => {
     })
   }, []);
 
-
   // Calculate payout balance
   const calculatePayoutBalance = (amount, fee)=> {
        let transaction_amount = amount
@@ -117,6 +116,42 @@ const RecentTransactions = () => {
        let payoutBalance = transaction_amount - ((transaction_amount / 100) * transaction_fee)
 
        return payoutBalance;
+  };
+
+  // For Empty data
+  if (recentTransactions.length === 0) {
+    return (
+
+      <Paper sx={{maxHeight:'25rem', overflow:'auto'}}>
+        <Typography variant="p" sx={{ padding: '18px', fontWeight: 'bold', mt:5 }}>
+            Recent Transactions
+        </Typography>
+
+        <TableContainer component={Paper} sx={{ maxHeight: '20rem', marginTop:'18px' }}>
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Date</strong></TableCell>
+                <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Time</strong></TableCell>
+                <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Transaction Id</strong></TableCell>
+                <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Order Id</strong></TableCell>
+                <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Amount</strong></TableCell>
+                <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Fee</strong></TableCell>
+                <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Payout</strong></TableCell>
+                <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Status</strong></TableCell>
+              </TableRow>
+            </TableHead>
+          </Table>
+
+          <TableBody style={{display:'flex', justifyContent:'center', height:'14rem'}}>
+              <InboxIcon sx={{mt:10, fontSize:'90px', color:'#e0e2e2'}} /> <br />
+          </TableBody>
+
+        </TableContainer>
+
+      </Paper>
+
+    );
   };
   
 
