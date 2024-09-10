@@ -4,7 +4,6 @@ import {
   Box, useMediaQuery
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import axiosInstance from '../Authentication/axios';
 import Pagination from '@mui/material/Pagination';
 import IosShareIcon from '@mui/icons-material/IosShare';
@@ -13,6 +12,7 @@ import { saveAs } from 'file-saver';
 import Chip from '@mui/material/Chip';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import WithdrawalFrom from './withdrawalForm';
+import Footer from '../Footer';
 
 
 
@@ -274,6 +274,8 @@ export default function MerchantWithdrawalRequests() {
                 accountBalance={accountBalance}
                 setOpen={setOpenWithdrawal}
             />
+
+        <Footer />
     </>
     );
 };

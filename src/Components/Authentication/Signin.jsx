@@ -13,6 +13,18 @@ import Avatar from '@mui/material/Avatar';
 import { useMediaQuery, useTheme } from '@mui/material';
 
 
+const IS_DEVELOPMENT = import.meta.env.VITE_IS_DEVELOPMENT;
+let kycRedirectUrl = '';
+
+
+
+// URL according to the environment
+if (IS_DEVELOPMENT === 'True') {
+    kycRedirectUrl = 'http://localhost:5173'
+} else {
+    kycRedirectUrl = 'https://react-payment.oyefin.com'
+};
+
 
 
 // User Signin 
@@ -88,15 +100,22 @@ export default function Signin() {
 			}).catch((error)=> {
                 console.log(error)
 
-                if (error.response.data.msg == 'Your account is not active. Please contact the administrator.'){
+                if (error.response.data.msg == 'Your account is not active. Please contact the administrator'){
                     setError("Your account is not active yet please contact the Administrator");
-                    return;
                 }
                 else if (error.response.data.msg == 'Invalid credentials'){
                     setError("Invalid Credentials");
-                    return;
                 }
-                else {
+                else if (error.response.data.message === 'Kyc not submitted') {
+                    let first_name     = error.response.data.first_name
+                    let last_name      = error.response.data.last_name
+                    let contact_number = error.response.data.contact_number
+                    let email          = error.response.data.email
+                    let user_id        = error.response.data.user_id
+
+                    window.location.href = `${kycRedirectUrl}/kyc/?first_name=${first_name}&last_name=${last_name}&contact_number=${contact_number}&email=${email}&user_id=${user_id}`
+
+                } else {
                     setError('')
                 }
             })

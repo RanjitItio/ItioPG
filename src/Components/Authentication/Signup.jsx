@@ -102,7 +102,7 @@ export default function Signup() {
             setError('Incorrect OTP Entered')
         } else if (!formData.last_name) {
             setError("Please fill your Last Name");
-        } else if (!formData.first_name) {
+        }else if (!formData.first_name) {
             setError("Please fill your First Name");
         } else if (!formData.contact_number) {
             setError("Please fill the contact number");
@@ -156,7 +156,7 @@ export default function Signup() {
                 const queryString = new URLSearchParams(filteredFormData).toString();
         
                 setTimeout(() => {
-                  window.location.href = `/kyc?${queryString}`
+                //   window.location.href = `/kyc?${queryString}`
                 }, 2000);
               }
             })
@@ -226,7 +226,7 @@ export default function Signup() {
                                             }}
                                             startDecorator={
                                                 <InputAdornment position="start">
-                                                    <AccountCircleIcon />
+                                                    <AccountCircleIcon color='primary' />
                                                 </InputAdornment>
                                             }
                                         />
@@ -248,7 +248,7 @@ export default function Signup() {
                                             }}
                                             startDecorator={
                                                 <InputAdornment position="start">
-                                                    <AccountCircleIcon />
+                                                    <AccountCircleIcon color='primary' />
                                                 </InputAdornment>
                                             }
                                         />

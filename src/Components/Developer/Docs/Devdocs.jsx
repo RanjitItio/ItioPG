@@ -60,6 +60,7 @@ export default function DevDocs() {
 
 
   return (
+    <>
         <Layout style={{ minHeight: '100vh' }}>
             {!isMobile ? (
                 <Sider
@@ -186,6 +187,8 @@ axios.request(options).then(function (response) {
         </Sider>
       )}
     </Layout>
+  
+  </>
 
     );
 };

@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef} from 'react';
 import {
-  Card,Button,TextField, MenuItem, Select, InputLabel, FormControl, Collapse, Box, Grid,
+  Card,Button,TextField, Box, Grid,
 } from '@mui/material';
-import FormHelperText from '@mui/material/FormHelperText';
 import axiosInstance from '../Authentication/axios';
 import Pagination from '@mui/material/Pagination';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -16,6 +15,7 @@ import { saveAs } from 'file-saver';
 import IconButton from '@mui/material/IconButton';
 import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
 import { useTheme } from '@mui/material/styles';
+import Footer from '../Footer';
 
 
 
@@ -281,6 +281,8 @@ if (isLoading) {
         <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '3%' }}>
             <CircularProgress />
         </Box>
+
+        <Footer />
         </>
     )
 };
@@ -335,15 +337,14 @@ if (emptyData) {
         </Box>
         <p style={{display:'flex', justifyContent: 'center'}}>Nothing to show</p>
 
+        <Footer />
         </>
     )
 };
 
 
-
-
 return (
-
+    <>
     <Box sx={{zIndex: 0, marginTop: -8, padding: 4}}>
     <Card sx={{borderRadius:'20px', boxShadow:'-28px -8px 9px 0px rgba(0,0,0,0.25)'}}>
         <Grid container p={2} justifyContent="space-between" alignItems="center">
@@ -475,6 +476,9 @@ return (
 
     </Card>
     </Box>
+
+    <Footer />
+    </>
   );
 };
 

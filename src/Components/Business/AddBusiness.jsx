@@ -13,6 +13,7 @@ import axiosInstance from '../Authentication/axios';
 import { useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import FormHelperText from '@mui/material/FormHelperText';
+import Footer from '../Footer';
 
 
 
@@ -376,6 +377,8 @@ export default function AddNewBusines() {
                     </Paper>
                 </Grid>
             </Grid>
+
+            <Footer />
         </>
     );
 };

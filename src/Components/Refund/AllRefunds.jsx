@@ -12,6 +12,7 @@ import { saveAs } from 'file-saver';
 import Chip from '@mui/material/Chip';
 import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
 import DownloadIcon from '@mui/icons-material/Download';
+import Footer from '../Footer';
 
 
 
@@ -152,6 +153,7 @@ export default function AllMerchantRefundRequests() {
 
 
     return (
+        <>
         <Box sx={{zIndex: 0, marginTop: -8, padding: 4}}>
             <Card sx={{borderRadius:'20px', boxShadow:'-28px -8px 9px 0px rgba(0,0,0,0.25)'}}>
             <Grid container p={2} justifyContent="space-between" alignItems="center">
@@ -272,5 +274,9 @@ export default function AllMerchantRefundRequests() {
 
             </Card>
         </Box>
+
+        <Footer />
+        
+        </>
     );
 };

@@ -11,6 +11,7 @@ import {
 import { useState, useEffect } from 'react';
 import axiosInstance from '../Authentication/axios';
 import PaymentButtonCode from './ButtonCode';
+import Footer from '../Footer';
 
 
 
@@ -182,6 +183,8 @@ export default function AllPaymentForms() {
             setOpen={setOpen}
             buttonID={buttonID}
         />
+
+        <Footer />
         </>
     );
 }

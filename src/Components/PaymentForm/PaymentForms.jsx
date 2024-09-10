@@ -16,6 +16,7 @@ import PreviewFooterSection from './PreviewFooterSection';
 import ReviewCreate from './ReviewCreate';
 import axiosInstance from '../Authentication/axios';
 import { useNavigate } from 'react-router-dom';
+import Footer from '../Footer';
 
 
 
@@ -239,6 +240,7 @@ export default function PaymentForm() {
 
 
     return (
+        <>
         <Container maxWidth="lg" style={{ marginTop: '20px' }}>
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={12} md={3}>
@@ -252,7 +254,7 @@ export default function PaymentForm() {
                 </Grid>
 
                 <Grid item xs={12} sm={12} md={current === 3 ? 9 : 6}>
-                    <Card>
+                    <Card sx={{height:'100%'}}>
                         <CardContent>
                             <Typography variant="h5">{steps[current]}</Typography>
 
@@ -318,71 +320,71 @@ export default function PaymentForm() {
                                 {/* Second Step */}
                                 {current === 1 && (
                                     <>
-                                <PopupState variant="popover" popupId="demo-popup-menu">
-                                    {(popupState) => (
-                                        <React.Fragment>
-                                            <Button 
-                                                variant="outlined" 
-                                                {...bindTrigger(popupState)}
-                                                sx={{marginTop:'4%'}}
-                                                startIcon={<AddIcon />}
-                                                >
-                                                Add Amount Field
-                                            </Button>
+                                        <PopupState variant="popover" popupId="demo-popup-menu">
+                                            {(popupState) => (
+                                                <React.Fragment>
+                                                    <Button 
+                                                        variant="outlined" 
+                                                        {...bindTrigger(popupState)}
+                                                        sx={{marginTop:'4%'}}
+                                                        startIcon={<AddIcon />}
+                                                        >
+                                                        Add Amount Field
+                                                    </Button>
 
-                                            <Menu {...bindMenu(popupState)}>
-                                                <HtmlTooltip 
-                                                    title={
-                                                        <React.Fragment>
-                                                            <Typography color="inherit">Fixed Amount</Typography>
-                                                            <em>{"Add a field which contains the price value which customer should pay."}</em>
-                                                        </React.Fragment>
-                                                    } 
-                                                    placement="right-start">
-                                                    <MenuItem onClick={()=> {popupState.close(); handleAmountFieldClicked('Fixed Amount')}}>Fixed Amount</MenuItem>
-                                                </HtmlTooltip>
+                                                    <Menu {...bindMenu(popupState)}>
+                                                        <HtmlTooltip 
+                                                            title={
+                                                                <React.Fragment>
+                                                                    <Typography color="inherit">Fixed Amount</Typography>
+                                                                    <em>{"Add a field which contains the price value which customer should pay."}</em>
+                                                                </React.Fragment>
+                                                            } 
+                                                            placement="right-start">
+                                                            <MenuItem onClick={()=> {popupState.close(); handleAmountFieldClicked('Fixed Amount')}}>Fixed Amount</MenuItem>
+                                                        </HtmlTooltip>
 
-                                                <HtmlTooltip
-                                                    title={
-                                                        <React.Fragment>
-                                                            <Typography color="inherit">Customer Decided Amount</Typography>
-                                                            <em>{"Add a free field which helps customer to fill a amount which they wish to pay."}</em>
-                                                        </React.Fragment>
-                                                    } 
-                                                    placement="right-start">
-                                                    <MenuItem onClick={()=> {popupState.close(); handleAmountFieldClicked('Customer Decided Amount')}}>Customer Decided Amount</MenuItem>
-                                                </HtmlTooltip>
+                                                        <HtmlTooltip
+                                                            title={
+                                                                <React.Fragment>
+                                                                    <Typography color="inherit">Customer Decided Amount</Typography>
+                                                                    <em>{"Add a free field which helps customer to fill a amount which they wish to pay."}</em>
+                                                                </React.Fragment>
+                                                            } 
+                                                            placement="right-start">
+                                                            <MenuItem onClick={()=> {popupState.close(); handleAmountFieldClicked('Customer Decided Amount')}}>Customer Decided Amount</MenuItem>
+                                                        </HtmlTooltip>
 
-                                                {/* <HtmlTooltip 
-                                                    title={
-                                                        <React.Fragment>
-                                                            <Typography color="inherit">Item With Quantity</Typography>
-                                                            <em>{"Add a price field with quantity selection widget to facilitate to purchase multiple quantities."}</em>
-                                                        </React.Fragment>
-                                                    } 
-                                                    placement="right-start">
-                                                    <MenuItem onClick={()=> {popupState.close(); handleAmountFieldClicked('Item With Quantity')}}>Item With Quantity</MenuItem>
-                                                </HtmlTooltip> */}
-                                            </Menu>
+                                                        {/* <HtmlTooltip 
+                                                            title={
+                                                                <React.Fragment>
+                                                                    <Typography color="inherit">Item With Quantity</Typography>
+                                                                    <em>{"Add a price field with quantity selection widget to facilitate to purchase multiple quantities."}</em>
+                                                                </React.Fragment>
+                                                            } 
+                                                            placement="right-start">
+                                                            <MenuItem onClick={()=> {popupState.close(); handleAmountFieldClicked('Item With Quantity')}}>Item With Quantity</MenuItem>
+                                                        </HtmlTooltip> */}
+                                                    </Menu>
 
-                                    {/* Amount Fields */}
-                                    <AmountFields 
-                                        fixedAmountField={fixedAmountField}
-                                        CustomerAmountField={CustomerAmountField}
-                                        setFixedAmountField={setFixedAmountField}
-                                        setCustomerAmountField={setCustomerAmountField}
-                                        amountFieldsData={amountFieldsData}
-                                        updateAmoutFieldsData={updateAmoutFieldsData}
-                                        currency={currency}
-                                        setCurrency={setCurrency}
-                                        currency2={currency2}
-                                        setCurrency2={setCurrency2}
-                                    />
+                                            {/* Amount Fields */}
+                                            <AmountFields 
+                                                fixedAmountField={fixedAmountField}
+                                                CustomerAmountField={CustomerAmountField}
+                                                setFixedAmountField={setFixedAmountField}
+                                                setCustomerAmountField={setCustomerAmountField}
+                                                amountFieldsData={amountFieldsData}
+                                                updateAmoutFieldsData={updateAmoutFieldsData}
+                                                currency={currency}
+                                                setCurrency={setCurrency}
+                                                currency2={currency2}
+                                                setCurrency2={setCurrency2}
+                                            />
 
-                                            </React.Fragment>
+                                                    </React.Fragment>
 
-                                    )}
-                                </PopupState>
+                                            )}
+                                        </PopupState>
                                     </>
                                 )}
 
@@ -520,7 +522,7 @@ export default function PaymentForm() {
                 {/* Preview Section */}
                 {current !== 3 && (
                 <Grid item xs={12} sm={12} md={3}>
-                    <Card sx={{height: '120%', display: 'flex', flexDirection: 'column' }}>
+                    <Card sx={{height: '100%', display: 'flex', flexDirection: 'column' }}>
                         <CardContent>
                             <Typography variant="h6" sx={{mb:4}}>Preview</Typography>
 
@@ -662,6 +664,9 @@ export default function PaymentForm() {
                 )}
             </Grid>
         </Container>
+
+        <Footer />
+        </>
     );
 }
 

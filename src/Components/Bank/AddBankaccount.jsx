@@ -15,6 +15,7 @@ import MenuItem from '@mui/material/MenuItem';
 import axiosInstance from '../Authentication/axios';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
+import Footer from '../Footer';
 
 
 
@@ -171,6 +172,7 @@ export default function AddMerchantBankAccount() {
     
     
       return (
+        <>
             <Box sx={{ flexGrow: 1 }}>
                 <Paper 
                     elevation={3} 
@@ -358,6 +360,11 @@ export default function AddMerchantBankAccount() {
 
                 </Paper>
             </Box>
+
+
+        <Footer />
+
+        </>
         
       );
 };

@@ -7,6 +7,7 @@ import MerchantMonthlyTransaction from './MonthyTransaction';
 import StatsComponent from './Stats';
 import RecentTransactions from './RecentTransactions';
 import TransactionStatistics from './TransactionStatitics';
+import Footer from '../Footer';
 // import Currency from '../currency';
 // import MerchantTotalRefunds from '../DashboradComponents/TotalRefunds';
 // import RecentActivity from '../Recentactivity';
@@ -72,6 +73,8 @@ export default function GatewayDashboard() {
                     </Grid>
                 </Grid> */}
             </Box>
+
+            <Footer />
         </>
     );
 };

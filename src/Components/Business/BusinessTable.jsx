@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import animationData from '../Animations/EmptyAnimation.json';
 import Lottie from 'lottie-react';
+import Footer from '../Footer';
 
 
 
@@ -132,6 +133,8 @@ if (loader) {
       <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '3%' }}>
           <CircularProgress />
       </Box>
+
+      <Footer />
       </>
   )
 };
@@ -179,6 +182,7 @@ if (emptyData) {
       </Box>
       <p style={{display:'flex', justifyContent: 'center'}}>Nothing to show</p>
 
+      <Footer />
       </>
   )
 };
@@ -186,6 +190,8 @@ if (emptyData) {
 
 
   return (
+    <>
+    
     <Box sx={{zIndex: 0, marginTop: -8, padding: 4}}>
     <Card sx={{borderRadius:'20px', boxShadow:'-28px -8px 9px 0px rgba(0,0,0,0.25)'}}>
       <Box p={2} display="flex" justifyContent="space-between" alignItems="center">
@@ -385,6 +391,9 @@ if (emptyData) {
             />
     </Card>
     </Box>
+
+  <Footer />
+  </>
   );
 };
 

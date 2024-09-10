@@ -2,6 +2,7 @@ import React from 'react';
 import { Table, Pagination } from 'antd';
 import { useEffect, useState } from 'react';
 import axiosInstance from '../Authentication/axios';
+import Footer from '../Footer';
 
 
 
@@ -127,13 +128,15 @@ export default function APILogs() {
           rowClassName="custom-row"
         />
 
-        <div style={{ marginTop: '1px', textAlign: 'right' }}>
+        <div style={{ marginTop: '1px', textAlign: 'right', marginBottom:160}}>
             <Pagination 
               defaultCurrent={1} 
               total={totalRowCount} 
               onChange={handlePaginationValue}
               />
         </div>
+
+        <Footer />
     </>
    );
 };

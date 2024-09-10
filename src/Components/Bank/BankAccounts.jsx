@@ -11,6 +11,7 @@ import axiosInstance from "../Authentication/axios";
 import { useEffect, useState } from "react";
 import CancelIcon from '@mui/icons-material/Cancel';
 import BankAccountDelete from "./BankDelete";
+import Footer from "../Footer";
 
 
 
@@ -164,6 +165,8 @@ export default function MerchantBankAccounts() {
 
         {/*  Delete Bank Account Component */}
         <BankAccountDelete open={deleteOpen} setOpen={setDeleteOpen} accountID={bankAccountId} />
+
+        <Footer />
         </>
     );
 };

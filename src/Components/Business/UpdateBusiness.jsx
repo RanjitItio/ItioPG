@@ -13,10 +13,11 @@ import axiosInstance from '../Authentication/axios';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import FormHelperText from '@mui/material/FormHelperText';
 import Typography from '@mui/material/Typography';
+import Footer from '../Footer';
 
 
 
-
+// Update business
 export default function UpdateMerchant({open}) {
     const location = useLocation();
     const navigate = useNavigate();
@@ -415,6 +416,8 @@ export default function UpdateMerchant({open}) {
                     </Paper>
                 </Grid>
             </Grid>
+
+            <Footer />
         </>
     );
 };

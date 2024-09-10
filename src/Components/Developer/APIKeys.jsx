@@ -7,6 +7,7 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import axiosInstance from '../Authentication/axios';
 import { useEffect, useState } from "react";
 import NewKeyGenerationPopup from "./NewKeyPopup";
+import Footer from "../Footer";
 
 
 
@@ -94,6 +95,7 @@ export default function APIKeys() {
 
     return (
         <>
+        <Box sx={{marginBottom:35}}>
             <Grid container sx={{marginTop: '2%'}}>
                 <Grid item xs={6} sm={6} md={6} lg={6} >
                     <Typography variant="h5" sx={{marginLeft: '4%'}}>API Keys</Typography>
@@ -155,6 +157,10 @@ export default function APIKeys() {
                 handleGenerateKeys={handleGenerateKeys}
                 success={success}
             />
+        </Box>
+
+        <Footer />
+
         </>
     )
 }

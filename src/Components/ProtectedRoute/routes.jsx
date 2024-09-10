@@ -7,23 +7,15 @@ import Signin from '../Authentication/Signin';
 import Signup from "../Authentication/Signup";
 import Navbar from '../Navbar/navBar';
 import WelcomeSection from '../HomePage/WelcomeSection';
-// import GatewayDashboard from '../HomePage/Dashboard';
-// import BusinessTransactionTable from '../Transactions/TransactionTable';
-// import AllBusinessTable from '../Business/BusinessTable';
 import KYCForm from "../Authentication/KycForm";
 import KYCSubmission from "../Authentication/KycSubmit";
 import Signout from "../Authentication/Signout";
 import AddNewBusines from "../Business/AddBusiness";
 import UpdateMerchant from "../Business/UpdateBusiness";
-// import PaymentCheckoutPage from "../PaymentCheckout/checkout";
 import TestPaymentCheckoutPage from "../PaymentTestCheckout/checkout";
-// import MasterCardOTPComponent from "../Mastercard/otp";
-// import PaymentSuccessPage from "../PaymentStatus/Success";
-// import PaymentFailedPage from "../PaymentStatus/Failed";
 import MastercardPaymentStatus from "../PaymentCheckout/MCPaymentStatus";
 import DeveloperTools from "../Developer/DevTools";
 import APIKeys from "../Developer/APIKeys";
-// import MerchantBankAccounts from "../Bank/BankAccounts";
 import AddMerchantBankAccount from "../Bank/AddBankaccount";
 import UpdateMerchantBankAccount from "../Bank/updateBank";
 import SandBoxProcessStepper from "../Steps/steps";
@@ -50,7 +42,6 @@ const AllMerchantRefundRequests = React.lazy(()=> import('../Refund/AllRefunds')
 const DevDocs = React.lazy(()=> import('../Developer/Docs/Devdocs'));
 const ChangePassword = React.lazy(()=> import('../Authentication/ChangePassword'));
 const MerchantProfilePage = React.lazy(()=> import('../MerchantProfile/profilePage'));
-const UpdateMerchantProfile = React.lazy(()=> import('../MerchantProfile/updateProfile'));
 const AdminLogin = React.lazy(()=> import('../Authentication/AdminLogin'));
 
 
@@ -192,7 +183,6 @@ const AuthRoutes = () => {
 
                 {/* Profile page */}
                 <Route exact path='/merchant/profile/' element={<MerchantProfilePage />}></Route>
-                <Route exact path='/update/merchant/profile/' element={<UpdateMerchantProfile />}></Route>
                 
                 <Route exact path='*' element={
                   <>
