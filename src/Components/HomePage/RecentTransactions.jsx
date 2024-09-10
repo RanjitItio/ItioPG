@@ -158,12 +158,12 @@ const RecentTransactions = () => {
 
   return (
        
-    <Paper sx={{maxHeight:'25rem', overflow:'auto'}}>
+    <Paper sx={{height:'100%', overflow:'auto'}}>
       <Typography variant="p" sx={{ padding: '18px', fontWeight: 'bold', mt:5 }}>
           Recent Transactions
       </Typography>
 
-      <TableContainer component={Paper} sx={{ maxHeight: '20rem', marginTop:'18px' }}>
+      <TableContainer component={Paper} sx={{ height: '27rem', marginTop:'18px' }}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>
