@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Button,
-  Box, useMediaQuery
+  Box, useMediaQuery, Typography
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import axiosInstance from '../Authentication/axios';
@@ -13,6 +13,7 @@ import Chip from '@mui/material/Chip';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import WithdrawalFrom from './withdrawalForm';
 import Footer from '../Footer';
+import {Select as JoySelect, Option as JoyOption} from '@mui/joy';
 
 
 
@@ -28,8 +29,18 @@ export default function MerchantWithdrawalRequests() {
     const [totalRows, updateTotalRows]   = useState(0);
     const [openWithdrawl, setOpenWithdrawal]     = useState(false); // Withdrawal form state
     const [accountBalance, updateAccountBalance] = useState([]); // Merchant Account balance state
+    const [selctedCurrency, setSelectedCurrency] = useState('USD'); // Selcted Currency by the merchant
 
     const countPagination = Math.ceil(totalRows);
+    
+
+    // Assign selected currency value to the state
+    const handleSelctedCurrency = (event, newValue)=> {
+        setSelectedCurrency(newValue)
+    };
+
+    // Filter balance according to the currency
+    const filteredBalance = accountBalance.find(balance => balance.currency === selctedCurrency)
     
 
     // Get all the Withdrawal requests raised by merchant
@@ -52,20 +63,39 @@ export default function MerchantWithdrawalRequests() {
     // Fetch Account balance of the user when the page loads
    useEffect(() => {
         axiosInstance.get(`/api/v5/merchant/account/balance/`).then((res)=> {
-        // console.log(res)
+            // console.log(res)
 
             if (res.status === 200 && res.data.success === true) {
                 updateAccountBalance(res.data.merchantAccountBalance)
              }
-            }).catch((error)=> {
-            console.log(error)
-            
-            if (error.response.data.error === 'No Merchant Balance availabel') {
-                //  MerchantAccountBalance = 0
-           };
 
+            }).catch((error)=> {
+                console.log(error)
+                
+                if (error.response.data.error === 'No Merchant Balance availabel') {
+                    //  MerchantAccountBalance = 0
+            };
         })
     }, []);
+
+
+    // Get the account balance of merchant according to the selected currency
+    const handleGetMerchantAccountBalance = ()=> {
+        axiosInstance.get(`/api/v5/merchant/account/balance/`).then((res)=> {
+            // console.log(res)
+            if (res.status === 200 && res.data.success === true) {
+                updateAccountBalance(res.data.merchantAccountBalance)
+             };
+
+            }).catch((error)=> {
+                console.log(error)
+                
+                if (error.response.data.error === 'No Merchant Balance availabel') {
+                    //  MerchantAccountBalance = 0
+            };
+
+        });
+    };
 
     // Open Withdrawal Form
     const handleClickOpenWithdrawalForm = () => {
@@ -120,11 +150,11 @@ export default function MerchantWithdrawalRequests() {
     
     // Download all withdrawal requests
     const handleDownloadWithdrawals = ()=> {
-        axiosInstance.get(`/api/v3/merchant/withdrawal/`).then((res)=> {
+        axiosInstance.get(`/api/v3/merchant/export/withdrawals/`).then((res)=> {
             // console.log(res)
     
             if (res.status === 200 && res.data.success === true) {
-                updateExportData(res.data.merchantWithdrawalRequests);
+                updateExportData(res.data.ExportmerchantWithdrawalRequests);
 
                 setTimeout(() => {
                     exportToExcel();
@@ -159,6 +189,7 @@ export default function MerchantWithdrawalRequests() {
         })
   };
 
+
     
     return (
         <>
@@ -173,31 +204,41 @@ export default function MerchantWithdrawalRequests() {
                     </div>
                 </div>
 
+                <Typography variant='p' sx={{ ml: 2, display: {xs:'none', sm:'none', md:'flex'} }}>
+                    <b>Total Balance: {filteredBalance ? (filteredBalance.amount ? parseFloat(filteredBalance.amount).toFixed(3) : 0.00) : 0.00}</b>
+                    <JoySelect defaultValue="USD" variant='plain' sx={{mt:-1}} onChange={(event, newValue)=> {handleSelctedCurrency(event, newValue); handleGetMerchantAccountBalance(); }}>
+                        <JoyOption value="USD">USD</JoyOption>
+                        <JoyOption value="EUR">EUR</JoyOption>
+                        <JoyOption value="INR">INR</JoyOption>
+                        <JoyOption value="GBP">GBP</JoyOption>
+                    </JoySelect>
+                </Typography>   
+
+
                 <Box>
                     {/* If Small screen */}
-                {isSmallScreen ? (
-                    <>
+                    {isSmallScreen ? (
+                        <div style={{display:'flex', justifyContent:'center'}}>
+                            <IconButton style={{marginTop: -30 ,fontSize:'10px', color:'#0089ba' }} >
+                                <FileDownloadIcon />
+                            </IconButton>
 
-                    <IconButton style={{ marginLeft: 0 }}>
-                        <FileDownloadIcon />
-                    </IconButton>
+                            <IconButton style={{ marginTop: -30, fontSize:'10px', color:'#0089ba' }} >
+                                <IosShareIcon />
+                            </IconButton>
+                        </div>
+                    ) : (
+                        <>
+                        {/* Large Screen */}
+                        <Button onClick={handleDownloadWithdrawals} variant="contained" style={{ marginLeft: 10 }} startIcon={<FileDownloadIcon />}>
+                            Download
+                        </Button>
 
-                    <IconButton style={{ marginLeft: 0 }}>
-                        <IosShareIcon />
-                    </IconButton>
-                    </>
-                ) : (
-                    <>
-                    {/* Large Screen */}
-                    <Button onClick={handleDownloadWithdrawals} variant="contained" style={{ marginLeft: 10 }} startIcon={<FileDownloadIcon />}>
-                        Download
-                    </Button>
-
-                    <Button onClick={handleClickOpenWithdrawalForm} variant="contained" style={{ marginLeft: 10 }} startIcon={<IosShareIcon />}>
-                        Withdrawal
-                    </Button>
-                    </>
-                )}
+                        <Button onClick={handleClickOpenWithdrawalForm} variant="contained" style={{ marginLeft: 10, marginTop:3}} startIcon={<IosShareIcon />}>
+                            Withdrawal
+                        </Button>
+                        </>
+                    )}
                 </Box>
             </Box>
 

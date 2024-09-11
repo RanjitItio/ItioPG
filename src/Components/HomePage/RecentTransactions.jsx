@@ -22,53 +22,6 @@ const statusColors = {
   PAYMENT_INITIATED: 'info',
 };
 
-const orders = [
-  {
-    user: 'Dianne Russell',
-    avatar: 'https://python-uat.oyefin.com/media/transaction.jpeg', // Replace with correct paths or icons
-    invoice: '#6352148',
-    item: 'iPhone 14 max',
-    qty: 2,
-    amount: '$5,000.00',
-    status: 'Paid',
-  },
-  {
-    user: 'Wade Warren',
-    avatar: 'https://python-uat.oyefin.com/media/transaction.jpeg',
-    invoice: '#6352148',
-    item: 'Laptop HPH',
-    qty: 3,
-    amount: '$1,000.00',
-    status: 'Pending',
-  },
-  {
-    user: 'Albert Flores',
-    avatar: 'https://python-uat.oyefin.com/media/transaction.jpeg',
-    invoice: '#6352148',
-    item: 'Smart Watch',
-    qty: 7,
-    amount: '$1,000.00',
-    status: 'Shipped',
-  },
-  {
-    user: 'Bessie Cooper',
-    avatar: '/path/to/avatar4.jpg',
-    invoice: '#6352148',
-    item: 'Nike Air Shoe',
-    qty: 1,
-    amount: '$3,000.00',
-    status: 'Canceled',
-  },
-  {
-    user: 'Arlene McCoy',
-    avatar: '/path/to/avatar5.jpg',
-    invoice: '#6352148',
-    item: 'New Headphone',
-    qty: 5,
-    amount: '$4,000.00',
-    status: 'Canceled',
-  },
-];
 
 
 
@@ -141,14 +94,28 @@ const RecentTransactions = () => {
                 <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Status</strong></TableCell>
               </TableRow>
             </TableHead>
-          </Table>
+          
 
-          <TableBody style={{display:'flex', justifyContent:'center', height:'14rem'}}>
-              <InboxIcon sx={{mt:10, fontSize:'90px', color:'#e0e2e2'}} /> <br />
+          <TableBody>
+            <TableRow>
+              <TableCell colSpan={8}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '14rem',
+                  }}
+                >
+                  {/* Placeholder for empty state */}
+                  <InboxIcon sx={{ mt: 2, fontSize: '90px', color: '#e0e2e2' }} />
+                </Box>
+              </TableCell>
+            </TableRow>
           </TableBody>
 
+        </Table>
         </TableContainer>
-
       </Paper>
 
     );
@@ -180,7 +147,6 @@ const RecentTransactions = () => {
 
             <TableBody>
               {recentTransactions.map((order, index) => (
-               
                 <TableRow key={index}>
                   <TableCell sx={{display:'flex', justifyContent:'center'}}>
                       <Avatar src='https://python-uat.oyefin.com/media/transaction.jpeg' alt='Date' sx={{ marginRight: 2 }} />

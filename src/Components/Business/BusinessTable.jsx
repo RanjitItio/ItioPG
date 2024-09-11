@@ -222,9 +222,9 @@ if (emptyData) {
                   Add New Business
               </Button>
 
-              <Button variant="contained" style={{ marginLeft: 10 }} startIcon={<IosShareIcon />}>
+              {/* <Button variant="contained" style={{ marginLeft: 10 }} startIcon={<IosShareIcon />}>
                 Export
-              </Button>
+              </Button> */}
             </>
           )}
         </Box>

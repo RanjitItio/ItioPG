@@ -87,7 +87,6 @@ export default function AllMerchantRefundRequests() {
           } else {
               console.log('No Data available to Download')
           }
-  
           
       };
   
@@ -100,7 +99,7 @@ export default function AllMerchantRefundRequests() {
               if (res.status === 200 && res.data.success === true) {
                   updateExportData(res.data.export_merchant_refunds);
   
-                  setTimeout(() => {
+                  setTimeout(() => {    
                       exportToExcel();
                   }, 1000);
               }

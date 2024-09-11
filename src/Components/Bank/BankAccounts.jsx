@@ -58,16 +58,18 @@ export default function MerchantBankAccounts() {
             return acc_no; 
           }
         
-          const firstTwo = acc_no.slice(0, 2);
+          const firstTwo  = acc_no.slice(0, 2);
           const lastTwo   = acc_no.slice(-2);
 
           return `${firstTwo}****${lastTwo}`
     };
 
+    // Delete Bank Account method
     const handleBankAccountDelete = (accountID)=> {
         setDeleteOpen(true);
         setBankAccountId(accountID)
     };
+
 
     return (
         <>

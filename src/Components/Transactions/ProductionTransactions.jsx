@@ -16,7 +16,7 @@ const RefundFrom = lazy(()=> import('../Refund/RefundForm'));
 // Production Transaction Table
 export default function ProductionTransactionTable({businessTransactionData}) {
     const [openRefund, setOpenRefund] = useState(false);  // Refund form state
-    const [refundTransactionData, updateRefundTransactionData] = useState([]);
+    const [refundTransactionData, updateRefundTransactionData] = useState([]); // Refund transactions
 
 
     // Open Refund Form
@@ -79,6 +79,7 @@ export default function ProductionTransactionTable({businessTransactionData}) {
 
         return payoutBalance;
     };
+
 
     return (
         <>

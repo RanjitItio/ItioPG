@@ -105,7 +105,7 @@ export default function AddMerchantBankAccount() {
         })
     }, []);
 
-// console.log(formData.bank_doc)
+
     // Create Bank account
     const handleFormSubmit = ()=> {
          if (formData.acc_holder_name === '') {
@@ -153,7 +153,6 @@ export default function AddMerchantBankAccount() {
 
              if (res.status === 200) {
                 setSuccessMessage('Bank Account Added successfully please wait for Admin Approval')
-                
 
                 setTimeout(() => {
                     navigate('/merchant/bank/accounts/')
@@ -165,7 +164,17 @@ export default function AddMerchantBankAccount() {
             
             if(error.response.data.msg === 'Only Accessible by merchant') {
                 setErrorMessage('Only Merchants can add bank account')
+                setDisableButton(false);
+
+            } else if (error.response.data.message == 'Bank account already exists') {
+                setErrorMessage('Account already exists')
+                setDisableButton(false);
+
+            } else {
+                setErrorMessage('')
+                setDisableButton(false);
             };
+
           })
          }
     };
@@ -355,8 +364,14 @@ export default function AddMerchantBankAccount() {
                     </Button>
 
                 </Stack>
-                {errorMessage && <Typography variant="body2" sx={{ ml: 2, color:'red' }}>{errorMessage}</Typography>}
-                {successMessage && <Typography variant="body2" sx={{ ml: 2, color: 'green' }}>{successMessage}</Typography>}
+                {errorMessage && 
+                    <Typography variant="body2" sx={{ ml: 2, color:'red', display:'flex', justifyContent:'center'}}>
+                        {errorMessage}
+                    </Typography>}
+                {successMessage && 
+                    <Typography variant="body2" sx={{ ml: 2,mt: 2, color: 'green', display:'flex', justifyContent:'center' }}>
+                        {successMessage}
+                    </Typography>}
 
                 </Paper>
             </Box>

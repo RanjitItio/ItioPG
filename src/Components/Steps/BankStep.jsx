@@ -128,7 +128,7 @@ export default function AddMerchantBankAccountStep({...props}) {
             setErrorMessage('Please select valid document')
          } else {
             setErrorMessage('');
-            setDisableButton(true)
+            setDisableButton(true);
 
             
 
@@ -167,7 +167,16 @@ export default function AddMerchantBankAccountStep({...props}) {
             
             if(error.response.data.msg === 'Only Accessible by merchant') {
                 setErrorMessage('Only Merchants can add bank account')
-            };
+                setDisableButton(false);
+
+            } else if (error.response.data.message == 'Bank account already exists') {
+                setErrorMessage('Account already exists')
+                setDisableButton(false);
+
+            } else {
+                setErrorMessage('')
+                setDisableButton(false);
+            }
 
           })
          }

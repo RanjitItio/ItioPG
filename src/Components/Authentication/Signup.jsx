@@ -1,10 +1,8 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axiosInstance from './axios';
 import { Link, useNavigate } from 'react-router-dom';
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
@@ -156,8 +154,9 @@ export default function Signup() {
                 const queryString = new URLSearchParams(filteredFormData).toString();
         
                 setTimeout(() => {
-                //   window.location.href = `/kyc?${queryString}`
-                }, 2000);
+                    setSuccessMessage('')
+                    window.location.href = `/signin/`
+                }, 3000);
               }
             })
             .catch((error) => {
@@ -174,6 +173,16 @@ export default function Signup() {
               }
           });
         }};
+
+        // Remove error message after some time
+        useEffect(() => {
+          if (error) {
+            setTimeout(() => {
+                    setError('');
+            }, 3000);
+          }
+        }, [error])
+        
 
       // Method to check which account type user selected
       const handleSelectedAccountClick = (event, account) => {

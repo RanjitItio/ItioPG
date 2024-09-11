@@ -13,6 +13,7 @@ import Select from '@mui/material/Select';
 import NativeSelect from '@mui/material/NativeSelect';
 import axiosInstance from '../Authentication/axios';
 import { Link } from 'react-router-dom';
+import {Input as JoyInput} from '@mui/joy';
 
 
 
@@ -67,46 +68,36 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
     const isSmallScreen                           = useMediaQuery('(max-width:600px)');
     const [balanceCurrency, setBalanceCurrency]   = useState('USD');  // Account Balance Currency
     const [merchantAccounts, setMerchantAccounts] = useState([]);     // Merchant Bank Accounts
-    const [currencies, SetCurrencies]             = useState([]);
-    const [sliderAmount, setSliderAmount]         = useState(10);     // Slider Amount
+    const [currencies, SetCurrencies]             = useState([]);     // Currncies
     const [error, setError]                       = useState('');     // Error Message
-    const [filteredBalance, setFilteredBalance]   = useState(0.00);   // Account balance of Merchant According to currency
-    const [successMessage, setSuccessMessage]     = useState('');
+    const [successMessage, setSuccessMessage]     = useState('');     // Success Message
+    const [InputAmount, setInputAmount]           = useState(0);      // Input Amount
     const [formData, updateFormData]              = useState({       // Form Values to send in API
         bankAccount: '', bankCurrency: ''
     });
 
-
    
     // Get the account balance of the merchant according to the selected currency
-    useEffect(() => {
-        const Balance = accountBalance.find(balance => balance.currency === balanceCurrency)
-        if (Balance){ 
-            setFilteredBalance(Balance.amount)
-            setSliderAmount(Balance.amount)
-        } else {
-            setFilteredBalance(0.00)
-            setSliderAmount(0.00)
-        };
-        
-    }, [balanceCurrency]);
+    const Balance = accountBalance.find(balance => balance.currency === balanceCurrency)
     
-    // Assign slider value
-    const handleSliderChange = (newValue) => {
-        if (typeof newValue === 'number') {
-            setSliderAmount(newValue);
+
+    // Input amount value
+    const handleInputAmountChange = (event) => {
+        if (parseInt(event.target.value) > Balance?.amount) {
+            setError('Amount is greater than Account Balance')
+        } else if (parseInt(event.target.value) === 0) {
+            setError('Amount must be greater than 0')
         } else {
-            setSliderAmount(parseInt(newValue));
+            setError('')
+            setInputAmount(event.target.value);
         }
-        
     };
+
 
     // Capture the Account balance currency Value
     const handleAccountBalanceCurrencyChange = (e)=> {
         setBalanceCurrency(e.target.value);
-        console.log(e.target.value)
     };
-    
     
 
     // User selcted Bank and Currency value
@@ -167,8 +158,8 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
             setError('Please select bank Account')
         } else if (formData.bankCurrency === '') {
             setError('Please select Bank Accepted Currency')
-        } else if (sliderAmount === 0 || sliderAmount < 10) {
-            setError('Amount should be Greater than 10')
+        } else if (InputAmount === 0 || InputAmount == '') {
+            setError('Amount should be Greater than 1')
         } else {
             setError('')
             // Call API
@@ -183,7 +174,7 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
                 bank_id:          merchantBankID,
                 bank_currency_id: BankcurrencyID,
                 account_currency: balanceCurrency,
-                withdrawal_amount: sliderAmount
+                withdrawal_amount: parseInt(InputAmount)
 
             }).then((res)=> {
                 console.log(res)
@@ -194,7 +185,7 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
                     setTimeout(() => {
                         setOpen(false);
                         setSuccessMessage('')
-                    }, 2000);
+                    }, 2000)
                 };
 
             }).catch((error)=> {
@@ -215,16 +206,6 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
     };
 
 
-    // Method to handle select fixed amount
-    const handleFixedAmount = (value)=> {
-        if (value > filteredBalance) {
-            setError('Amount is greater than Account Balance')
-        } else {
-            setError('')
-        }
-    };
-
- 
 
     return (
         <Dialog
@@ -293,7 +274,7 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
 
                         <div style={{display:'flex', justifyContent:'center'}}>
                             <Typography variant="h4" color="textPrimary">
-                               {getCurrencyIcon(balanceCurrency)}{filteredBalance ? filteredBalance.toFixed(3) : 0.00}
+                               {getCurrencyIcon(balanceCurrency)}{Balance ? Balance.amount.toFixed(3) : 0.00}
                             </Typography>
 
                             <FormControl>
@@ -315,18 +296,23 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
                         </div>
                     </Box>
 
+                    <JoyInput 
+                        placeholder="Type withdrawal amount"
+                        type='number'
+                        value={InputAmount}
+                        onChange={handleInputAmountChange}
+                        />
+
                     {/* Slider */}
-                    <Slider
+                    {/* <Slider
                         value={sliderAmount}
-                        max={filteredBalance ? (filteredBalance >= 10 ? filteredBalance : 0) : 0}
+                        max={Balance ? (Balance.amount >= 10 ? Balance.amount : 0) : 0}
                         onChange={(e, newValue) => handleSliderChange(newValue)}
-                        min={filteredBalance === undefined ? 0 : (filteredBalance ? (filteredBalance >= 10 ? 10 : 0) : 0)}
+                        min={Balance.amount === undefined ? 0 : (Balance ? (Balance.amount >= 10 ? 10 : 0) : 0)}
                         aria-label="Medium"
                         valueLabelDisplay="auto"
                     />
 
-
-                    {/* Amount Buttons */}
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
                         {[0, 10, 100, 1000, 10000].map((value) => (
                         <AmountButton
@@ -337,7 +323,7 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
                             {getCurrencyIcon(balanceCurrency)}{value}
                         </AmountButton>
                         ))}
-                    </Box>
+                    </Box> */}
 
                 {/* Withdraw Button */}
                 <p style={{color:'red'}}>{error && error}</p>

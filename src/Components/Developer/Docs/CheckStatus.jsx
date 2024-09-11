@@ -184,7 +184,7 @@ export default function CheckStatusAPIDocs() {
                     </Card>
                 </Card>
 
-                <Title level={3}>Sample Response - Success</Title>
+                <Title level={3}>Sample Response - Failed</Title>
                 <Card style={{ margin: '16px', padding: '0px', borderRadius: '8px' }}>
                     <p>Sample Payload</p>
                     <Card

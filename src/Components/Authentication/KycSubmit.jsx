@@ -10,10 +10,11 @@ import {
 
 
 
-
+// Successful KYC response page
 function KYCSubmission(params) {
   const [userName, updateUserName] = useState({});
 
+  // Get The query params
   useEffect(() => {
     const queryString = new URLSearchParams(window.location.search);
 
@@ -26,6 +27,7 @@ function KYCSubmission(params) {
     });
   }, []);
 
+
   return (
     <Dialog
       open={true}
@@ -34,20 +36,22 @@ function KYCSubmission(params) {
       aria-describedby="kyc-submission-dialog-description"
     >
       <DialogTitle id="kyc-submission-dialog-title">KYC Submission Report</DialogTitle>
+
       <DialogContent>
-        <DialogContentText id="kyc-submission-dialog-description">
           <Typography variant="body1" className="text-success">
             <b>Thank you for applying</b>
           </Typography>
+
           <Typography variant="body1" className="text-success">
             Dear {userName.firstName} {userName.lastName}, your KYC application has been submitted successfully.
             Please wait for admin approval.
           </Typography>
+
           <Typography variant="body1" className="text-success">
             You will get notified about your approval status.
-          </Typography>
-        </DialogContentText>
+          </Typography>  
       </DialogContent>
+
     </Dialog>
   );
 }

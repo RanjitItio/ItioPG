@@ -120,12 +120,12 @@ export const RequestParameterdata = [
 
 export const sampleRequestPayload = `
 {
-  "merchantId": "PGTESTPAYUAT",
-  "merchantTransactionId": "MT7850590068188104",
-  "merchantUserId": "MUID123",
+  "merchantPublicKey": "PGTESTPAYUAT",
+  "merchantSecretKey": "ewjuiyrtyuvghj567hjk",
+  "merchantOrderId": "MT7850590068188104",
+  "currency": "USD",
   "amount": 10000,
   "redirectUrl": "https://webhook.site/redirect-url",
-  "redirectMode": "REDIRECT",
   "callbackUrl": "https://webhook.site/callback-url",
   "mobileNumber": "9999999999",
   "paymentInstrument": {
@@ -137,7 +137,7 @@ export const sampleRequestPayload = `
 
 export const sampleResponsePayload = `
 {
-    "success": True,
+    "success": true,
     "status": "PAYMENT_INITIATED",
     "message": "Payment Initiated",
     "data": {
@@ -145,7 +145,7 @@ export const sampleResponsePayload = `
         "merchantOrderId": "eJxLdwQBp9xiNyfv5PJ4",
         "transactionID":  "JxLdwQBp9xiNyfv5PJ4dfghj567",
         "amount": 90,
-        'currency': 'USD',
+        "currency": "USD",
         "instrumentResponse": {
             "type": "PAY_PAGE",
             "redirectInfo": {
@@ -336,19 +336,17 @@ export const sampleCallbackURLResponse =
 
 export const Base64DecodedCallbackResponse = 
     {
-        "success": true,
-        "code": "PAYMENT_SUCCESS",
-        "message": "Your request has been successfully completed.",
+        "success": false,
+        "code": "PAYMENT_FAILED",
+        "message": "Your payment has been failed",
         "data": {
-          "merchantId": "PGTESTPAYUAT",
-          "merchantTransactionId": "MT7850590068188104",
-          "transactionId": "T2111221437456190170379",
+          "merchantPublicKey": "PGTESTPAYUAT",
+          "merchantOrderId": "MT7850590068188104",
+          "transactionID": "T2111221437456190170379",
           "amount": 100,
-          "state": "COMPLETED",
-          "responseCode": "SUCCESS",
+          "currency": "USD",
           "paymentInstrument": {
-            "type": "UPI",
-            "utr": "206378866112"
+            "type": "Card",
           }
         }
   };
@@ -410,15 +408,13 @@ export const CheckStatusSampleSuccessResponse = `{
       "status": "PAYMENT_SUCCESS",
       "message": "Your request has been successfully completed.",
       "data": {
-        "merchantId": "PGTESTPAYUAT",
-        "merchantTransactionId": "MT7850590068188104",
-        "transactionId": "T2111221437456190170379",
+        "merchantPublicKey": "PGTESTPAYUAT",
+        "merchantOrderId": "MT7850590068188104",
+        "transactionID": "T2111221437456190170379",
         "amount": 100,
-        "state": "COMPLETED",
-        "responseCode": "SUCCESS",
+        "currency": "USD",
         "paymentInstrument": {
-          "type": "UPI",
-          "utr": "206378866112"
+          "type": "Card",
         }
       }
 }`
