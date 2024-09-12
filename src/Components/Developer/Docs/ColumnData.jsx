@@ -336,9 +336,9 @@ export const sampleCallbackURLResponse =
 
 export const Base64DecodedCallbackResponse = 
     {
-        "success": false,
-        "code": "PAYMENT_FAILED",
-        "message": "Your payment has been failed",
+        "success": true,
+        "code": "PAYMENT_SUCCESS",
+        "message": "Your payment has been successful",
         "data": {
           "merchantPublicKey": "PGTESTPAYUAT",
           "merchantOrderId": "MT7850590068188104",
