@@ -93,7 +93,7 @@ export default function AllPaymentForms() {
                 </Tabs>
             </AppBar>
 
-            <Grid container spacing={2} mt={2}>
+            {/* <Grid container spacing={2} mt={2}>
                 <Grid item xs={12} sm={6} md={4} lg={3}>
                     <TextField label="Title" variant="outlined" size="small" fullWidth />
                 </Grid>
@@ -123,7 +123,7 @@ export default function AllPaymentForms() {
                     <Button variant="contained" color="primary" fullWidth>Search</Button>
                 </Grid>
 
-            </Grid>
+            </Grid> */}
 
             <TableContainer component={Paper} sx={{ mt: 2 }}>
                 <Table>

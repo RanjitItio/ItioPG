@@ -25,6 +25,8 @@ const IconStyle = styled('div')(({ theme }) => ({
   marginLeft: theme.spacing(2),
 }));
 
+
+
 const tools = [
   { title: 'API Keys', description: 'Access and manage your API keys', url: '/merchant/developer/api/keys/' },
   { title: 'API Docs', description: 'Integration Documentation', url: '/pg/developer/docs/' },
@@ -32,8 +34,8 @@ const tools = [
   { title: 'API Logs and Alerts', description: 'View API logs and configure alerts for API errors', url: '/merchant/api/logs/' },
   { title: 'Webhooks', description: 'Configure webhooks, subscribe to events and trace logs', url: '' },
   { title: 'Whitelisting', description: 'View, request and track your whitelisting requests', url: '' },
-  { title: 'Checkout Analytics', description: 'Set up checkout tracking with your favorite analytics provider', url: '' },
-  { title: 'Integration Usage', description: 'Monitor integration performance and version updates', url: '' },
+  // { title: 'Checkout Analytics', description: 'Set up checkout tracking with your favorite analytics provider', url: '' },
+  // { title: 'Integration Usage', description: 'Monitor integration performance and version updates', url: '' },
 ];
 
 
