@@ -15,6 +15,7 @@ import Button from '@mui/material/Button';
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Signout from '../Authentication/Signout';
+import HomeIcon from '@mui/icons-material/Home';
 // import Badge from '@mui/material/Badge';
 // import SearchIcon from '@mui/icons-material/Search';
 // import MailIcon from '@mui/icons-material/Mail';
@@ -70,7 +71,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 
-
+// Navbar
 export default function Navbar() {
 
   const navigate = useNavigate();
@@ -239,8 +240,9 @@ export default function Navbar() {
             color="inherit"
             aria-label="open drawer"
             sx={{ mr: 2 }}
+            onClick={()=> {navigate('/')}}
           >
-            <FitbitIcon />
+            <HomeIcon />
           </IconButton>
 
           <Typography

@@ -193,7 +193,7 @@ if (emptyData) {
     <>
     
     <Box sx={{zIndex: 0, marginTop: -8, padding: 4}}>
-    <Card sx={{borderRadius:'20px', boxShadow:'-28px -8px 9px 0px rgba(0,0,0,0.25)'}}>
+    <Card sx={{borderRadius:'20px'}}>
       <Box p={2} display="flex" justifyContent="space-between" alignItems="center">
         {/* <TextField placeholder="Search for transaction here" variant="outlined" size="small" /> */}
         <div className="d-flex justify-content-start">
@@ -310,7 +310,7 @@ if (emptyData) {
             </Box>
         </Collapse> */}
 
-        <TableContainer style={{ overflowX: 'auto', maxHeight: '400px', overflowY: 'auto'}}>
+        <TableContainer style={{ overflowX: 'auto', maxHeight: '55rem', overflowY: 'auto'}}>
             <Table stickyHeader>
                 <TableHead>
                     <TableRow>

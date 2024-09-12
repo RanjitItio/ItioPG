@@ -154,7 +154,7 @@ export default function AllMerchantRefundRequests() {
     return (
         <>
         <Box sx={{zIndex: 0, marginTop: -8, padding: 4}}>
-            <Card sx={{borderRadius:'20px', boxShadow:'-28px -8px 9px 0px rgba(0,0,0,0.25)'}}>
+            <Card sx={{borderRadius:'20px'}}>
             <Grid container p={2} justifyContent="space-between" alignItems="center">
                 <Grid item xs={12} sm={4} md={3} lg={3}>
                     <div className="d-flex justify-content-start">
@@ -212,7 +212,7 @@ export default function AllMerchantRefundRequests() {
                 </Grid> 
             </Grid>
 
-                <TableContainer style={{ overflowX: 'auto', maxHeight: '400px', overflowY: 'auto'}}>
+                <TableContainer style={{ overflowX: 'auto', maxHeight: '55rem', overflowY: 'auto'}}>
                     <Table stickyHeader>
                         <TableHead>
                             <TableRow>

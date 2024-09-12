@@ -83,7 +83,7 @@ export default function ProductionTransactionTable({businessTransactionData}) {
 
     return (
         <>
-        <TableContainer style={{ overflowX: 'auto', maxHeight: '400px', overflowY: 'auto'}}>
+        <TableContainer style={{ overflowX: 'auto', maxHeight: '55rem', overflowY: 'auto'}}>
             <Table stickyHeader>
                 <TableHead>
                     <TableRow>

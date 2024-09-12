@@ -159,7 +159,7 @@ const RecentTransactions = () => {
                   <TableCell>{order?.transaction_fee}%</TableCell>
                   <TableCell>{calculatePayoutBalance(order?.transaction_amount || 0, order?.transaction_fee || 0)} {order.currency || 'None'}</TableCell>
                   <TableCell>
-                        <Chip label={getPaymentStatusLabel(order.status || 'NONE')} color={statusColors[order.status]} variant="outlined" />
+                        <Chip label={getPaymentStatusLabel(order.status || 'NONE')} color={statusColors[order.status]} variant="filled" />
                   </TableCell>
                 </TableRow>
               ))}

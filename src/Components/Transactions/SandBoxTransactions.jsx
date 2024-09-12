@@ -44,7 +44,7 @@ export default function SandBoxTransactionTable({businessSandboxTransactionData}
 
     
     return (
-        <TableContainer style={{ overflowX: 'auto', maxHeight: '400px', overflowY: 'auto'}}>
+        <TableContainer style={{ overflowX: 'auto',  height: '51rem', overflowY: 'auto'}}>
             <Table stickyHeader>
                 <TableHead>
                     <TableRow>

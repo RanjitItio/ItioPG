@@ -31,7 +31,7 @@ export default function MerchantWithdrawalRequests() {
     const [accountBalance, updateAccountBalance] = useState([]); // Merchant Account balance state
     const [selctedCurrency, setSelectedCurrency] = useState('USD'); // Selcted Currency by the merchant
 
-    const countPagination = Math.ceil(totalRows);
+    const countPagination = Math.floor(totalRows);
     
 
     // Assign selected currency value to the state
@@ -194,7 +194,7 @@ export default function MerchantWithdrawalRequests() {
     return (
         <>
         <Box sx={{zIndex: 0, marginTop: -8, padding: 4}}>
-            <Card sx={{borderRadius:'20px', boxShadow:'-28px -8px 9px 0px rgba(0,0,0,0.25)'}}>
+            <Card sx={{borderRadius:'20px'}}>
             <Box p={2} display="flex" justifyContent="space-between" alignItems="center">
                 {/* <TextField placeholder="Search for transaction here" variant="outlined" size="small" /> */}
                 <div className="d-flex justify-content-start">
@@ -204,8 +204,8 @@ export default function MerchantWithdrawalRequests() {
                     </div>
                 </div>
 
-                <Typography variant='p' sx={{ ml: 2, display: {xs:'none', sm:'none', md:'flex'} }}>
-                    <b>Total Balance: {filteredBalance ? (filteredBalance.amount ? parseFloat(filteredBalance.amount).toFixed(3) : 0.00) : 0.00}</b>
+                <Typography variant='p' sx={{ ml: 2, color:'#0089ba', display: {xs:'none', sm:'none', md:'flex'} }}>
+                    <b>TOTAL BALANCE: {filteredBalance ? (filteredBalance.amount ? parseFloat(filteredBalance.amount).toFixed(3) : 0.00) : 0.00}</b>
                     <JoySelect defaultValue="USD" variant='plain' sx={{mt:-1}} onChange={(event, newValue)=> {handleSelctedCurrency(event, newValue); handleGetMerchantAccountBalance(); }}>
                         <JoyOption value="USD">USD</JoyOption>
                         <JoyOption value="EUR">EUR</JoyOption>
@@ -242,7 +242,7 @@ export default function MerchantWithdrawalRequests() {
                 </Box>
             </Box>
 
-                <TableContainer style={{ overflowX: 'auto', maxHeight: '400px', overflowY: 'auto'}}>
+                <TableContainer style={{ overflowX: 'auto', maxHeight: '55rem', overflowY: 'auto'}}>
                     <Table stickyHeader>
                         <TableHead>
                             <TableRow>
