@@ -21,7 +21,7 @@ import animationData from '../Animations/Wallet.json';
 // Production payment checkout
 const PaymentCheckoutPage = () => {
     const query_params = new URLSearchParams(window.location.search)
-    const token        = query_params.get('token')
+    const token        = query_params.get('token') //  URL Data
 
     const [upiqrPage, setUPIQRPage]         = useState(false);  // UPI Pay page state
     const [allPayment, setAllPayment]       = useState(true);    // All payment state
@@ -36,9 +36,10 @@ const PaymentCheckoutPage = () => {
 
     let merchant_public_key  = '';
     let transaction_amount   = '';
-    // let merchant_order_id    = '';
-    let merchant_transaction_id    = '';
+    let merchant_business_name = '';
+    let merchant_transaction_id = '';
     let transaction_currency = '';
+    let merchantBusinessName = '';
 
 
 
@@ -47,15 +48,23 @@ const PaymentCheckoutPage = () => {
 
       merchant_public_key  = tokenValue[0]
       transaction_amount   = tokenValue[1]
-      // merchant_order_id    = tokenValue[2]
       merchant_transaction_id = tokenValue[2]
       transaction_currency = tokenValue[3]
+      merchant_business_name = tokenValue[4]
     };
 
     const merchantTransactionAmount   = parseFloat(atob(transaction_amount))
     const merchantTransactionCurrency = JSON.parse(atob(transaction_currency))
-    // const merchantOrderID             = JSON.parse(atob(merchant_order_id))
     const merchatTransactionID        = JSON.parse(atob(merchant_transaction_id))
+
+    // Business Name
+    try{
+      const decodedBusinessName = atob(merchant_business_name)
+      merchantBusinessName      = JSON.parse(decodedBusinessName)
+    } catch(error) {
+      merchantBusinessName      = 'Business Name'
+    }
+    
     
 
     // Get the available acquirer for the merchant
@@ -93,6 +102,8 @@ const PaymentCheckoutPage = () => {
         })
     }, []);
 
+
+    // Animate the wallet before page starts
     useEffect(()=> {
       // Turn off the animation after two second
        const animationTimeoutID = setTimeout(() => {
@@ -105,6 +116,8 @@ const PaymentCheckoutPage = () => {
 
     }, [])
 
+
+  // If the values are not present in URL
   if (!token) {
     return (
      
@@ -138,6 +151,7 @@ const PaymentCheckoutPage = () => {
             setAllPayment={setAllPayment} 
             setCardDetails={setCardDetails} 
             allPayment={allPayment}
+            merchantBusinessName={merchantBusinessName}
          />
 
          <Box sx={{ flexGrow: 1 }}>
@@ -160,7 +174,6 @@ const PaymentCheckoutPage = () => {
               <Collapse in={cardDetail} timeout='auto' unmountOnExit>
                 <CardPayment 
                     merchatTransactionID={merchatTransactionID}
-                    // merchantOrderID={merchantOrderID}
                     merchantTransactionAmount={merchantTransactionAmount}
                     merchantTransactionCurrency={merchantTransactionCurrency}
                     disblePayButton={disblePayButton}

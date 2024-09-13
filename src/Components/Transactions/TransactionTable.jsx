@@ -346,135 +346,75 @@ if (emptyData) {
 return (
     <>
     <Box sx={{zIndex: 0, marginTop: -8, padding: 4}}>
-    <Card sx={{borderRadius:'20px', height:'100%'}}>
-        <Grid container p={2} justifyContent="space-between" alignItems="center">
-            <Grid item xs={12} sm={4} md={3} lg={3}>
-                <div className="d-flex justify-content-start">
-                <p>
-                    <b><span className='fs-3'>PAYMENT</span></b> <br />
-                    <small>List of all payments received from customers</small>
-                </p>
-                </div>
-            </Grid>
-
-            <Grid item xs={12} sm={8} md={9} lg={9} textAlign="right">
-                <TextField
-                    id="standard-basic" 
-                    label="Search Transactions" 
-                    variant="standard"
-                    onChange={(e)=> handleSearchedText(e)}
-                    />
-
-                <IconButton aria-label="delete" size="large" onClick={handleFetchSearchedTransaction}>
-                    <ContentPasteSearchIcon fontSize="inherit" color='primary' />
-                </IconButton>
-
-                <Button variant="contained" onClick={handleDownloadTransactions}>
-                    Export
-                </Button>
-            </Grid> 
-        </Grid>
-
-        {/* <Collapse in={filterOpen}>
-            <Box p={1}>
-            <Grid container spacing={0}>
-                <Grid item xs={12} sm={6} md={3}>
-                    <FormControl sx={{width: {xs: '100%', sm: '95%',md:'80%'}}} size='medium'>
-                        <InputLabel id="demo-simple-select-currency-label">Currency</InputLabel>
-                        <Select
-                          labelId="demo-simple-select-currency-label"
-                          id="demo-simple-select-currency"
-                          value={'USD'}
-                        >
-                        <MenuItem value={'USD'}>USD</MenuItem>
-                        <MenuItem value={'INR'}>INR</MenuItem>
-                        <MenuItem value={'EUR'}>EUR</MenuItem>
-                        </Select>
-                        <FormHelperText>Select Currency</FormHelperText>
-                    </FormControl>
+        <Card sx={{borderRadius:'20px', height:'100%'}}>
+            <Grid container p={2} justifyContent="space-between" alignItems="center">
+                <Grid item xs={12} sm={4} md={3} lg={3}>
+                    <div className="d-flex justify-content-start">
+                    <p>
+                        <b><span className='fs-3'>PAYMENT</span></b> <br />
+                        <small>List of all payments received from customers</small>
+                    </p>
+                    </div>
                 </Grid>
 
-                <Grid item xs={12} sm={6} md={3}>
-                    <FormControl sx={{width: {xs: '100%', sm: '95%',md:'80%'}}} size='medium'>
-                        <InputLabel id="demo-simple-select-helper-label">Business Name</InputLabel>
-                        <Select
-                          labelId="demo-simple-select-helper-label"
-                          id="demo-simple-select-helper"
-                          value={'Business 1'}
-                        >
-                            <MenuItem value={'Business 1'}>Business 1</MenuItem>
-                            <MenuItem value={'Business 2'}>Business 2</MenuItem>
-                            <MenuItem value={'Business 3'}>Business 3</MenuItem>
-                        </Select>
-                        <FormHelperText>Select Business</FormHelperText>
-                    </FormControl>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={3}>
-                    <TextField 
-                          type="date" 
-                          label="Date" 
-                          variant="outlined" 
-                          size="medium" 
-                          InputLabelProps={{ shrink: true }} 
-                          sx={{width: {xs: '100%', sm: '95%',md:'80%'}, marginBottom: {xs: 2}}}
-                          />
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={3}>
-                    <TextField 
-                        type="text" 
-                        label="Order ID" 
-                        variant="outlined" 
-                        size="medium" 
-                        sx={{width: {xs: '100%', sm: '95%',md:'80%'}, marginBottom: {xs: 2}}}
+                <Grid item xs={12} sm={8} md={9} lg={9} textAlign="right">
+                    <TextField
+                        id="standard-basic" 
+                        label="Search Transactions" 
+                        variant="standard"
+                        onChange={(e)=> handleSearchedText(e)}
                         />
-                </Grid>
-                
+
+                    <IconButton aria-label="delete" size="large" onClick={handleFetchSearchedTransaction}>
+                        <ContentPasteSearchIcon fontSize="inherit" color='primary' />
+                    </IconButton>
+
+                    <Button variant="contained" onClick={handleDownloadTransactions}>
+                        Export
+                    </Button>
+                </Grid> 
             </Grid>
-            </Box>
-        </Collapse> */}
 
-        {/* Production and Sandbox Transaction table */}
-        {SwitchTransaction ? 
-          <ProductionTransactionTable 
-                businessTransactionData={businessTransactionData} 
-                /> 
-        : 
-        <SandBoxTransactionTable businessSandboxTransactionData={businessSandboxTransactionData} />}
+            {/* Production and Sandbox Transaction table */}
+            {SwitchTransaction ? 
+            <ProductionTransactionTable 
+                    businessTransactionData={businessTransactionData} 
+                    /> 
+            : 
+            <SandBoxTransactionTable businessSandboxTransactionData={businessSandboxTransactionData} />}
 
-        
-        <Box sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap', 
-            gap: 2, 
-            margin: '20px 0'
-            }}>
-            <Pagination
-                count={countPagination ? countPagination : 10}
-                color="primary"
-                sx={{
-                [theme.breakpoints.down('sm')]: {
-                    margin: 2, 
-                    width: '100%', 
-                }
-                }}
-                onChange={(e, value)=> {handlePaginationChange(e, value)}}
-            />
 
-            <SandBoxProductionTransactionSwitch
-                handleSwitchTransactions={handleSwitchTransactions}
-                transactionModeName={transactionModeName}
-                sx={{
-                [theme.breakpoints.down('sm')]: {
-                    marginBottom: 2,
-                }
-                }}
-            />
-            </Box>
+            <Box sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap', 
+                gap: 2, 
+                margin: '20px 0'
+                }}>
+                <Pagination
+                    count={countPagination ? countPagination : 10}
+                    color="primary"
+                    sx={{
+                    [theme.breakpoints.down('sm')]: {
+                        margin: 2, 
+                        width: '100%', 
+                    }
+                    }}
+                    onChange={(e, value)=> {handlePaginationChange(e, value)}}
+                />
 
-    </Card>
+                <SandBoxProductionTransactionSwitch
+                    handleSwitchTransactions={handleSwitchTransactions}
+                    transactionModeName={transactionModeName}
+                    sx={{
+                    [theme.breakpoints.down('sm')]: {
+                        marginBottom: 2,
+                    }
+                    }}
+                />
+                </Box>
+
+        </Card>
     </Box>
 
     <Footer />

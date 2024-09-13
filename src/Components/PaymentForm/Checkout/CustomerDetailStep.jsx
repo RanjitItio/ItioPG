@@ -47,7 +47,7 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
     const [merchantKeys, updateMerchantKeys] = useState([]);
     const [error, setError] = useState(''); // Error Message
 
-    const totalAmount = amountDetails.fixedAmount + formValue.customerAmt
+    const totalAmount = amountDetails?.fixedAmount + formValue?.customerAmt // Total Amount
 
     // console.log('amountDetails', amountDetails.redirectURL)
 
@@ -70,9 +70,10 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
         })
     }, []);
 
-    
 
-    // Redirect to checkout page
+
+
+    // Send Payment Request
     const handlePaymentCheckout = ()=> {
         if (formValue.email === '') {
             setError('Please type your Email ID')
@@ -94,11 +95,13 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
                 
                 "amount": totalAmount * 100,   // Multiplied by 100
     
-                "redirectUrl": amountDetails?.redirectURL || '' ,
+                "redirectUrl": amountDetails.redirectURL ? amountDetails.redirectURL : 'redirect URL',
+
+                "BusinessName": amountDetails.businessName ? amountDetails.businessName : "",
     
-                "callbackUrl": "",
+                "callbackUrl": "Webhook url",
     
-                "mobileNumber": "9999999999",
+                "mobileNumber": formValue.phoneno ? formValue.phoneno : "9999999999",
     
                 "paymentInstrument": {
                     "type": "PAY_PAGE"   

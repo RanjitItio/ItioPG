@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import axiosInstance from '../Authentication/axios';
 
 
+
+
 const stats = [
   { id: 1, label: 'Total Balance', icon: <AccountBalanceWallet />, color: 'blue' },
   { id: 2, label: 'Total Withdrawal', icon: <AccountBalanceWallet />, color: 'red' },
@@ -16,7 +18,7 @@ const stats = [
 
 
 
-
+// Home page Stats card
 const StatCard = ({ label, icon, color, currency }) => {
 
        const [statsData, updateStatsData] = useState([]); // stats data state
@@ -43,9 +45,9 @@ const StatCard = ({ label, icon, color, currency }) => {
             case 'Total Balance':
                 return parseInt(statsData[0]?.merchant_account_balance[0]?.amount).toFixed(2) ?? 0;
             case 'Total Withdrawal':
-                return parseInt(statsData[0]?.merchant_withdrawals[0]?.amount).toFixed(2) || 0;
+                return parseInt(statsData[0]?.merchant_withdrawals[0]?.amount).toFixed(2) ?? 0;
             case 'Pending Withdrawals':
-                return parseInt(statsData[0]?.merchant_pending_withdrawals[0].amount).toFixed(2) || 0;
+                return parseInt(statsData[0]?.merchant_pending_withdrawals[0].amount).toFixed(2) ?? 0;
             case 'Total Refund':
                 return parseInt(statsData[0]?.merchant_refunds[0]?.amount).toFixed(2) ?? 0;
             default:

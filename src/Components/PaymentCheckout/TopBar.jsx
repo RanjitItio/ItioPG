@@ -3,14 +3,16 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 
 
-
-export default function TopBar ({setUPIQRPage, setAllPayment, setCardDetails, allPayment}) {
-
+// Top bar for Business name
+export default function TopBar ({setUPIQRPage, setAllPayment, setCardDetails, allPayment, merchantBusinessName}) {
+    
+    // Back button
     const handleBack = ()=> {
         setUPIQRPage(false);
         setAllPayment(true);
         setCardDetails(false);
     };
+
 
     return (
         <Box 
@@ -32,7 +34,7 @@ export default function TopBar ({setUPIQRPage, setAllPayment, setCardDetails, al
                  }
 
                 <img src="https://python-uat.oyefin.com/media/signup/merchant.png" alt="" style={{ width: '30px', height: '30px', marginLeft: '4px', marginTop: '3%' }} />
-                <Typography variant="h6" color={'white'} sx={{marginLeft: '15px', marginTop: '3%'}}>Business Name</Typography>
+                <Typography variant="h6" color={'white'} sx={{marginLeft: '15px', marginTop: '3%'}}>{merchantBusinessName ? merchantBusinessName : 'Business Name'}</Typography>
 
             </Box>
             <hr style={{ margin: '1rem 0', borderTop: '1px solid black'}}  />

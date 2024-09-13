@@ -44,9 +44,7 @@ const getPaymentStatusLabel = (status) => {
 
 // Recent Transaction in Dashboard section
 const RecentTransactions = () => {
-
   const [recentTransactions, updateRecentTransaction] = useState([]); // Recent Transactions
-
 
   useEffect(() => {
     axiosInstance.get(`api/v6/merchant/recent/transactions/`).then((res)=> {
@@ -60,6 +58,7 @@ const RecentTransactions = () => {
          console.log(error);
     })
   }, []);
+
 
   // Calculate payout balance
   const calculatePayoutBalance = (amount, fee)=> {
@@ -87,6 +86,7 @@ const RecentTransactions = () => {
                 <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Date</strong></TableCell>
                 <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Time</strong></TableCell>
                 <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Transaction Id</strong></TableCell>
+                <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Business</strong></TableCell>
                 <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Order Id</strong></TableCell>
                 <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Amount</strong></TableCell>
                 <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Fee</strong></TableCell>
@@ -137,6 +137,7 @@ const RecentTransactions = () => {
                 <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Date</strong></TableCell>
                 <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Time</strong></TableCell>
                 <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Transaction Id</strong></TableCell>
+                <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Business</strong></TableCell>
                 <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Order Id</strong></TableCell>
                 <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Amount</strong></TableCell>
                 <TableCell sx={{ backgroundColor: '#eef0f5' }}><strong>Fee</strong></TableCell>
@@ -145,22 +146,49 @@ const RecentTransactions = () => {
               </TableRow>
             </TableHead>
 
+
+
             <TableBody>
               {recentTransactions.map((order, index) => (
                 <TableRow key={index}>
+
                   <TableCell sx={{display:'flex', justifyContent:'center'}}>
                       <Avatar src='https://python-uat.oyefin.com/media/transaction.jpeg' alt='Date' sx={{ marginRight: 2 }} />
                       <b>{order.createdAt.split('T')[0]}</b>
                   </TableCell>
-                  <TableCell>{order?.createdAt?.split('T')[1] || 'Date'}</TableCell>
-                  <TableCell>{`${order.transaction_id?.substring(0, 15)}...`}</TableCell>
-                  <TableCell>{`${order.merchantOrderID?.substring(0, 15)}...`}</TableCell>
-                  <TableCell>{order?.transaction_amount || 0} {order.currency}</TableCell>
-                  <TableCell>{order?.transaction_fee}%</TableCell>
-                  <TableCell>{calculatePayoutBalance(order?.transaction_amount || 0, order?.transaction_fee || 0)} {order.currency || 'None'}</TableCell>
+
+                  <TableCell>
+                      {order?.createdAt?.split('T')[1] || 'Date'}
+                  </TableCell>
+
+                  <TableCell>
+                      {`${order.transaction_id?.substring(0, 15)}...`}
+                  </TableCell>
+
+                  <TableCell>
+                      {order?.business_name || 'None'}
+                  </TableCell>
+
+                  <TableCell>
+                      {`${order.merchantOrderID?.substring(0, 15)}...`}
+                  </TableCell>
+
+                  <TableCell>
+                      {order?.transaction_amount || 0} {order.currency}
+                  </TableCell>
+
+                  <TableCell>
+                      {order?.transaction_fee}%
+                  </TableCell>
+
+                  <TableCell>
+                      {calculatePayoutBalance(order?.transaction_amount || 0, order?.transaction_fee || 0)} {order.currency || 'None'}
+                  </TableCell>
+
                   <TableCell>
                         <Chip label={getPaymentStatusLabel(order.status || 'NONE')} color={statusColors[order.status]} variant="filled" />
                   </TableCell>
+
                 </TableRow>
               ))}
             </TableBody>

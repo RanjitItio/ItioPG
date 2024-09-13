@@ -27,6 +27,8 @@ const TestPaymentCheckoutPage = () => {
     let transaction_amount   = '';
     let merchant_order_id    = '';
     let transaction_currency = '';
+    let business_name        = '';
+    let merchantBusinessName = '';
 
 
     useEffect(()=> {
@@ -50,6 +52,7 @@ const TestPaymentCheckoutPage = () => {
       transaction_amount   = tokenValue[1]
       merchant_order_id    = tokenValue[2]
       transaction_currency = tokenValue[3]
+      business_name        = tokenValue[4]
     };
 
     // Decode the base64 encoded value
@@ -57,7 +60,16 @@ const TestPaymentCheckoutPage = () => {
     const merchantTransactionCurrency = JSON.parse(atob(transaction_currency))
     const merchantOrderID             = JSON.parse(atob(merchant_order_id))
 
+    // Business Name from query
+    try {
+      const decodedValue   = atob(business_name)
+      merchantBusinessName = JSON.parse(decodedValue) 
+    } catch(error) {
+      merchantBusinessName = 'Business Name'
+    };
+
     
+
     // Page without any value in query
     if (!token) {
       return (
@@ -92,6 +104,7 @@ const TestPaymentCheckoutPage = () => {
             setAllPayment={setAllPayment} 
             setCardDetails={setCardDetails} 
             allPayment={allPayment}
+            merchantBusinessName={merchantBusinessName}
          />
 
          <Box sx={{ flexGrow: 1 }}>

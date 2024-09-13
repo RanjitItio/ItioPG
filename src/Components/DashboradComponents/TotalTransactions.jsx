@@ -42,7 +42,8 @@ export default function TotalTransactions() {
     // Calculte amount datas
     const amounts     = allMerchantTransactions.map(transactions => Number(transactions.amount));
     const totalAmount = amounts.reduce((accumulator, currentValue)=> accumulator + currentValue, 0)
-
+    
+    // Capture currency value
     const handleCurrencyChange = (event) => {
         setCurrency(event.target.value);
     };
@@ -85,7 +86,7 @@ export default function TotalTransactions() {
                 boxShadow: "0px 1px 20px rgba(0,0,0,0.3)" 
                 }
             }}>
-        <CardContent style={{ overflow: "auto", maxHeight: "18rem" }}>
+        <CardContent style={{ overflow: "auto", maxHeight: "20rem" }}>
                
             <Grid container spacing={1}>
                     <Grid item xs={12} sm={6} md={8}>

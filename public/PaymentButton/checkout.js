@@ -11,8 +11,6 @@ window.onload = async () => {
             throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        // console.log(data.data); 
-        
 
         button.innerHTML = `
             <div style="display: flex; align-items: center; justify-content: center;">
@@ -47,6 +45,7 @@ window.onload = async () => {
     } catch (error) {
         console.error('There has been a problem with your fetch operation:', error);
     };
+
 };
 
 

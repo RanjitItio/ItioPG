@@ -26,11 +26,11 @@ export default function GatewayDashboard() {
             <Box sx={{zIndex: 0, marginTop: -8, padding: 4}}>
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={4}>
-                        {/* Total Balance */}
+                        {/* Account Balance */}
                             <AccountBalance />
                         <Grid container>
                             <Grid item xs={12} my={2}>
-                                {/* Pocket Plan */}
+                                {/* Monthly Transaction*/}
                                 <MerchantMonthlyTransaction />
                             </Grid>
                         </Grid>
@@ -40,17 +40,17 @@ export default function GatewayDashboard() {
 
                         <Grid container spacing={1}>
                             <Grid item xs={12} sm={7}>
-                                {/* Pocket Plan */}
+                                {/* Stats */}
                                 <StatsComponent />
                             </Grid>
 
                             <Grid item xs={12} sm={5}>
-                                {/* Pocket Plan */}
+                                {/* Transaction Statitics */}
                                 <TransactionStatistics />
                             </Grid>
 
                             <Grid item xs={12}>
-                                {/* Pocket Plan */}
+                                {/* Recent Transaction */}
                                 <RecentTransactions />
                             </Grid>
 

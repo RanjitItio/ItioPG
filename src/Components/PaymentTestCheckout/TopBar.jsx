@@ -5,8 +5,10 @@ import Lottie from 'lottie-react';
 
 
 
-export default function TestPaymentTopBar({setUPIQRPage, setAllPayment, setCardDetails, allPayment}) {
+// Test payment checkout page
+export default function TestPaymentTopBar({setUPIQRPage, setAllPayment, setCardDetails, allPayment, merchantBusinessName}) {
 
+    // Head back to the previous page
     const handleBack = ()=> {
         setUPIQRPage(false);
         setAllPayment(true);
@@ -35,7 +37,7 @@ export default function TestPaymentTopBar({setUPIQRPage, setAllPayment, setCardD
                  }
 
                 <img src="https://python-uat.oyefin.com/media/signup/merchant.png" alt="" style={{ width: '30px', height: '30px', marginLeft: '4px', marginTop: '3%' }} />
-                <Typography variant="h6" color={'white'} sx={{marginLeft: '15px', marginTop: '3%'}}>Business Name</Typography>
+                <Typography variant="h6" color={'white'} sx={{marginLeft: '15px', marginTop: '3%'}}>{merchantBusinessName ? merchantBusinessName : 'Business Name'}</Typography>
             </Box>
 
                 <Lottie 

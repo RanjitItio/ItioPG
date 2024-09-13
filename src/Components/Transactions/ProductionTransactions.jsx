@@ -7,7 +7,7 @@ import CircularProgress from '@mui/joy/CircularProgress';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import Chip from '@mui/material/Chip';
-// import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+
 
 const RefundFrom = lazy(()=> import('../Refund/RefundForm'));
 
@@ -55,7 +55,7 @@ export default function ProductionTransactionTable({businessTransactionData}) {
                 return 'warning' 
             default:
                 return 'defaultColor';
-        }
+        };
     };
 
     
@@ -83,7 +83,7 @@ export default function ProductionTransactionTable({businessTransactionData}) {
 
     return (
         <>
-        <TableContainer style={{ overflowX: 'auto', maxHeight: '55rem', overflowY: 'auto'}}>
+        <TableContainer style={{ overflowX: 'auto', maxHeight: '64rem', overflowY: 'auto'}}>
             <Table stickyHeader>
                 <TableHead>
                     <TableRow>
@@ -91,6 +91,7 @@ export default function ProductionTransactionTable({businessTransactionData}) {
                         <TableCell><b>Created At</b></TableCell>
                         <TableCell><b>Order ID</b></TableCell>
                         <TableCell><b>Itio Transaction ID</b></TableCell>
+                        <TableCell><b>Business</b></TableCell>
                         <TableCell><b>MOP</b></TableCell>
                         <TableCell><b>Amount</b></TableCell>
                         <TableCell><b>Fee</b></TableCell>
@@ -125,6 +126,11 @@ export default function ProductionTransactionTable({businessTransactionData}) {
                         {/* Transaction ID Column */}
                         <TableCell>
                             <small>{transaction?.transaction_id || ''}</small>
+                        </TableCell>
+
+                        {/* Business Name Column */}
+                        <TableCell>
+                            <small>{transaction?.business_name || ''}</small>
                         </TableCell>
 
                         {/* Payment Mode Column */}

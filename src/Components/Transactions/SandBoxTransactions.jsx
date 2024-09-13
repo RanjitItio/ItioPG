@@ -1,33 +1,34 @@
 import {TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Box} from '@mui/material';
+import Chip from '@mui/material/Chip';
 
 
+const statusMap = {
+    PAYMENT_INITIATED: 'PAYMENT INITIATED',
+    PAYMENT_FAILED: 'PAYMENT FAILED',
+    PAYMENT_SUCCESS: 'PAYMENT SUCCESS',
+    PAYMENT_PENDING: 'PAYMENT PENDING'
+  };
+
+
+// Status Colur according to the status type
+const getStatusColor = (status)=> {
+    switch (status) {
+        case 'PAYMENT_INITIATED':
+            return 'primary'
+        case 'PAYMENT_FAILED':
+            return 'error' 
+        case 'PAYMENT_SUCCESS':
+            return 'success' 
+        case 'PAYMENT_PENDING':
+            return 'warning' 
+        default:
+            return 'defaultColor';
+    };
+};
 
 
 // Sandbox Transactions
 export default function SandBoxTransactionTable({businessSandboxTransactionData}) {
-
-    const statusMap = {
-        PAYMENT_INITIATED: 'PAYMENT INITIATED',
-        PAYMENT_FAILED: 'PAYMENT FAILED',
-        PAYMENT_SUCCESS: 'PAYMENT SUCCESS',
-        PAYMENT_PENDING: 'PAYMENT PENDING'
-      };
-
-    // Status Colur according to the status type
-    const getStatusColor = (status)=> {
-        switch (status) {
-            case 'PAYMENT_INITIATED':
-                return 'warning'
-            case 'PAYMENT_FAILED':
-                return 'danger' 
-            case 'PAYMENT_SUCCESS':
-                return 'success' 
-            case 'PAYMENT_PENDING':
-                return 'warning' 
-            default:
-                return 'defaultColor';
-        }
-    };
 
     // Format Date type
     const formatDate = (dateString)=> {
@@ -52,6 +53,7 @@ export default function SandBoxTransactionTable({businessSandboxTransactionData}
                         <TableCell><b>Created At</b></TableCell>
                         <TableCell><b>Order ID</b></TableCell>
                         <TableCell><b>Itio Transaction ID</b></TableCell>
+                        <TableCell><b>Business</b></TableCell>
                         <TableCell><b>MOP</b></TableCell>
                         <TableCell><b>Amount</b></TableCell>
                         <TableCell><b>Status</b></TableCell>
@@ -66,31 +68,41 @@ export default function SandBoxTransactionTable({businessSandboxTransactionData}
                         <TableCell>{transaction.id ? transaction.id : '-'}</TableCell>
 
                         {/* Date Column */}
-                        <TableCell>{formatDate(transaction.createdAt ? transaction.createdAt.split('T')[0] : new Date())} &ensp; {transaction.createdAt ? transaction.createdAt.split('T')[1] : ''} </TableCell>
+                        <TableCell>
+                            <small>{transaction.createdAt ? formatDate(transaction.createdAt.split('T')[0]) : ''} &ensp; {transaction.createdAt ? transaction.createdAt.split('T')[1] : ''}</small>
+                        </TableCell>
 
                         {/* Merchant Order ID */}
                         <TableCell>
                             <Box display="flex" alignItems="center">
                                 <Box>
-                                    <div>{transaction?.merchantOrderId || ''}</div>
+                                    <div><small>{transaction?.merchantOrderId || ''}</small></div>
                                 </Box>
                             </Box>
                         </TableCell>
 
                         {/* Transaction ID Column */}
-                        <TableCell>{transaction?.transaction_id || ''}</TableCell>
+                        <TableCell>
+                            <small>{transaction?.transaction_id || ''}</small>
+                        </TableCell>
 
                         {/* Payment Mode Column */}
-                        <TableCell>{transaction?.payment_mode || ''}</TableCell>
+                        <TableCell>
+                            <small>{transaction?.business_name || ''}</small>
+                        </TableCell>
+
+                        <TableCell>
+                            <small>{transaction?.payment_mode || ''}</small>
+                        </TableCell>
 
                         {/* Amount Column */}
-                        <TableCell>{transaction?.currency || ''} {transaction?.amount || ''}</TableCell>
+                        <TableCell>
+                            <small>{transaction?.currency || ''} {transaction?.amount || ''}</small>
+                        </TableCell>
 
                         {/* Status */}
                         <TableCell>
-                            <span className={`text-${getStatusColor(transaction.status)}` }>
-                                {statusMap[transaction.status] || 'UNKNOWN STATUS'}
-                            </span>
+                            <Chip label={statusMap[transaction.status] || 'UNKNOWN STATUS'} color={getStatusColor(transaction.status)} />
                         </TableCell>
 
                     </TableRow>
