@@ -137,7 +137,7 @@ export default function TotalTransactions() {
             <Typography>{currentMonthName} Month Transaction Amount ${totalAmount}</Typography>
 
             <TransactionLineChart allMerchantTransactions={allMerchantTransactions}/>
-            
+
         </CardContent>
     </Card>
     </>

@@ -14,6 +14,8 @@ import { useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import FormHelperText from '@mui/material/FormHelperText';
 import Footer from '../Footer';
+import 'bootstrap/dist/js/bootstrap.min.js';
+
 
 
 

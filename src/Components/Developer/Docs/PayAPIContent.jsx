@@ -167,7 +167,6 @@ export default function PayAPIContent() {
                         position: 'relative'
                         }}
                     >
-                        
                         <SyntaxHighlighter language="json" style={coy} showLineNumbers>
                           {sampleRequestPayload}
                         </SyntaxHighlighter>

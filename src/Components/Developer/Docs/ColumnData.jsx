@@ -60,6 +60,13 @@ export const RequestParameterdata = [
     required: 'YES'
   },
   {
+    key: '3',
+    parameterName: <small>BusinessName</small>,
+    dataType: 'STRING',
+    description: `Business Name`,
+    required: 'NO'
+  },
+  {
     key: '4',
     parameterName: <small>currency</small>,
     dataType: 'STRING',
@@ -123,6 +130,7 @@ export const sampleRequestPayload = `
   "merchantPublicKey": "PGTESTPAYUAT",
   "merchantSecretKey": "ewjuiyrtyuvghj567hjk",
   "merchantOrderId": "MT7850590068188104",
+  "BusinessName": "XYZ Business",
   "currency": "USD",
   "amount": 10000,
   "redirectUrl": "https://webhook.site/redirect-url",
