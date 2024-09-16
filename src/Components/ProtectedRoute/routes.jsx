@@ -43,6 +43,7 @@ const DevDocs = React.lazy(()=> import('../Developer/Docs/Devdocs'));
 const ChangePassword = React.lazy(()=> import('../Authentication/ChangePassword'));
 const MerchantProfilePage = React.lazy(()=> import('../MerchantProfile/profilePage'));
 const AdminLogin = React.lazy(()=> import('../Authentication/AdminLogin'));
+const ResetForgotPassword = React.lazy(()=> import('../Authentication/ResetPassword'));
 
 
 
@@ -68,6 +69,14 @@ const AuthRoutes = () => {
       element: (
         <Suspense fallback={<div>Loading...</div>}>
             <PaymentCheckoutPage />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/reset/password/",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+            <ResetForgotPassword />
         </Suspense>
       ),
     },
@@ -243,6 +252,14 @@ const AuthRoutes = () => {
             <ForgetPassword />
         </Suspense>
       )
+    },
+    {
+      path: "/reset/password/",
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+            <ResetForgotPassword />
+        </Suspense>
+      ),
     },
   ];
 

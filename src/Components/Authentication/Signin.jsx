@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axiosInstance from './axios';
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
@@ -9,8 +8,11 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import { useMediaQuery, useTheme } from '@mui/material';
+import {Input as JoyInput} from '@mui/joy';
+import EmailIcon from '@mui/icons-material/Email';
+import LockIcon from '@mui/icons-material/Lock';
+
 
 
 const IS_DEVELOPMENT = import.meta.env.VITE_IS_DEVELOPMENT;
@@ -124,70 +126,82 @@ export default function Signin() {
 
     return (
         // backgroundColor='#0081CF'
-        <Box display="flex" flexDirection={isSmallScreen ? 'column' : 'row'} minHeight="100vh">
+        <Box display="flex">
         <Box
           flex={1}
           display="flex"
           alignItems="center"
           justifyContent="center"
-          sx={{ backgroundColor: '#0081CF', color: 'white', p: 2 }}
         >
           <CardMedia
             component="img"
-            image="https://python-uat.oyefin.com/media/signup/authbackgroundpic.png"
+            image="https://python-uat.oyefin.com/media/signup/authImg.png"
             alt="Logo"
-            sx={{ height: isSmallScreen ? 160 : 320, width: isSmallScreen ? 160 : 320, boxShadow: 3 }}
+            sx={{display:{xs:'none', sm:'flex', md:'flex'}}}
           />
         </Box>
   
-        <Box flex={1.5} display="flex" alignItems="center" justifyContent="center" bgcolor="white">
+        <Box flex={1} display="flex" alignItems="center" justifyContent="center" bgcolor="white">
           <Container maxWidth="sm">
-            <Card sx={{ boxShadow: 3, p: 4, borderRadius: 2 }}>
-              <Box display="flex" flexDirection="column" alignItems="center">
-                <Avatar sx={{ bgcolor: 'primary.main', mb: 2 }}>
-                  {/* <RiUser3Line size="3em" /> */}
-                </Avatar>
-  
-                <Typography component="h2" variant="h5" fontWeight="bold" mb={4}>
-                  Login
-                </Typography>
+            <Card sx={{ boxShadow: 0, p: 5, borderRadius: 2 }}>
+            
+              <Box display="flex" flexDirection="column" alignItems="left" marginBottom={2}>
+                  <Typography component="h1" variant="h5">
+                      <b>Sign In to your Account</b>
+                  </Typography>
+                  <p>Welcome back! please enter your detail</p>
               </Box>
+
               <form onSubmit={handleOnSubmit}>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
-                    <TextField
-                      variant="outlined"
+                    <JoyInput
+                      variant="soft"
                       required
-                      fullWidth
                       id="email"
-                      label="Email"
+                      placeholder="Email"
                       name="email"
                       autoComplete="email"
                       onChange={handleChange}
+                      startDecorator={
+                        <EmailIcon color='primary' />
+                      }
+                      sx={{
+                        width:{xs:'100%', sm:'80%'}
+                      }}
                     />
                   </Grid>
   
                   <Grid item xs={12}>
-                    <TextField
-                      variant="outlined"
+                    <JoyInput
+                      variant="soft"
                       required
-                      fullWidth
                       name="password"
-                      label="Password"
+                      placeholder="Password"
                       type="password"
                       id="password"
                       autoComplete="current-password"
                       onChange={handleChange}
+                      startDecorator={
+                        <LockIcon color='primary'/>
+                      }
+                      sx={{
+                        width:{xs:'100%', sm:'80%'}
+                      }}
                     />
                   </Grid>
   
                   <Grid item xs={12}>
+
                     <Button
                       type="submit"
                       fullWidth
                       variant="contained"
                       color="primary"
                       disabled={disbaleButton}
+                      sx={{
+                        width:{xs:'100%', sm:'80%'}
+                      }}
                     >
                       Login
                     </Button>
@@ -205,16 +219,17 @@ export default function Signin() {
                   )}
                 </Grid>
               </form>
-  
-              <Box display="flex" justifyContent="space-between" mt={2}>
+
+              <Box display="flex" justifyContent="space-between" sx={{mt:4, width:{xs:'100%', sm:'80%'}}}>
                 <Typography variant="body2">
-                  If you don't have an account <Link to="/signup">Signup</Link>
+                    If you don't have an account <Link to="/signup">Signup</Link>
                 </Typography>
-  
+
                 <Typography variant="body2">
-                  <Link to="/forgot-password">Forget password</Link>
+                  <Link to="/forgot-password">Forgot password?</Link>
                 </Typography>
               </Box>
+
             </Card>
           </Container>
         </Box>

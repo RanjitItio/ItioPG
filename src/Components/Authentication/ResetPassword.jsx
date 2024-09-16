@@ -1,17 +1,26 @@
-import { Box, Container, Grid, TextField, Button, Typography, Link, CssBaseline } from '@mui/material';
+import { Box, Container, Grid, Button, Typography, Link } from '@mui/material';
 import { useState, useEffect } from 'react';
 import axiosInstance from './axios';
 import {Input as JoyInput} from '@mui/joy';
-import EmailIcon from '@mui/icons-material/Email';
+import LockIcon from '@mui/icons-material/Lock';
+import { useLocation } from 'react-router-dom';
 
 
 
-// User Forgot password
-const ForgetPassword = () => {
+
+
+
+// Reset forgot password
+export default function ResetForgotPassword() {
+    const location = useLocation();
+
+    const queryParams = new URLSearchParams(location.search);
+    const token = queryParams.get('token')
 
     // Initial form data
     const initialFormData = Object.freeze({
-        email: ''
+        password1: '',
+        password2: '',
     })
 
     const [formData, UpdatFormData] = useState(initialFormData)  // Password data
@@ -28,70 +37,65 @@ const ForgetPassword = () => {
     };
 
 
-     // Method to submit the data through API
+    // Method to submit the data through API
     const handleSubmit = (e)=> {
         e.preventDefault();
-        let validationError = [];
-		// console.log('formData');
 
-        if(!formData.email) {
-            setError("Please fillup the Email");
+        if(!formData.password1) {
+            setError("Please fillup the password");
+
+        } else if (!formData.password2) {
+            setError('Please fill in Confirm password')
 
         } else{
             setError('');
             setIsButtonDisabled(true);
 
-        axiosInstance.post(`api/v1/user/reset_passwd/mail/`, {
-            email: formData.email,
-          
-        })
-        .then((res) => {
-            // console.log(res)
-            if (res.data.msg == 'Password reset instructions have been sent to your email address.') {
-              setSuccessMessage('Password reset mail has been sent to the given email, Please check your mail')
-              setIsButtonDisabled(false);
+            axiosInstance.post(`/api/v1/user/reset_passwd/`, {
+                password1: formData.password1,
+                password2: formData.password2,
+                token: token
+            })
+            .then((res) => {
+                // console.log(res)
+                if (res.status === 200 && res.data.msg === 'Password has been reset successfully') {
+                setSuccessMessage('Password reset successfully')
+                setIsButtonDisabled(false);
 
-            } else{
-              setSuccessMessage('')
+                } else{
+                setSuccessMessage('')
             }
 
-        }).catch((error)=> {
-          console.log(error)
+            }).catch((error)=> {
+            console.log(error)
 
-          if (error.response.data.msg == 'Requested mail ID does not exist') {
-            setError('Requested user does not exist')
-            setIsButtonDisabled(false);
+            if(error.response.data.msg === 'Invalid token or user does not exist') {
+                setError('Invalid User')
+            } else if (error.response.data.msg === 'Password did not match') {
+                setError('Password did not match')
+            }
 
-          } else if (error.response.data.msg == 'Unable to get the user') {
-            setError('Unable to get The user details please retry')
-            setIsButtonDisabled(false);
-
-          } else if (error.response.data.msg == 'Server error') {
-            setError('Unknow error occured please retry after some time')
-            setIsButtonDisabled(false);
-
-          };
-        })
-    }
-};
-
-    // Remove the error and success message if any
-    useEffect(() => {
-
-        if (error || successMessage) {
-          const timer = setTimeout(() => {
-            setError('');
-            setSuccessMessage('');
-          }, 4000); 
-    
-          return () => clearTimeout(timer);
+            })
         }
-      }, [error, successMessage]);
+    };
 
 
-  return (
-    
-      <Container component="main" maxWidth="lg">
+// Remove the error and success message if any
+useEffect(() => {
+
+    if (error || successMessage) {
+      const timer = setTimeout(() => {
+        setError('');
+        setSuccessMessage('');
+      }, 5000); 
+
+      return () => clearTimeout(timer);
+    }
+  }, [error, successMessage]);
+
+
+    return (
+        <Container component="main" maxWidth="lg">
         <Grid container spacing={2} alignItems="center" sx={{ minHeight: '100vh' }}>
           <Grid item xs={12} md={6}>
             <Box
@@ -114,26 +118,40 @@ const ForgetPassword = () => {
               }}
             >
               <Typography component="h1" variant="h5">
-                <b>Forget Password</b>
+                <b>Set Password</b>
               </Typography>
 
               <Typography variant="body2" color="textSecondary" sx={{ mt: 1, mb: 3, width:{xs: '100%', sm: '70%'} }}>
-                  Enter the email address associated with your account and we will send you a link to reset your password.
+                  Enter your password and confirm password
               </Typography>
 
               <JoyInput
                 variant="soft"
-                type='email'
+                type='password'
                 required
-                id="email"
-                placeholder="Email"
-                name="email"
+                id="password1"
+                placeholder="Password"
+                name="password1"
                 onChange={handleChange}
-                autoComplete="email"
                 autoFocus
                 sx={{width:{xs: '100%', sm: '70%'}}}
                 startDecorator={
-                  <EmailIcon color='primary'/>
+                  <LockIcon color='primary'/>
+                }
+              />
+
+              <JoyInput
+                variant="soft"
+                type='password'
+                required
+                id="password2"
+                placeholder="Confirm Password"
+                name="password2"
+                onChange={handleChange}
+                autoFocus
+                sx={{width:{xs: '100%', sm: '70%', marginTop:15}}}
+                startDecorator={
+                  <LockIcon color='primary'/>
                 }
               />
 
@@ -170,7 +188,5 @@ const ForgetPassword = () => {
         </Grid>
 
       </Container>
-  );
+    );
 };
-
-export default ForgetPassword;

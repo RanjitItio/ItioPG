@@ -120,7 +120,6 @@ export default function StatsComponent() {
         setCurrency(e.target.value)
     };
 
-
 // console.log('statsData', statsData)
     useEffect(() => {
         // Fetch all the available currencies

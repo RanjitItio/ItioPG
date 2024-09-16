@@ -155,21 +155,20 @@ const PaymentCheckoutPage = () => {
          />
 
          <Box sx={{ flexGrow: 1 }}>
-              {allPayment && <AllPaymentPage 
-                                  setUPIQRPage={setUPIQRPage} 
-                                  setAllPayment={setAllPayment} 
-                                  setCardDetails={setCardDetails}
-                                  merchantPipes={merchantPipes}
-                                  merchantTransactionAmount={merchantTransactionAmount}
-                                  merchantTransactionCurrency={merchantTransactionCurrency}
-                                  disblePayButton={disblePayButton}
-                                  loadingButton={loadingButton}
-                                  setLoadingButton={setLoadingButton}
-                                  />
-                                  }
+              {allPayment && 
+                  <AllPaymentPage 
+                      setUPIQRPage={setUPIQRPage} 
+                      setAllPayment={setAllPayment} 
+                      setCardDetails={setCardDetails}
+                      merchantPipes={merchantPipes}
+                      merchantTransactionAmount={merchantTransactionAmount}
+                      merchantTransactionCurrency={merchantTransactionCurrency}
+                      disblePayButton={disblePayButton}
+                      loadingButton={loadingButton}
+                      setLoadingButton={setLoadingButton}
+                      />
+                  }
               {upiqrPage && <UPIQRCOde />}
-
-              {/* {cardDetail && <CardPayment />} */}
 
               <Collapse in={cardDetail} timeout='auto' unmountOnExit>
                 <CardPayment 
