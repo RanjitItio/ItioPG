@@ -43,13 +43,13 @@ const StatCard = ({ label, icon, color, currency }) => {
     const getAmount = (label) => {
         switch (label) {
             case 'Total Balance':
-                return parseInt(statsData[0]?.merchant_account_balance[0]?.amount).toFixed(2) ?? 0;
+                return parseFloat(statsData[0]?.merchant_account_balance[0]?.amount).toFixed(3) ?? 0;
             case 'Total Withdrawal':
-                return parseInt(statsData[0]?.merchant_withdrawals[0]?.amount).toFixed(2) ?? 0;
+                return parseFloat(statsData[0]?.merchant_withdrawals[0]?.amount).toFixed(2) ?? 0;
             case 'Pending Withdrawals':
-                return parseInt(statsData[0]?.merchant_pending_withdrawals[0].amount).toFixed(2) ?? 0;
+                return parseFloat(statsData[0]?.merchant_pending_withdrawals[0].amount).toFixed(2) ?? 0;
             case 'Total Refund':
-                return parseInt(statsData[0]?.merchant_refunds[0]?.amount).toFixed(2) ?? 0;
+                return parseFloat(statsData[0]?.merchant_refunds[0]?.amount).toFixed(2) ?? 0;
             default:
                 return 0;
             }
@@ -60,11 +60,12 @@ const StatCard = ({ label, icon, color, currency }) => {
         <Paper
             elevation={3}
             sx={{
-            padding: '16px',
+            padding: '18px',
             display: 'flex',
             alignItems: 'center',
             backgroundColor: '#f5f5f5',
             borderRadius: '8px',
+            mt:2
             }}
         >
             <Box
@@ -137,7 +138,7 @@ export default function StatsComponent() {
 
     
     return (
-        <Paper sx={{ padding: '20px', mb:3, height:{md:'21.4rem'} }}>
+        <Paper sx={{ padding: '20px', mb:3, height:{md:'23rem'} }}>
             <Box sx={{ display:'flex', justifyContent:'space-between', mb:1}}>
                 <Typography variant="h6" gutterBottom>
                     Stats

@@ -71,7 +71,7 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
     const [currencies, SetCurrencies]             = useState([]);     // Currncies
     const [error, setError]                       = useState('');     // Error Message
     const [successMessage, setSuccessMessage]     = useState('');     // Success Message
-    const [InputAmount, setInputAmount]           = useState(0);      // Input Amount
+    const [InputAmount, setInputAmount]           = useState(0.00);      // Input Amount
     const [formData, updateFormData]              = useState({       // Form Values to send in API
         bankAccount: '', bankCurrency: ''
     });
@@ -151,7 +151,8 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
     }, []);
 
 
-    
+
+
    // Method to raise an withdrawal request for merchant
     const handleRaiseWithDrawalRequest = ()=> {
         if (formData.bankAccount === '') {
@@ -174,10 +175,10 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
                 bank_id:          merchantBankID,
                 bank_currency_id: BankcurrencyID,
                 account_currency: balanceCurrency,
-                withdrawal_amount: parseInt(InputAmount)
+                withdrawal_amount: parseFloat(InputAmount)
 
             }).then((res)=> {
-                console.log(res)
+                // console.log(res)
 
                 if (res.status === 200 && res.data.success === true){ 
                     setSuccessMessage('Withdrawal Request has been raised Successfully, Please wait for Admin Approval')
@@ -202,7 +203,6 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
                 };
             });
         }
-
     };
 
 

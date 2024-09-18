@@ -44,6 +44,7 @@ const ChangePassword = React.lazy(()=> import('../Authentication/ChangePassword'
 const MerchantProfilePage = React.lazy(()=> import('../MerchantProfile/profilePage'));
 const AdminLogin = React.lazy(()=> import('../Authentication/AdminLogin'));
 const ResetForgotPassword = React.lazy(()=> import('../Authentication/ResetPassword'));
+const PageNotFound = React.lazy(()=> import('../404Page'));
 
 
 
@@ -164,11 +165,11 @@ const AuthRoutes = () => {
           path: "*",
           element: (
       <>
-              <Navbar />
+            <Navbar />
               <Suspense fallback={<CircularProgress sx={{display:'flex', justifyContent:'center', alignItems:'center'}}/>}>
               <Routes>
-
-                <Route exact path='/merchant/add/businesses/' element={<AddNewBusines />}></Route>
+              
+                <Route exact path='/merchant/add/businesses/' element={<AddNewBusines />} />
                 <Route exact path='/merchant/update/businesses/' element={<UpdateMerchant />}></Route>
                 <Route exact path='/merchant/developer/tools/' element={<DeveloperTools />}></Route>
                 <Route exact path='/merchant/developer/api/keys/' element={<APIKeys />}></Route>
@@ -192,14 +193,12 @@ const AuthRoutes = () => {
 
                 {/* Profile page */}
                 <Route exact path='/merchant/profile/' element={<MerchantProfilePage />}></Route>
+
                 
                 <Route exact path='*' element={
                   <>
-
                     {/* With Navbar and Welcome section   */}
                     <WelcomeSection />
-
-                    {/* <Suspense fallback={<CircularProgress sx={{display:'flex', justifyContent:'center', alignItems:'center'}}/>}> */}
                     <Routes>
                         <Route exact path='/' element={<GatewayDashboard />}></Route>
                         <Route exact path='/merchant/business/transactions/' element={<BusinessTransactionTable />}></Route>
@@ -208,12 +207,10 @@ const AuthRoutes = () => {
                         <Route exact path='/merchant/withdrawal/requests/' element={<MerchantWithdrawalRequests />}></Route>
                         {/* Refunds */}
                         <Route exact path='/merchant/refund/requests/' element={<AllMerchantRefundRequests />}></Route>
-
                     </Routes>
-                    {/* </Suspense> */}
-                    
                     </>
                 }></Route>
+
               </Routes>
               </Suspense>
               </>
