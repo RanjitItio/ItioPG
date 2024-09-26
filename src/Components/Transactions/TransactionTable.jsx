@@ -327,7 +327,8 @@ const handleFetchSearchedTransaction = ()=> {
               
                 const prodData = res.data.merchant_prod_trasactions
                 updateBusinessTransactionData(prodData);
-    
+                setFilterError('')
+                
                 if (prodData.length === 0) {
                     setFilterError('No data found')
                 };
@@ -338,7 +339,9 @@ const handleFetchSearchedTransaction = ()=> {
     
             if (error.response.data.message === 'No transaction available') {
                 setFilterError('No Data Found');
-            };
+            } else {
+                setFilterError('')
+            }
         });
     }
 };
