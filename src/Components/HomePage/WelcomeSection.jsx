@@ -104,7 +104,13 @@ export default function WelcomeSection() {
                 </Alert>
             }
 
-            <Typography variant="h4" sx={{ pt: 2, pb: 2, marginLeft: "4rem", color: "white", display: 'flex', alignItems: 'center' }}>
+            <Typography variant="p" 
+                sx={{ pt: 2, pb: 2, marginLeft: "4rem", 
+                      color: "white", 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      fontSize: {xs:'1.7rem', sm:'2.3rem'}
+                      }}>
                 <span>
                     Welcome, {user_full_name}
                 </span>

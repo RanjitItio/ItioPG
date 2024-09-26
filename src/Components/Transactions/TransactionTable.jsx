@@ -16,6 +16,11 @@ import IconButton from '@mui/material/IconButton';
 import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
 import { useTheme } from '@mui/material/styles';
 import Footer from '../Footer';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/joy/Select';
+import Option from '@mui/joy/Option';
+import Input from '@mui/joy/Input';
+import {Button as JoyButton} from '@mui/joy';
 
 
 
@@ -26,7 +31,6 @@ export default function BusinessTransactionTable () {
 
   const theme = useTheme();
 
-  const [filterOpen, setFilterOpen] = useState(false);  // Open filter fields state
   const [businessTransactionData, updateBusinessTransactionData] = useState([])  // Production Transaction data state
   const [businessSandboxTransactionData, updateBusinessSandboxTransactionData] = useState([])  // Production Transaction data state
   const [isLoading, setIsLoading] = useState(true);
@@ -37,6 +41,19 @@ export default function BusinessTransactionTable () {
   const [searchText, updateSearchText] = useState();    // User searched text
   const [rowCount, setRowCount] = useState(0);
   const [error, setError] = useState('');
+  const [showFilters, setShowFilters] = useState(false);  // Filter fileds state
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectOrderID, setSelectOrderID] = useState('');
+  const [selectTransactionID, setSelectTransactionID] = useState('');
+  const [selectBusinessname, setSelectBusinessName] = useState('');
+  const [filterError, setFilterError] = useState('');  // Error message of filter
+  
+
+
+  /// Open close Filter fields
+    const handleToggleFilters = () => {
+        setShowFilters(!showFilters);
+    };
 
   let countPagination = Math.ceil(rowCount);
 
@@ -263,6 +280,69 @@ const handleFetchSearchedTransaction = ()=> {
     }
 };
 
+    // Get selected date
+    const handleSelctedDate = (e, newValue)=> {
+        setSelectedDate(newValue)
+    };
+
+    // Get selected Order ID
+    const handleSelctedOrderID = (e)=> {
+        const value = e.target.value;
+        setSelectOrderID(value);
+    };
+    // Get selected Transaction ID
+    const handleSelctedTransactionID = (e)=> {
+        const value = e.target.value;
+        setSelectTransactionID(value);
+    };
+    // Get selected Business Name
+    const handleSelctedBusinessName = (e)=> {
+        const value = e.target.value;
+        setSelectBusinessName(value);
+    };
+
+
+  // Filter Transaction Method
+  const handleFilterTransaction = ()=> {
+    if (selectedDate === '' || selectedDate === null) {
+        setFilterError('Please select date range')
+    } else if (selectOrderID === '') {
+        setFilterError('Please type order ID')
+    } else if(selectTransactionID === '') {
+        setFilterError('Please select transaction ID')
+    } else if (selectBusinessname === '') {
+        setFilterError('Please select Business Name')
+    }
+    else {
+
+        axiosInstance.post(`/api/v2/filter/merchant/transaction/`, {
+            date: selectedDate,
+            order_id: selectOrderID,
+            transaction_id: selectTransactionID,
+            business_name: selectBusinessname
+    
+        }).then((res)=> {
+    
+            if (res.status === 200) {
+              
+                const prodData = res.data.merchant_prod_trasactions
+                updateBusinessTransactionData(prodData);
+    
+                if (prodData.length === 0) {
+                    setFilterError('No data found')
+                };
+            }
+    
+        }).catch((error)=> {
+            console.log(error)
+    
+            if (error.response.data.message === 'No transaction available') {
+                setFilterError('No Data Found');
+            };
+        });
+    }
+};
+
 
 // API response witing component
 if (isLoading) {
@@ -295,6 +375,7 @@ if (emptyData) {
         <>
        
        <Grid container p={2} justifyContent="space-between" alignItems="center">
+
             <Grid item xs={12} sm={4} md={3} lg={3}>
                 <div className="d-flex justify-content-start">
                 <p>
@@ -329,8 +410,6 @@ if (emptyData) {
                 </Grid>
             </Grid>
         </Grid>
-        
-        
 
         <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '0%'}}>
             <Lottie animationData={animationData} loop={true} style={{width:'200px', height: '200px'}} />
@@ -343,12 +422,14 @@ if (emptyData) {
 };
 
 
+
 return (
     <>
     <Box sx={{zIndex: 0, marginTop: -8, padding: 4}}>
         <Card sx={{borderRadius:'20px', height:'100%'}}>
             <Grid container p={2} justifyContent="space-between" alignItems="center">
-                <Grid item xs={12} sm={4} md={3} lg={3}>
+
+                <Grid item xs={12} sm={4} md={3}>
                     <div className="d-flex justify-content-start">
                     <p>
                         <b><span className='fs-3'>PAYMENT</span></b> <br />
@@ -357,22 +438,90 @@ return (
                     </div>
                 </Grid>
 
-                <Grid item xs={12} sm={8} md={9} lg={9} textAlign="right">
-                    <TextField
-                        id="standard-basic" 
-                        label="Search Transactions" 
-                        variant="standard"
-                        onChange={(e)=> handleSearchedText(e)}
-                        />
+                <Grid item xs={12} sm={8} md={9} textAlign="right">
+                    <Grid container justifyContent="flex-end">
+                        <Grid item>
+                        <TextField
+                            id="standard-basic" 
+                            label="Search Transactions" 
+                            variant="standard"
+                            onChange={(e)=> handleSearchedText(e)}
+                            />
+                        
 
-                    <IconButton aria-label="delete" size="large" onClick={handleFetchSearchedTransaction}>
-                        <ContentPasteSearchIcon fontSize="inherit" color='primary' />
-                    </IconButton>
+                        <IconButton aria-label="delete" size="large" onClick={handleFetchSearchedTransaction}>
+                            <ContentPasteSearchIcon fontSize="inherit" color='primary' />
+                        </IconButton>
+                        </Grid>
 
-                    <Button variant="contained" onClick={handleDownloadTransactions}>
-                        Export
-                    </Button>
-                </Grid> 
+                        <Grid item>
+                            <Button variant="contained" onClick={handleDownloadTransactions}>
+                                Export
+                            </Button>
+                        </Grid>
+
+                        <Grid item>
+                            <Button
+                            variant="contained"
+                            style={{ marginLeft: 10 }}
+                            onClick={handleToggleFilters}
+                            >
+                            Filters
+                            </Button>
+                        </Grid>
+                    </Grid> 
+                </Grid>
+
+                {/* Hidden Drop Down */}
+                {showFilters && (
+                    <>
+                    <Grid container p={2} justifyContent="flex-end" spacing={2}>
+                        <Grid item xs={12} sm={6} md={2.5}>
+                            <FormControl fullWidth>
+                            <Select
+                                label="date"
+                                placeholder='Date'
+                                id="date"
+                                value={selectedDate}
+                                name="date"
+                                onChange={handleSelctedDate}
+                            >
+                                <Option value="Today">Today</Option>
+                                <Option value="Yesterday">Yesterday</Option>
+                                <Option value="ThisWeek">This Week</Option>
+                                <Option value="ThisMonth">This Month</Option>
+                                <Option value="PreviousMonth">Previous Month</Option>
+                            </Select>
+                            </FormControl>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6} md={2.5}>
+                            <FormControl fullWidth>
+                                <Input placeholder="Order ID" onChange={(e)=> handleSelctedOrderID(e)} />
+                            </FormControl>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6} md={3}>
+                            <FormControl fullWidth>
+                                <Input placeholder="Transaction ID" onChange={(e)=> handleSelctedTransactionID(e)} />
+                            </FormControl>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6} md={3}>
+                            <FormControl fullWidth>
+                                <Input placeholder="Business Name" onChange={(e)=> handleSelctedBusinessName(e)} />
+                            </FormControl>
+                        </Grid>
+                        
+                        <Grid item xs={12} sm={6} md={1}>
+                            <FormControl fullWidth>
+                                <JoyButton onClick={handleFilterTransaction}>Submit</JoyButton>
+                            </FormControl>
+                        </Grid>
+                    </Grid>
+                    <small style={{color:'red'}}>{filterError && filterError}</small>
+                    </>
+                )}
             </Grid>
 
             {/* Production and Sandbox Transaction table */}

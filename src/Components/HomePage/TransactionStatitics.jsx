@@ -10,18 +10,7 @@ import { useRef } from 'react';
 
 // Register the chart components (necessary from Chart.js v3 onwards)
 ChartJS.register(ArcElement, Tooltip, Legend);
-
-
-
-// Options for the chart
-const options = {
-  cutout: '10%',
-  plugins: {
-    legend: {
-      display: false,
-    },
-  },
-};
+ 
 
 
 // Styled component for the percentage circles
@@ -94,13 +83,17 @@ export default function TransactionStatistics() {
         console.log(error)
       });
     }
-  }, [selectedCurrency])
+  }, [selectedCurrency]);
   
-     
-  
+
+  const total             = parseInt(transactinData.success_transaction) + parseInt(transactinData.withdrawal_amount) + parseInt(transactinData.refund_amount);
+  const successPercent    = total === 0 ? 0 : ((parseInt(transactinData.success_transaction) * 100) / total).toFixed(1);
+  const withdrawalPercent = total === 0 ? 0 : ((parseInt(transactinData.withdrawal_amount) * 100) / total).toFixed(1);
+  const refundPercent     = total === 0 ? 0 : ((parseInt(transactinData.refund_amount) * 100) / total).toFixed(1);
+
   // Dougnut Chart
   const data = {
-    labels: ['Success Transaction', 'Withdrawals', 'Refunds'],
+    labels: [`Success Transaction`, `Withdrawals`, `Refunds`],
   
     datasets: [
       {
@@ -110,13 +103,26 @@ export default function TransactionStatistics() {
       },
     ],
   };
-  
 
-  const total             = parseInt(transactinData.success_transaction) + parseInt(transactinData.withdrawal_amount) + parseInt(transactinData.refund_amount);
-  const successPercent    = total === 0 ? 0 : ((parseInt(transactinData.success_transaction) * 100) / total).toFixed(1);
-  const withdrawalPercent = total === 0 ? 0 : ((parseInt(transactinData.withdrawal_amount) * 100) / total).toFixed(1);
-  const refundPercent     = total === 0 ? 0 : ((parseInt(transactinData.refund_amount) * 100) / total).toFixed(1);
-
+  // Options for the chart
+const options = {
+  cutout: '10%',
+  plugins: {
+    legend: {
+      display: false,
+    },
+    tooltip: {
+      callbacks: {
+        label: function (tooltipItem) {
+          const dataIndex = tooltipItem.dataIndex;
+          const labels = ['Success', 'Withdrawal', 'Refund'];
+          const percentages = [successPercent, withdrawalPercent, refundPercent];
+          return `${labels[dataIndex]}: ${percentages[dataIndex]}%`;
+        }
+      }
+    },
+  },
+}; 
 
   return (
     <Box sx={{ p: 1, backgroundColor: '#f5f7fb', borderRadius: '10px', maxWidth: 400}}>
@@ -143,7 +149,7 @@ export default function TransactionStatistics() {
       <Box sx={{ position: 'relative', mt: 3, mb: 1, height:'16rem' }}>
         <Doughnut data={data} options={options} />
 
-        <PercentageCircle top="13%" left="11%">
+        {/* <PercentageCircle top="13%" left="11%">
             {withdrawalPercent}%
         </PercentageCircle>
 
@@ -153,7 +159,7 @@ export default function TransactionStatistics() {
 
         <PercentageCircle top="-3%" left="39%">
             {refundPercent}%
-        </PercentageCircle>
+        </PercentageCircle> */}
       </Box>
 
       {/* Legend with values */}
@@ -173,7 +179,7 @@ export default function TransactionStatistics() {
         </Box>
 
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ width: 10, height: 10, backgroundColor: '#FBBC05', mr: 1 }} />
+          <Box sx={{ width: 10, height: 10, backgroundColor: '#e02342', mr: 1 }} />
           <Typography variant="body2">
             Refunds: <strong>{transactinData.refund_amount}</strong>
           </Typography>

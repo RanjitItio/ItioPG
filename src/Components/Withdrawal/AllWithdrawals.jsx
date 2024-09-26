@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Button,
-  Box, useMediaQuery, Typography
+  Box, useMediaQuery, Typography, Grid, TextField
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import axiosInstance from '../Authentication/axios';
@@ -13,7 +13,12 @@ import Chip from '@mui/material/Chip';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import WithdrawalFrom from './withdrawalForm';
 import Footer from '../Footer';
-import {Select as JoySelect, Option as JoyOption} from '@mui/joy';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import Select from '@mui/joy/Select';
+import Option from '@mui/joy/Option';
+import Input from '@mui/joy/Input';
+import {Button as JoyButton} from '@mui/joy';
+import FormControl from '@mui/material/FormControl';
 
 
 
@@ -25,14 +30,32 @@ export default function MerchantWithdrawalRequests() {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     const [withdrawalRequests, updateWithdrawalRequests] = useState([]);   // All withdrawal request data
-    const [exportData, updateExportData] = useState([]); // Excel Data
-    const [totalRows, updateTotalRows]   = useState(0);
+    const [exportData, updateExportData]         = useState([]); // Excel Data
+    const [totalRows, updateTotalRows]           = useState(0);
     const [openWithdrawl, setOpenWithdrawal]     = useState(false); // Withdrawal form state
     const [accountBalance, updateAccountBalance] = useState([]); // Merchant Account balance state
     const [selctedCurrency, setSelectedCurrency] = useState('USD'); // Selcted Currency by the merchant
+    const [showFilters, setShowFilters]          = useState(false);  // Filter fileds state
+    const [filterDate, setFilterDate]            = useState('');  // Filter date state field
+    const [filterError, setFilterError]          = useState('');  // Error message of filter
+    const [filterData, updateFilterData]         = useState({
+        bank_name: '',
+        WithdrawalCurrency: '',
+        withdrawalAmount: ''
+    });  // Filter filed data state
+
+
+    // Get the selected date of filter fields
+    const handleFilterDateChange = (e, newValue)=> {
+        setFilterDate(newValue)
+    };
 
     const countPagination = Math.floor(totalRows);
     
+    /// Open close Filter fields
+    const handleToggleFilters = () => {
+        setShowFilters(!showFilters);
+    };
 
     // Assign selected currency value to the state
     const handleSelctedCurrency = (event, newValue)=> {
@@ -190,59 +213,184 @@ export default function MerchantWithdrawalRequests() {
   };
 
 
-    
+  // Get all filter field data
+  const handleFilterDataChange = (e)=> {
+        const {name, value} = e.target;
+
+        updateFilterData({
+            ...filterData, 
+            [name]: value
+        })
+    };
+
+
+    // Get Filtered data
+    const handleGetFlterData = ()=> {
+        if (filterDate === '' || filterDate === null) {
+            setFilterError('Please select date')
+        } else if (filterData.bank_name === '') {
+            setFilterError('Please select bank name')
+        } else if (filterData.WithdrawalCurrency === '') {
+            setFilterError('Please select withdrawal currency')
+        } else if (filterData.withdrawalAmount === '') {
+            setFilterError('Please select withdrawal amount')
+        } else {
+            axiosInstance.post(`/api/v3/filter/merchant/fiat/withdrawals/`, {
+                date: filterDate,
+                bank_name: filterData.bank_name,
+                withdrawal_currency: filterData.WithdrawalCurrency,
+                withdrawal_amount: filterData.withdrawalAmount
+
+            }).then((res)=> {
+                console.log(res)
+
+                if (res.status === 200 && res.data.success === true) {
+                    updateWithdrawalRequests(res.data.merchantWithdrawalRequests)
+                    setFilterError('')
+                }   
+            }).catch((error)=> {
+                console.log(error)
+
+                if (error.response.data.error === 'No withdrawal request found') {
+                    setFilterError('No data found')
+                } else {
+                    setFilterError('')
+                };
+            })
+        }
+    };
+
+
+
     return (
         <>
         <Box sx={{zIndex: 0, marginTop: -8, padding: 4}}>
             <Card sx={{borderRadius:'20px'}}>
-            <Box p={2} display="flex" justifyContent="space-between" alignItems="center">
-                {/* <TextField placeholder="Search for transaction here" variant="outlined" size="small" /> */}
-                <div className="d-flex justify-content-start">
-                    <div>
+            <Grid container p={2} justifyContent="space-between" alignItems="center">
+
+                <Grid item xs={12} sm={4} md={3}>
+                    <div className="d-flex justify-content-start">
+                    <p>
                         <b><span className='fs-3'>All Withdrawals</span></b> <br />
-                        <p>List of all your withdrawal requests</p>
+                        <small>List of all your withdrawal requests</small>
+                    </p>
                     </div>
-                </div>
+                </Grid>
 
-                <Typography variant='p' sx={{ ml: 2, color:'#0089ba', display: {xs:'none', sm:'none', md:'flex'} }}>
-                    <b>TOTAL BALANCE: {filteredBalance ? (filteredBalance.amount ? parseFloat(filteredBalance.amount).toFixed(3) : 0.00) : 0.00}</b>
-                    <JoySelect defaultValue="USD" variant='plain' sx={{mt:-1}} onChange={(event, newValue)=> {handleSelctedCurrency(event, newValue); handleGetMerchantAccountBalance(); }}>
-                        <JoyOption value="USD">USD</JoyOption>
-                        <JoyOption value="EUR">EUR</JoyOption>
-                        <JoyOption value="INR">INR</JoyOption>
-                        <JoyOption value="GBP">GBP</JoyOption>
-                    </JoySelect>
-                </Typography>   
+                <Grid item xs={12} sm={8} md={9} textAlign="right">
+                    <Grid container justifyContent="flex-end" spacing={1}>
+                     
+                        {isSmallScreen ? (
+                                <>
+                                </>
+                        ) : (
+                            <>
+                            <Grid item>
+                                <Button onClick={handleDownloadWithdrawals} variant="contained" style={{ marginLeft: 10 }} startIcon={<FileDownloadIcon />}>
+                                    Download
+                                </Button>
+                            </Grid>
 
+                            <Grid item>
+                                <Button onClick={handleClickOpenWithdrawalForm} variant="contained" style={{ marginLeft: 10, marginTop:3}} startIcon={<IosShareIcon />}>
+                                    Withdrawal
+                                </Button>
+                            </Grid>
 
-                <Box>
-                    {/* If Small screen */}
-                    {isSmallScreen ? (
-                        <div style={{display:'flex', justifyContent:'center'}}>
-                            <IconButton style={{marginTop: -30 ,fontSize:'10px', color:'#0089ba' }} >
-                                <FileDownloadIcon />
-                            </IconButton>
+                            <Grid item>
+                                <Button onClick={handleToggleFilters} variant="contained" style={{ marginLeft: 10, marginTop:3}} startIcon={<FilterAltIcon />}>
+                                    Filter
+                                </Button>
+                            </Grid>
+                            </>
+                        )}
+                    </Grid> 
+                </Grid>
 
-                            <IconButton style={{ marginTop: -30, fontSize:'10px', color:'#0089ba' }} >
-                                <IosShareIcon />
-                            </IconButton>
-                        </div>
-                    ) : (
+                {isSmallScreen && (
+                    <Grid item xs={12} style={{ textAlign: 'left', marginTop: '0px' }}>
+                    
+                        <IconButton onClick={handleDownloadWithdrawals} style={{color:'#0089ba' }} >
+                            <FileDownloadIcon fontSize='medium' />
+                        </IconButton>
+                 
+                        <IconButton onClick={handleClickOpenWithdrawalForm} style={{ color:'#0089ba' }} >
+                            <IosShareIcon fontSize='medium' />
+                        </IconButton>
+
+                        <IconButton onClick={handleToggleFilters} style={{ color:'#0089ba' }} >
+                            <FilterAltIcon fontSize='medium'/>
+                        </IconButton>
+                    </Grid>
+                )}
+                    {/* Hidden Drop Down */}
+                    {showFilters && (
                         <>
-                        {/* Large Screen */}
-                        <Button onClick={handleDownloadWithdrawals} variant="contained" style={{ marginLeft: 10 }} startIcon={<FileDownloadIcon />}>
-                            Download
-                        </Button>
+                        <Grid container p={2} justifyContent="flex-end" spacing={2}>
+                            <Grid item xs={12} sm={6} md={2.5}>
+                                <FormControl fullWidth>
+                                <Select
+                                    label="date"
+                                    placeholder='Date'
+                                    id="date"
+                                    name="date"
+                                    value={filterDate}
+                                    onChange={(e, newValue) => handleFilterDateChange(e, newValue)}
+                                >
+                                    <Option value="Today">Today</Option>
+                                    <Option value="Yesterday">Yesterday</Option>
+                                    <Option value="ThisWeek">This Week</Option>
+                                    <Option value="ThisMonth">This Month</Option>
+                                    <Option value="PreviousMonth">Previous Month</Option>
+                                </Select>
+                                </FormControl>
+                            </Grid>
 
-                        <Button onClick={handleClickOpenWithdrawalForm} variant="contained" style={{ marginLeft: 10, marginTop:3}} startIcon={<IosShareIcon />}>
-                            Withdrawal
-                        </Button>
-                        </>
+                            <Grid item xs={12} sm={6} md={2.5}>
+                                <FormControl fullWidth>
+                                    <Input 
+                                    placeholder="Bank Name" 
+                                    name='bank_name'
+                                    value={filterData.bank_name}
+                                    onChange={handleFilterDataChange}
+                                    />
+                                </FormControl>
+                            </Grid>
+
+                            <Grid item xs={12} sm={6} md={3}>
+                                <FormControl fullWidth>
+                                    <Input 
+                                        name='WithdrawalCurrency'
+                                        value={filterData.WithdrawalCurrency}
+                                        onChange={handleFilterDataChange}
+                                        placeholder="Withdrawal Currency" 
+                                        />
+                                </FormControl>
+                            </Grid>
+
+                            <Grid item xs={12} sm={6} md={3}>
+                                <FormControl fullWidth>
+                                    <Input 
+                                        placeholder="Withdrawal Amount"
+                                        name='withdrawalAmount'
+                                        value={filterData.withdrawalAmount} 
+                                        onChange={handleFilterDataChange}
+                                        />
+                                </FormControl>
+                            </Grid>
+                            
+                            <Grid item xs={12} sm={6} md={1}>
+                                <FormControl fullWidth>
+                                    <JoyButton onClick={handleGetFlterData}>Submit</JoyButton>
+                                </FormControl>
+                            </Grid>
+                        </Grid>
+                        <small style={{color:'red'}}>{filterError && filterError}</small>
+                    </>
                     )}
-                </Box>
-            </Box>
-
-                <TableContainer style={{ overflowX: 'auto', maxHeight: '55rem', overflowY: 'auto'}}>
+            </Grid>
+            
+                <TableContainer style={{ overflowX: 'auto', maxHeight: '85rem', overflowY: 'auto'}}>
                     <Table stickyHeader>
                         <TableHead>
                             <TableRow>

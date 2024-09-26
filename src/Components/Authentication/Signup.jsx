@@ -25,7 +25,6 @@ import { InputAdornment } from '@mui/material';
 
 // User Signup Function
 export default function Signup() {
-    const navigate = useNavigate();
 
     const initialFormData = Object.freeze({
         first_name: '',
