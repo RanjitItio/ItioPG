@@ -302,29 +302,19 @@ const handleFetchSearchedTransaction = ()=> {
     };
 
 
-  // Filter Transaction Method
-  const handleFilterTransaction = ()=> {
-    if (selectedDate === '' || selectedDate === null) {
-        setFilterError('Please select date range')
-    } else if (selectOrderID === '') {
-        setFilterError('Please type order ID')
-    } else if(selectTransactionID === '') {
-        setFilterError('Please select transaction ID')
-    } else if (selectBusinessname === '') {
-        setFilterError('Please select Business Name')
-    }
-    else {
-
+    // Filter Transaction Method
+    const handleFilterTransaction = ()=> {
+        
         axiosInstance.post(`/api/v2/filter/merchant/transaction/`, {
             date: selectedDate,
             order_id: selectOrderID,
             transaction_id: selectTransactionID,
             business_name: selectBusinessname
-    
+
         }).then((res)=> {
-    
+
             if (res.status === 200) {
-              
+                
                 const prodData = res.data.merchant_prod_trasactions
                 updateBusinessTransactionData(prodData);
                 setFilterError('')
@@ -333,18 +323,18 @@ const handleFetchSearchedTransaction = ()=> {
                     setFilterError('No data found')
                 };
             }
-    
+
         }).catch((error)=> {
             console.log(error)
-    
+
             if (error.response.data.message === 'No transaction available') {
                 setFilterError('No Data Found');
             } else {
                 setFilterError('')
             }
         });
-    }
-};
+        
+    };
 
 
 // API response witing component
@@ -391,7 +381,7 @@ if (emptyData) {
             <Grid item xs={12} sm={8} md={9} lg={9} textAlign="right">
                 <Grid container justifyContent="flex-end">
 
-                <Grid item>
+                {/* <Grid item>
                     <TextField
                         id="standard-basic" 
                         label="Search Transactions" 
@@ -402,7 +392,7 @@ if (emptyData) {
                     <IconButton aria-label="delete" size="large" onClick={handleFetchSearchedTransaction}>
                         <ContentPasteSearchIcon fontSize="inherit" color='primary' />
                     </IconButton>
-                </Grid>
+                </Grid> */}
 
                 <Grid item>
                     <Button variant="contained" style={{ marginLeft: 10 }} onClick={handleDownloadTransactions}>
@@ -443,7 +433,7 @@ return (
 
                 <Grid item xs={12} sm={8} md={9} textAlign="right">
                     <Grid container justifyContent="flex-end">
-                        <Grid item>
+                        {/* <Grid item>
                         <TextField
                             id="standard-basic" 
                             label="Search Transactions" 
@@ -455,7 +445,7 @@ return (
                         <IconButton aria-label="delete" size="large" onClick={handleFetchSearchedTransaction}>
                             <ContentPasteSearchIcon fontSize="inherit" color='primary' />
                         </IconButton>
-                        </Grid>
+                        </Grid> */}
 
                         <Grid item>
                             <Button variant="contained" onClick={handleDownloadTransactions}>

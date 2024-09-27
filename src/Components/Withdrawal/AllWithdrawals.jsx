@@ -44,13 +44,13 @@ export default function MerchantWithdrawalRequests() {
         withdrawalAmount: ''
     });  // Filter filed data state
 
+    const countPagination = Math.floor(totalRows);
 
     // Get the selected date of filter fields
     const handleFilterDateChange = (e, newValue)=> {
         setFilterDate(newValue)
     };
 
-    const countPagination = Math.floor(totalRows);
     
     /// Open close Filter fields
     const handleToggleFilters = () => {
@@ -226,38 +226,33 @@ export default function MerchantWithdrawalRequests() {
 
     // Get Filtered data
     const handleGetFlterData = ()=> {
-        if (filterDate === '' || filterDate === null) {
-            setFilterError('Please select date')
-        } else if (filterData.bank_name === '') {
-            setFilterError('Please select bank name')
-        } else if (filterData.WithdrawalCurrency === '') {
-            setFilterError('Please select withdrawal currency')
-        } else if (filterData.withdrawalAmount === '') {
-            setFilterError('Please select withdrawal amount')
-        } else {
-            axiosInstance.post(`/api/v3/filter/merchant/fiat/withdrawals/`, {
-                date: filterDate,
-                bank_name: filterData.bank_name,
-                withdrawal_currency: filterData.WithdrawalCurrency,
-                withdrawal_amount: filterData.withdrawalAmount
+        
+        axiosInstance.post(`/api/v3/filter/merchant/pg/withdrawals/`, {
+            date: filterDate,
+            bank_name: filterData.bank_name,
+            withdrawal_currency: filterData.WithdrawalCurrency,
+            withdrawal_amount: filterData.withdrawalAmount
 
-            }).then((res)=> {
-                console.log(res)
+        }).then((res)=> {
+            // console.log(res)
 
-                if (res.status === 200 && res.data.success === true) {
-                    updateWithdrawalRequests(res.data.merchantWithdrawalRequests)
-                    setFilterError('')
-                }   
-            }).catch((error)=> {
-                console.log(error)
+            if (res.status === 200 && res.data.success === true) {
+                updateWithdrawalRequests(res.data.merchantWithdrawalRequests)
+                setFilterError('')
+            }   
+        }).catch((error)=> {
+            // console.log(error)
 
-                if (error.response.data.error === 'No withdrawal request found') {
-                    setFilterError('No data found')
-                } else {
-                    setFilterError('')
-                };
-            })
-        }
+            if (error.response.data.error === 'No withdrawal request found') {
+                setFilterError('No data found')
+            } else if (error.response.data.message === 'Invalid Bank Name') {
+                setFilterError('Invalid Bank Name')
+            } else if (error.response.data.message === 'Invalid Currency') {
+                setFilterError('Invalid Currency')
+            } else {
+                setFilterError('')
+            };
+        })
     };
 
 

@@ -186,35 +186,29 @@ export default function AllMerchantRefundRequests() {
     // Get Filtered data
     const handleGetFlterData = ()=> {
 
-        if (filterDate === '' || filterDate === null) {
-            setFilterError('Please select date')
-        } else if (filterData.transactionId === '') {
-            setFilterError('Please select Transaction ID')
-        } else if (filterData.refundAmount === '') {
-            setFilterError('Please select refund amount')
-        }  else {
-            axiosInstance.post(`/api/v6/filter/merchant/fiat/refund/`, {
-                date: filterDate,
-                transaction_id: filterData.transactionId,
-                refund_amount: filterData.refundAmount
+        axiosInstance.post(`/api/v6/filter/merchant/pg/refund/`, {
+            date: filterDate,
+            transaction_id: filterData.transactionId,
+            refund_amount: filterData.refundAmount
 
-            }).then((res)=> {
-                // console.log(res)
+        }).then((res)=> {
+            // console.log(res)
 
-                if (res.status === 200 && res.data.success === true) {
-                    updateRefundRequests(res.data.merchant_refunds)
-                    setFilterError('')
-                }   
-            }).catch((error)=> {
-                console.log(error)
+            if (res.status === 200 && res.data.success === true) {
+                updateRefundRequests(res.data.merchant_refunds)
+                setFilterError('')
+            }   
+        }).catch((error)=> {
+            // console.log(error)
 
-                if (error.response.data.message === 'No refund requests available') {
-                    setFilterError('No data found')
-                } else {
-                    setFilterError('')
-                };
-            })
-        }
+            if (error.response.data.message === 'No refund requests available') {
+                setFilterError('No data found')
+            } else if (error.response.data.message === 'Invalid Transaction ID') {
+                setFilterError('Invalid Transaction ID')
+            } else {
+                setFilterError('')
+            };
+        })
     };
 
 
