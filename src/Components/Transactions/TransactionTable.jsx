@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef} from 'react';
 import {
-  Card,Button,TextField, Box, Grid,
+  Card,Button, TextField, Box, Grid,
 } from '@mui/material';
 import axiosInstance from '../Authentication/axios';
 import Pagination from '@mui/material/Pagination';
@@ -47,7 +47,7 @@ export default function BusinessTransactionTable () {
   const [selectTransactionID, setSelectTransactionID] = useState('');
   const [selectBusinessname, setSelectBusinessName] = useState('');
   const [filterError, setFilterError] = useState('');  // Error message of filter
-  
+
 
 
   /// Open close Filter fields
@@ -55,12 +55,11 @@ export default function BusinessTransactionTable () {
         setShowFilters(!showFilters);
     };
 
-  let countPagination = Math.ceil(rowCount);
+   let countPagination = Math.ceil(rowCount);
 
-//   Method to accept transaction type of user
+  //   Method to accept transaction type of user
   const handleSwitchTransactions = (event)=> {
       setSwitchTransaction(event.target.checked)
-
   };
 
 
@@ -106,6 +105,7 @@ export default function BusinessTransactionTable () {
         })
     }
   }, [SwitchTransaction])
+
   
 
   // Fetch all the production transaction data of merchant //
@@ -302,6 +302,16 @@ const handleFetchSearchedTransaction = ()=> {
     };
 
 
+    // Filter Reset method
+    const handleFilterReset = ()=> {
+        setSelectedDate('');
+        setSelectOrderID('');
+        setSelectTransactionID('');
+        setSelectBusinessName('');
+        handlePaginationChange('event', 1);
+    };
+
+
     // Filter Transaction Method
     const handleFilterTransaction = ()=> {
         
@@ -490,25 +500,31 @@ return (
 
                         <Grid item xs={12} sm={6} md={2.5}>
                             <FormControl fullWidth>
-                                <Input placeholder="Order ID" onChange={(e)=> handleSelctedOrderID(e)} />
+                                <Input value={selectOrderID} placeholder="Order ID" onChange={(e)=> handleSelctedOrderID(e)} />
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={6} md={3}>
+                        <Grid item xs={12} sm={6} md={2.5}>
                             <FormControl fullWidth>
-                                <Input placeholder="Transaction ID" onChange={(e)=> handleSelctedTransactionID(e)} />
+                                <Input value={selectTransactionID} placeholder="Transaction ID" onChange={(e)=> handleSelctedTransactionID(e)} />
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} sm={6} md={3}>
+                        <Grid item xs={12} sm={6} md={2.5}>
                             <FormControl fullWidth>
-                                <Input placeholder="Business Name" onChange={(e)=> handleSelctedBusinessName(e)} />
+                                <Input value={selectBusinessname} placeholder="Business Name" onChange={(e)=> handleSelctedBusinessName(e)} />
                             </FormControl>
                         </Grid>
                         
-                        <Grid item xs={12} sm={6} md={1}>
+                        <Grid item xs={6} sm={6} md={1}>
                             <FormControl fullWidth>
-                                <JoyButton onClick={handleFilterTransaction}>Submit</JoyButton>
+                                <JoyButton  onClick={handleFilterTransaction}>Submit</JoyButton>
+                            </FormControl>
+                        </Grid>
+
+                        <Grid item xs={6} sm={6} md={1}>
+                            <FormControl fullWidth>
+                                <JoyButton onClick={handleFilterReset}>Reset</JoyButton>
                             </FormControl>
                         </Grid>
                     </Grid>

@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import {
   Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Button,
-  Box, useMediaQuery, TextField, Grid
+  Box, useMediaQuery, Grid
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import axiosInstance from '../Authentication/axios';
 import Pagination from '@mui/material/Pagination';
-import IosShareIcon from '@mui/icons-material/IosShare';
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import Chip from '@mui/material/Chip';
-import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
 import DownloadIcon from '@mui/icons-material/Download';
 import Footer from '../Footer';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
@@ -38,7 +36,8 @@ export default function AllMerchantRefundRequests() {
     const [filterError, setFilterError]          = useState('');  // Error message of filter
     const [filterData, updateFilterData]         = useState({
         transactionId: '',
-        refundAmount: ''
+        refundAmount: '',
+        status: ''
     })
     
     let countPagination = Math.ceil(totalRowCount)
@@ -182,6 +181,17 @@ export default function AllMerchantRefundRequests() {
         })
     };
 
+    // Reset Filter
+    const handleFilterReset = ()=> {
+        setFilterDate('');
+        updateFilterData({
+            transactionId:'',
+            refundAmount: '',
+            status: ''
+        })
+        handlePaginationCount('e', 1);
+    };
+
     
     // Get Filtered data
     const handleGetFlterData = ()=> {
@@ -189,7 +199,8 @@ export default function AllMerchantRefundRequests() {
         axiosInstance.post(`/api/v6/filter/merchant/pg/refund/`, {
             date: filterDate,
             transaction_id: filterData.transactionId,
-            refund_amount: filterData.refundAmount
+            refund_amount: filterData.refundAmount,
+            status: filterData.status
 
         }).then((res)=> {
             // console.log(res)
@@ -262,7 +273,7 @@ export default function AllMerchantRefundRequests() {
                         {showFilters && (
                         <>
                             <Grid container p={2} justifyContent="flex-end" spacing={2}>
-                                <Grid item xs={12} sm={6} md={3}>
+                                <Grid item xs={12} sm={6} md={2.5}>
                                     <FormControl fullWidth>
                                     <Select
                                         label="date"
@@ -281,7 +292,7 @@ export default function AllMerchantRefundRequests() {
                                     </FormControl>
                                 </Grid>
 
-                                <Grid item xs={12} sm={6} md={3.5}>
+                                <Grid item xs={12} sm={6} md={2.5}>
                                     <FormControl fullWidth>
                                         <Input 
                                             name="transactionId"
@@ -292,7 +303,7 @@ export default function AllMerchantRefundRequests() {
                                     </FormControl>
                                 </Grid>
 
-                                <Grid item xs={12} sm={6} md={3.5}>
+                                <Grid item xs={12} sm={6} md={2.5}>
                                     <FormControl fullWidth>
                                         <Input 
                                             name='refundAmount'
@@ -302,10 +313,27 @@ export default function AllMerchantRefundRequests() {
                                             />
                                     </FormControl>
                                 </Grid>
+
+                                <Grid item xs={12} sm={6} md={2.5}>
+                                    <FormControl fullWidth>
+                                        <Input 
+                                            name='status'
+                                            value={filterData.status}
+                                            onChange={handleFilterFieldsChange}
+                                            placeholder="Status" 
+                                            />
+                                    </FormControl>
+                                </Grid>
                                 
-                                <Grid item xs={12} sm={6} md={2}>
+                                <Grid item xs={6} sm={6} md={1}>
                                     <FormControl fullWidth>
                                         <JoyButton onClick={handleGetFlterData}>Submit</JoyButton>
+                                    </FormControl>
+                                </Grid>
+
+                                <Grid item xs={6} sm={6} md={1}>
+                                    <FormControl fullWidth>
+                                        <JoyButton onClick={handleFilterReset}>Reset</JoyButton>
                                     </FormControl>
                                 </Grid>
                             </Grid>

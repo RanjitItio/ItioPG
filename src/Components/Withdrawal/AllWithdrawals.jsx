@@ -224,6 +224,18 @@ export default function MerchantWithdrawalRequests() {
     };
 
 
+    // Reset Filter values
+   const handleFilterReset = ()=> {
+        setFilterDate('');
+        updateFilterData({
+            bank_name:'',
+            WithdrawalCurrency: '',
+            withdrawalAmount: ''
+        });
+        handlePaginationData('event', 1)
+   };
+
+
     // Get Filtered data
     const handleGetFlterData = ()=> {
         
@@ -352,7 +364,7 @@ export default function MerchantWithdrawalRequests() {
                                 </FormControl>
                             </Grid>
 
-                            <Grid item xs={12} sm={6} md={3}>
+                            <Grid item xs={12} sm={6} md={2.5}>
                                 <FormControl fullWidth>
                                     <Input 
                                         name='WithdrawalCurrency'
@@ -363,7 +375,7 @@ export default function MerchantWithdrawalRequests() {
                                 </FormControl>
                             </Grid>
 
-                            <Grid item xs={12} sm={6} md={3}>
+                            <Grid item xs={12} sm={6} md={2.5}>
                                 <FormControl fullWidth>
                                     <Input 
                                         placeholder="Withdrawal Amount"
@@ -374,9 +386,15 @@ export default function MerchantWithdrawalRequests() {
                                 </FormControl>
                             </Grid>
                             
-                            <Grid item xs={12} sm={6} md={1}>
+                            <Grid item xs={6} sm={6} md={1}>
                                 <FormControl fullWidth>
                                     <JoyButton onClick={handleGetFlterData}>Submit</JoyButton>
+                                </FormControl>
+                            </Grid>
+
+                            <Grid item xs={6} sm={6} md={1}>
+                                <FormControl fullWidth>
+                                    <JoyButton onClick={handleFilterReset}>Reset</JoyButton>
                                 </FormControl>
                             </Grid>
                         </Grid>
