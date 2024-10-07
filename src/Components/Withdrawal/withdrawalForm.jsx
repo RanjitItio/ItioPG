@@ -83,8 +83,8 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
 
     // Input amount value
     const handleInputAmountChange = (event) => {
-        if (parseInt(event.target.value) > Balance?.amount) {
-            setError('Amount is greater than Account Balance')
+        if (parseInt(event.target.value) > Balance?.mature_balance || 0) {
+            setError('Amount is greater than Mature Balance')
         } else if (parseInt(event.target.value) === 0) {
             setError('Amount must be greater than 0')
         } else {
@@ -274,7 +274,7 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
 
                         <div style={{display:'flex', justifyContent:'center'}}>
                             <Typography variant="h4" color="textPrimary">
-                               {getCurrencyIcon(balanceCurrency)}{Balance ? Balance.amount.toFixed(3) : 0.00}
+                               {getCurrencyIcon(balanceCurrency)}{Balance ? (Balance.mature_balance ? Balance.mature_balance.toFixed(3) : 0.00) : 0.00}
                             </Typography>
 
                             <FormControl>

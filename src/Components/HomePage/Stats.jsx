@@ -9,7 +9,7 @@ import axiosInstance from '../Authentication/axios';
 
 
 const stats = [
-  { id: 1, label: 'Total Balance', icon: <AccountBalanceWallet />, color: 'blue' },
+  { id: 1, label: 'Mature Balance', icon: <AccountBalanceWallet />, color: 'blue' },
   { id: 2, label: 'Total Withdrawal', icon: <AccountBalanceWallet />, color: 'red' },
   { id: 3, label: 'Pending Withdrawals', icon: <AttachMoney />, color: 'green' },
   { id: 4, label: 'Total Refund', icon: <TrendingDown />, color: 'red' },
@@ -42,7 +42,7 @@ const StatCard = ({ label, icon, color, currency }) => {
     // Assign amount according to the label
     const getAmount = (label) => {
         switch (label) {
-            case 'Total Balance':
+            case 'Mature Balance':
                 return parseFloat(statsData[0]?.merchant_account_balance[0]?.amount).toFixed(3) ?? 0;
             case 'Total Withdrawal':
                 return parseFloat(statsData[0]?.merchant_withdrawals[0]?.amount).toFixed(2) ?? 0;
