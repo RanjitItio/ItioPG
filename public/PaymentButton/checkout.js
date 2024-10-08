@@ -6,7 +6,7 @@ const button = document.createElement('button');
 
 window.onload = async () => {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/merchant/payment/fetch/button/?id=${button_id}`);
+        const response = await fetch(`https://python-uat.oyefin.com/api/merchant/payment/fetch/button/?id=${button_id}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -37,7 +37,7 @@ window.onload = async () => {
 
         button.addEventListener('click',  (event)=> {
             event.preventDefault();
-            window.location.href = `http://localhost:5173/merchant/pg/payment/form/step/?payment_button=${button_id}`
+            window.location.href = `https://react-payment.oyefin.com/merchant/pg/payment/form/step/?payment_button=${button_id}`
         });
 
         document.querySelector('form').appendChild(button);
