@@ -47,7 +47,6 @@ export default function AccountBalance() {
    useEffect(() => {
        axiosInstance.get(`/api/v5/merchant/account/balance/`).then((res)=> {
          // console.log(res)
-
          if (res.status === 200 && res.data.success === true) {
             updateAccountBalance(res.data.merchantAccountBalance)
          }

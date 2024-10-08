@@ -83,10 +83,14 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
 
     // Input amount value
     const handleInputAmountChange = (event) => {
+        const value = event.target.value;
+
         if (parseInt(event.target.value) > Balance?.mature_balance || 0) {
             setError('Amount is greater than Mature Balance')
         } else if (parseInt(event.target.value) === 0) {
             setError('Amount must be greater than 0')
+        } else if (isNaN(Number(value))) {
+            setError('Please type valid number')
         } else {
             setError('')
             setInputAmount(event.target.value);
