@@ -11,7 +11,7 @@ import axiosInstance from '../Authentication/axios';
 const stats = [
   { id: 1, label: 'Mature Balance', icon: <AccountBalanceWallet />, color: 'blue' },
   { id: 2, label: 'Total Withdrawal', icon: <AccountBalanceWallet />, color: 'red' },
-  { id: 3, label: 'Pending Withdrawals', icon: <AttachMoney />, color: 'green' },
+  { id: 3, label: 'Immature Balance', icon: <AttachMoney />, color: 'green' },
   { id: 4, label: 'Total Refund', icon: <TrendingDown />, color: 'red' },
 ];
 
@@ -27,7 +27,7 @@ const StatCard = ({ label, icon, color, currency }) => {
         useEffect(() => {
             if (currency) {
             axiosInstance.get(`api/v6/merchant/dash/stats/${currency}/`).then((res) => {
-                // console.log(res.data.stats_data)
+                console.log(res.data.stats_data)
 
                 if (res.status === 200 && res.data.success) {
                     updateStatsData(res.data.stats_data);
@@ -43,13 +43,13 @@ const StatCard = ({ label, icon, color, currency }) => {
     const getAmount = (label) => {
         switch (label) {
             case 'Mature Balance':
-                return parseFloat(statsData[0]?.merchant_account_balance[0]?.amount).toFixed(3) ?? 0;
+                return parseFloat(statsData[0]?.merchant_account_balance[0]?.amount || 0).toFixed(3) ?? 0;
             case 'Total Withdrawal':
-                return parseFloat(statsData[0]?.merchant_withdrawals[0]?.amount).toFixed(2) ?? 0;
-            case 'Pending Withdrawals':
-                return parseFloat(statsData[0]?.merchant_pending_withdrawals[0].amount).toFixed(2) ?? 0;
+                return parseFloat(statsData[0]?.merchant_withdrawals[0]?.amount || 0).toFixed(2) ?? 0;
+            case 'Immature Balance':
+                return parseFloat(statsData[0]?.merchant_immature_balance[0].amount || 0).toFixed(2) ?? 0;
             case 'Total Refund':
-                return parseFloat(statsData[0]?.merchant_refunds[0]?.amount).toFixed(2) ?? 0;
+                return parseFloat(statsData[0]?.merchant_refunds[0]?.amount || 0).toFixed(2) ?? 0;
             default:
                 return 0;
             }
