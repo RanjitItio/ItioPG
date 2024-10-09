@@ -21,6 +21,8 @@ const getStatusColor = (status)=> {
             return 'success' 
         case 'PAYMENT_PENDING':
             return 'warning' 
+        case 'PAYMENT_HOLD':
+            return 'primary' 
         default:
             return 'primary';
     };

@@ -200,8 +200,6 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
 
                 if (error.response.data.error === 'Bank account not active') {
                     setError('Selected Bank account is not active yet')
-                } else if (error.response.data.error === 'Amount should be greater than 10') {
-                    setError('Amount should be greater than 10')
                 } else if (error.response.data.error === 'Do not have any active account in the currency'){
                     setError('Do not have any active bank account')
                 } else if(error.response.data.error === 'Donot have sufficient balance in Account') {
@@ -392,7 +390,7 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
                                     textOverflow: 'ellipsis'
                                 }}
                                 >
-                                Withdrawal Amount
+                                Withdrawable Amount
                             </Typography>
                         </Box>
                     </Paper>
