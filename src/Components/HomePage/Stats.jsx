@@ -27,7 +27,7 @@ const StatCard = ({ label, icon, color, currency }) => {
         useEffect(() => {
             if (currency) {
             axiosInstance.get(`api/v6/merchant/dash/stats/${currency}/`).then((res) => {
-                console.log(res.data.stats_data)
+                // console.log(res.data.stats_data)
 
                 if (res.status === 200 && res.data.success) {
                     updateStatsData(res.data.stats_data);
@@ -43,7 +43,7 @@ const StatCard = ({ label, icon, color, currency }) => {
     const getAmount = (label) => {
         switch (label) {
             case 'Mature Balance':
-                return parseFloat(statsData[0]?.merchant_account_balance[0]?.amount || 0).toFixed(3) ?? 0;
+                return parseFloat(statsData[0]?.merchant_mature_balance[0]?.amount || 0).toFixed(3) ?? 0;
             case 'Total Withdrawal':
                 return parseFloat(statsData[0]?.merchant_withdrawals[0]?.amount || 0).toFixed(2) ?? 0;
             case 'Immature Balance':

@@ -14,6 +14,8 @@ import NativeSelect from '@mui/material/NativeSelect';
 import axiosInstance from '../Authentication/axios';
 import { Link } from 'react-router-dom';
 import {Input as JoyInput} from '@mui/joy';
+import { AccountBalanceWallet } from '@mui/icons-material';
+
 
 
 
@@ -75,11 +77,11 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
     const [formData, updateFormData]              = useState({       // Form Values to send in API
         bankAccount: '', bankCurrency: ''
     });
+    const [merchantBalance, setMerchantBalance]   = useState([]);
 
    
     // Get the account balance of the merchant according to the selected currency
     const Balance = accountBalance.find(balance => balance.currency === balanceCurrency)
-    
 
     // Input amount value
     const handleInputAmountChange = (event) => {
@@ -204,10 +206,30 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
                     setError('Do not have any active bank account')
                 } else if(error.response.data.error === 'Donot have sufficient balance in Account') {
                     setError('Do not have suffiecient balance to make the transaction')
+                } else if (error.response.data.message === 'Withdrawal amount must be greater than minimum withdrawal amount') {
+                    setError('Withdrawal amount must be greater than minimum withdrawal amount')
+                } else {
+                    setError('')
                 };
             });
         }
     };
+
+
+    // Fetch all the account balance
+    useEffect(() => {
+        if (balanceCurrency) {
+        axiosInstance.get(`api/v6/merchant/dash/stats/${balanceCurrency}/`).then((res) => {
+            // console.log(res.data.stats_data)
+            if (res.status === 200 && res.data.success) {
+                setMerchantBalance(res.data.stats_data);
+            }
+
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+    }, [balanceCurrency]);
 
 
 
@@ -269,6 +291,113 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
                             ))}
                         </Select>
                     </FormControl>
+
+                    {/* Total Amount Section */}
+                    <Paper
+                        elevation={3}
+                        sx={{
+                        padding: '18px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        backgroundColor: '#f5f5f5',
+                        borderRadius: '8px',
+                        mt:1
+                        }}
+                    >
+                        <Box
+                        sx={{
+                            backgroundColor: 'red',
+                            borderRadius: '50%',
+                            padding: '8px',
+                            color: 'white',
+                            marginRight: '16px',
+                            fontSize: '1.5rem',
+                        }}
+                        >
+                        <AccountBalanceWallet />
+                        </Box>
+
+                        <Box sx={{flexGrow:1, minWidth:0}}>
+                            <Typography 
+                                variant="h6" 
+                                fontWeight="bold"
+                                sx={{
+                                    whiteSpace: 'nowrap', 
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis', 
+                                }}>
+                              
+                              {getCurrencyIcon(balanceCurrency)} {(merchantBalance[0]?.merchant_account_balance[0]?.amount || 0).toFixed(3) ?? 0}
+                            </Typography>
+
+                            <Typography 
+                                variant="subtitle2" 
+                                color="textSecondary"
+                                sx={{
+                                    whiteSpace:'nowrap',
+                                    overflow:'hidden',
+                                    textOverflow: 'ellipsis'
+                                }}
+                                >
+                                Total Amount
+                            </Typography>
+                        </Box>
+                    </Paper>
+
+                    {/* Withdrawal Amount Section */}
+                    <Paper
+                        elevation={3}
+                        sx={{
+                        padding: '18px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        backgroundColor: '#f5f5f5',
+                        borderRadius: '8px',
+                        mt:1,
+                        width:'100%'
+                        }}
+                    >
+                        <Box
+                        sx={{
+                            backgroundColor: 'red',
+                            borderRadius: '50%',
+                            padding: '10px',
+                            color: 'white',
+                            marginRight: '16px',
+                            fontSize: '1.5rem',
+                        }}
+                        >
+                            <AccountBalanceWallet />
+                        </Box>
+
+                        <Box sx={{flexGrow:1, minWidth:0}}>
+                            <Typography 
+                                variant="h6" 
+                                fontWeight="bold"
+                                sx={{
+                                    whiteSpace: 'nowrap', 
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis', 
+                                }}>
+                              
+                              {getCurrencyIcon(balanceCurrency)} {(merchantBalance[0]?.merchant_mature_balance[0]?.amount || 0).toFixed(3) ?? 0}
+                            </Typography>
+
+                            <Typography 
+                                variant="subtitle2" 
+                                color="textSecondary"
+                                sx={{
+                                    whiteSpace:'nowrap',
+                                    overflow:'hidden',
+                                    textOverflow: 'ellipsis'
+                                }}
+                                >
+                                Withdrawal Amount
+                            </Typography>
+                        </Box>
+                    </Paper>
+                    {/* Ends */}
+
 
                     {/* Amount Display */}
                     <Box sx={{ textAlign: 'center', mt: 3, mb: 3 }}>
