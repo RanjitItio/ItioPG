@@ -15,6 +15,8 @@ import axiosInstance from '../Authentication/axios';
 import { Link } from 'react-router-dom';
 import {Input as JoyInput} from '@mui/joy';
 import { AccountBalanceWallet } from '@mui/icons-material';
+import PaymentsIcon from '@mui/icons-material/Payments';
+import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 
 
 
@@ -304,7 +306,7 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
                     >
                         <Box
                         sx={{
-                            backgroundColor: 'red',
+                            backgroundColor: 'green',
                             borderRadius: '50%',
                             padding: '8px',
                             color: 'white',
@@ -312,7 +314,7 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
                             fontSize: '1.5rem',
                         }}
                         >
-                        <AccountBalanceWallet />
+                        <PaymentsIcon />
                         </Box>
 
                         <Box sx={{flexGrow:1, minWidth:0}}>
@@ -357,7 +359,7 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
                     >
                         <Box
                         sx={{
-                            backgroundColor: 'red',
+                            backgroundColor: 'orange',
                             borderRadius: '50%',
                             padding: '10px',
                             color: 'white',
@@ -365,7 +367,7 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
                             fontSize: '1.5rem',
                         }}
                         >
-                            <AccountBalanceWallet />
+                            <PointOfSaleIcon />
                         </Box>
 
                         <Box sx={{flexGrow:1, minWidth:0}}>
