@@ -54,7 +54,7 @@ export default function ProductionTransactionTable({businessTransactionData}) {
             case 'PAYMENT_PENDING':
                 return 'warning' 
             default:
-                return 'defaultColor';
+                return 'primary';
         };
     };
 

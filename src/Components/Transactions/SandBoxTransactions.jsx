@@ -22,7 +22,7 @@ const getStatusColor = (status)=> {
         case 'PAYMENT_PENDING':
             return 'warning' 
         default:
-            return 'defaultColor';
+            return 'primary';
     };
 };
 
