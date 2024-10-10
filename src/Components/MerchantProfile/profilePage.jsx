@@ -149,7 +149,7 @@ const MerchantProfilePage = () => {
           updateGender(userData.gander)
       }
 
-  }, [userData])
+  }, [userData]);
   
 
 

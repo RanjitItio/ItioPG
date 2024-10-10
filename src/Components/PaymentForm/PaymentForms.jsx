@@ -55,6 +55,23 @@ const HtmlTooltip = styled(({ className, ...props }) => (
   }));
 
 
+// Method to validate url format
+const validateURL = (url, setUrlFormatError) => {
+    const urlPattern = /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,4}(\/[\w-]*)*(\?.*)?$/; 
+        if (!urlPattern.test(url)) {
+            setUrlFormatError(prevErrors => ({
+            ...prevErrors,
+            redirectUrl: 'Invalid URL format'
+            }));
+        } else {
+            setUrlFormatError(prevErrors => ({
+            ...prevErrors,
+            redirectUrl: ''
+        }));
+    }
+};
+
+
 // Payment form
 export default function PaymentForm() {
     const initialAmountFieldData = {
@@ -76,6 +93,7 @@ export default function PaymentForm() {
     const [CustomerAmountField, setCustomerAmountField] = useState(false); // Customer decided amount
     const [firstStepData, updateFirstStepData]          = useState({title: '', businessName: '', redirectUrl: ''})    // Button step state
     const [stepErorMessage, setStepErrorMessage]        = useState(true);   // Step wise fields error Message
+    const [urlFormtError, setUrlFormatError]            = useState({redirectUrl: ''});     // Error Message for url format
 
 
     // Customer details fields state
@@ -177,10 +195,16 @@ export default function PaymentForm() {
         } 
     };
 
+
     // First step values
     const handleFirstStepChange = (e)=> {
+        const { name, value } = e.target;
+        if (name === 'redirectUrl') {
+            validateURL(value, setUrlFormatError);
+        }
+
         updateFirstStepData({...firstStepData,
-            [e.target.name]: e.target.value
+            [name]: value
         })
     };
 
@@ -288,6 +312,8 @@ export default function PaymentForm() {
                                             name='redirectUrl'
                                             value={firstStepData.redirectUrl}
                                             onChange={handleFirstStepChange}
+                                            error={!!urlFormtError.redirectUrl}
+                                            helperText={urlFormtError.redirectUrl}
                                         />
 
                                         <TextField
@@ -306,6 +332,7 @@ export default function PaymentForm() {
                                                 defaultValue="dark" 
                                                 onChange={handleFirstStepFieldChange}
                                                 name='buttonColor'
+                                                label='Button Theme'
                                                 >
                                                 <MenuItem value="default">Default</MenuItem>
                                                 <MenuItem value="dark">Dark</MenuItem>
