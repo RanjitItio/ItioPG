@@ -39,8 +39,10 @@ export default function ProductionTransactionTable({businessTransactionData}) {
         PAYMENT_INITIATED: 'PAYMENT INITIATED',
         PAYMENT_FAILED: 'PAYMENT FAILED',
         PAYMENT_SUCCESS: 'PAYMENT SUCCESS',
-        PAYMENT_PENDING: 'PAYMENT PENDING'
+        PAYMENT_PENDING: 'PAYMENT PENDING',
+        PAYMENT_HOLD: 'PAYMENT HOLD'
       };
+
 
     // Status Colur according to the status type
     const getStatusColor = (status)=> {
