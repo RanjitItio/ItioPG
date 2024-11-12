@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 
 
-
+/// Admin will login to merchant dashboard
 export default function AdminLogin() {
     const location = useLocation();
     const navigate = useNavigate();

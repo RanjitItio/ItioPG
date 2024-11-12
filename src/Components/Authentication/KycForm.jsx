@@ -112,12 +112,12 @@ const StepContent = ({ step, formData, handleChange, handleZipCodeChange, handle
             <Grid item xs={12} sm={6} md={6}>
                 <TextField 
                     name="email"
+                    type='email'
                     value={formData.email}
                     onChange={handleChange}
                     label="Email" 
                     fullWidth 
                     size='small' 
-                    type='email'
                     />
             </Grid>
 
@@ -363,87 +363,132 @@ const KYCForm = () => {
   // Submit button method
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    let validationError = [];
+    // let validationError = [];
     
-    if (!formData.firstName.trim()) validationError.push('Please fill your First Name');
-    if (!formData.lastName.trim()) validationError.push('Please fill your Last Name');
-    if (!formData.dob.trim()) validationError.push('Please fill your Date of Birth');
-    if (!formData.gender.trim()) validationError.push('Please select your Gender');
-    if (!formData.maritalStatus.trim()) validationError.push('Please select your Marital Status');
-    if (!formData.email.trim()) validationError.push('Please fill your email Address');
-    if (!formData.phoneNumber.trim()) validationError.push('Please fill your Phone number');
-    if (!formData.address.trim()) validationError.push('Please fill your Address');
-    if (!formData.landmark.trim()) validationError.push('Please type your Landmark name');
-    if (!formData.city.trim()) validationError.push('Please fill your city name');
-    if (!formData.zipCode.trim()) validationError.push('Please fill your Zipcode');
-    if (!formData.stateOrUt.trim()) validationError.push('Please fill your State or UT');
-    if (!formData.country.trim()) validationError.push('Please fill your Country Name');
-    if (!formData.nationality.trim()) validationError.push('Please type your Nationality');
-    if (!formData.idType.trim()) validationError.push('Please select your ID Type');
-    if (!formData.idNumber.trim()) validationError.push('Please type your ID Number');
-    if (!formData.idExpiryDate.trim()) validationError.push('Please fill in ID Expiry Date');
-    if (formData.document && formData.document.size > 1024 * 1024) {
-      validationError.push('Document size exceeds 1MB');
-    }
+    // if (!formData.firstName.trim()) validationError.push('Please fill your First Name');
+    // if (!formData.lastName.trim()) validationError.push('Please fill your Last Name');
+    // if (!formData.dob.trim()) validationError.push('Please fill your Date of Birth');
+    // if (!formData.gender.trim()) validationError.push('Please select your Gender');
+    // if (!formData.maritalStatus.trim()) validationError.push('Please select your Marital Status');
+    // if (!formData.email.trim()) validationError.push('Please fill your email Address');
+    // if (!formData.phoneNumber.trim()) validationError.push('Please fill your Phone number');
+    // if (!formData.address.trim()) validationError.push('Please fill your Address');
+    // if (!formData.landmark.trim()) validationError.push('Please type your Landmark name');
+    // if (!formData.city.trim()) validationError.push('Please fill your city name');
+    // if (!formData.zipCode.trim()) validationError.push('Please fill your Zipcode');
+    // if (!formData.stateOrUt.trim()) validationError.push('Please fill your State or UT');
+    // if (!formData.country.trim()) validationError.push('Please fill your Country Name');
+    // if (!formData.nationality.trim()) validationError.push('Please type your Nationality');
+    // if (!formData.idType.trim()) validationError.push('Please select your ID Type');
+    // if (!formData.idNumber.trim()) validationError.push('Please type your ID Number');
+    // if (!formData.idExpiryDate.trim()) validationError.push('Please fill in ID Expiry Date');
+    // if (formData.document && formData.document.size > 1024 * 1024) {
+    //   validationError.push('Document size exceeds 1MB');
+    // }
 
-    if (validationError.length > 0) {
-      setError(validationError.join(', '));
-      return;
+    // if (validationError.length > 0) {
+    //   setError(validationError.join(', '));
+    //   return;
+    // } else {
+    //   setError('');
+    // }
+    if(!formData.firstName.trim()) {
+      setError('Please fill your First Name')
+    } else if (!formData.lastName.trim()) {
+      setError('Please fill your Last Name')
+    } else if (!formData.dob.trim()) {
+      setError('Please fill your Date of Birth')
+    } else if (!formData.gender.trim()) {
+      setError('Please select your Gender')
+    } else if (!formData.maritalStatus.trim()) {
+      setError('Please select your Marital Status')
+    } else if (!formData.email.trim())  {
+      setError('Please fill your email Address')
+    } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(formData.email)) {
+      setError('Please enter valid email address')
+    } else if (!formData.phoneNumber.trim()) {
+      setError('Please fill your Phone number')
+    } else if (!/^\d+$/.test(formData.phoneNumber)) {
+      setError('Please enter valid phone number')
+    } else if (!formData.address.trim()) {
+      setError('Please fill your Address')
+    } else if (!formData.landmark.trim()) {
+      setError('Please type your Landmark name')
+    } else if (!formData.city.trim()) {
+      setError('Please fill your city name')
+    } else if (!formData.zipCode.trim()) {
+      setError('Please fill your Zipcode')
+    } else if (!formData.stateOrUt.trim()) {
+      setError('Please fill your State or UT')
+    } else if (!formData.country.trim()) {
+      setError('Please fill your Country Name')
+    } else if (!formData.nationality.trim()) {
+      setError('Please fill your Nationality')
+    } else if (!formData.idType.trim()) {
+      setError('Please select your ID Type')
+    } else if (!formData.idNumber.trim()) {
+      setError('Please type your ID Number')
+    } else if (!formData.idExpiryDate.trim()) {
+      setError('Please fill in ID Expiry Date')
+    } else if (formData.document && formData.document.size > 1024 * 1024) {
+      setError('Document size must be less than 1MB')
     } else {
-      setError('');
-    }
+        setError('');
 
-    const formDataToSend = new FormData();
+        const formDataToSend = new FormData();
 
-    formDataToSend.append('user_id', formData.user_id);
-    formDataToSend.append('firstname', formData.firstName);
-    formDataToSend.append('lastname', formData.lastName);
-    formDataToSend.append('dateofbirth', formData.dob);
-    formDataToSend.append('gender', formData.gender);
-    formDataToSend.append('marital_status', formData.maritalStatus);
-    formDataToSend.append('email', formData.email);
-    formDataToSend.append('phoneno', formData.phoneNumber);
-    formDataToSend.append('address', formData.address);
-    formDataToSend.append('landmark', formData.landmark);
-    formDataToSend.append('city', formData.city);
-    formDataToSend.append('zipcode', formData.zipCode);
-    formDataToSend.append('state', formData.stateOrUt);
-    formDataToSend.append('country', formData.country);
-    formDataToSend.append('nationality', formData.nationality);
-    formDataToSend.append('id_type', formData.idType);
-    formDataToSend.append('id_number', formData.idNumber);
-    formDataToSend.append('id_expiry_date', formData.idExpiryDate);
-    formDataToSend.append('uploaddocument', formData.document);
+        formDataToSend.append('user_id', parseInt(formData?.user_id || 0));
+        formDataToSend.append('firstname', formData.firstName);
+        formDataToSend.append('lastname', formData.lastName);
+        formDataToSend.append('dateofbirth', formData.dob);
+        formDataToSend.append('gender', formData.gender);
+        formDataToSend.append('marital_status', formData.maritalStatus);
+        formDataToSend.append('email', formData.email);
+        formDataToSend.append('phoneno', formData.phoneNumber);
+        formDataToSend.append('address', formData.address);
+        formDataToSend.append('landmark', formData.landmark);
+        formDataToSend.append('city', formData.city);
+        formDataToSend.append('zipcode', formData.zipCode);
+        formDataToSend.append('state', formData.stateOrUt);
+        formDataToSend.append('country', formData.country);
+        formDataToSend.append('nationality', formData.nationality);
+        formDataToSend.append('id_type', formData.idType);
+        formDataToSend.append('id_number', formData.idNumber);
+        formDataToSend.append('id_expiry_date', formData.idExpiryDate);
+        formDataToSend.append('uploaddocument', formData.document);
 
-    // Call api for Kyc Submission
-    try {
-      const res = await axiosInstance.post('api/v1/user/kyc/', formDataToSend, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      
-      if (res.status === 200) {
+        // Call api for Kyc Submission
+        try {
+          const res = await axiosInstance.post('api/v1/user/kyc/', formDataToSend, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+          
+          if (res.status === 200) {
 
-        setSuccessMessage(`KYC has been submitted successfully`);
-        const queryString = new URLSearchParams({ first_name: formData.firstName, last_name: formData.lastName });
+            setSuccessMessage(`KYC has been submitted successfully`);
+            const queryString = new URLSearchParams({ first_name: formData.firstName, last_name: formData.lastName });
 
-        // Redirect to success page after successfull submission
-        setTimeout(() => {
-          navigate(`/kyc/success/?${queryString}`);
-        }, 2000);
-        
-      }
-    } catch (error) {
-      console.log(error);
+            // Redirect to success page after successfull submission
+            setTimeout(() => {
+              navigate(`/kyc/success/?${queryString}`);
+            }, 2000);
+            
+          }
+        } catch (error) {
+          // console.log(error);
 
-      if (error.response.data.msg === 'Please upload document') {
-          setError('Please upload document');
-      } else if (error.response.data.message === 'Kyc already applied') {
-        setError('KYC already applied, can not reapply');
-      } else if (error.response.status === 413) {
-        setError('File size too large')
-      }
+          if (error.response.data.msg === 'Please upload document') {
+              setError('Please upload document');
+          } else if (error.response.data.message === 'Kyc already applied') {
+            setError('KYC already applied, can not reapply');
+          } else if (error.response.status === 413) {
+            setError('File size too large')
+          } else if (error.response.data.message === 'User not found') {
+            setError('Invalid User, Please register first')
+          }
+        }
     }
   };
 
@@ -499,9 +544,13 @@ const KYCForm = () => {
     // Second step validation
     if (activeStep === 1) {
         if (formData.email === '') {
-          setError('Please Fill up your email ID')
+          setError('Please fill your email ID')
+        } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(formData.email)) {
+          setError('Please enter valid email Address')
         } else if (formData.phoneNumber === '') {
-          setError('Please Fillup your Phone Number')
+          setError('Please fill Phone Number')
+        } else if (!/^\d+$/.test(formData.phoneNumber)) {
+          setError('Please enter valid Pnone Number')
         } else {
           setError('')
           setActiveStep((prevActiveStep) => prevActiveStep + 1);

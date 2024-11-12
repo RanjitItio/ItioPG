@@ -1,4 +1,4 @@
-import { Box, Container, Grid, TextField, Button, Typography, Link, CssBaseline } from '@mui/material';
+import { Box, Container, Grid, Button, Typography, Link } from '@mui/material';
 import { useState, useEffect } from 'react';
 import axiosInstance from './axios';
 import {Input as JoyInput} from '@mui/joy';
@@ -56,7 +56,7 @@ const ForgetPassword = () => {
             }
 
         }).catch((error)=> {
-          console.log(error)
+          // console.log(error)
 
           if (error.response.data.msg == 'Requested mail ID does not exist') {
             setError('Requested user does not exist')
