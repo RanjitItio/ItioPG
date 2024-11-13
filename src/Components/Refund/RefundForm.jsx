@@ -19,13 +19,12 @@ import { useState, useEffect } from 'react';
 export default function RefundFrom({open, handleClose, refundTransactionData}) {
     const [error, setError]                       = useState();  // Error Message
     const [sumInstantRefund, setSumInstantRefund] = useState(0); // Instant Refund total Amount
-    const [refundAmount, updateRefundAmount]      = useState(parseFloat(refundTransactionData.amount));  // Refund Amount
+    const [refundAmount, updateRefundAmount]      = useState();  // Refund Amount
     const [instantRefund, setInstantRefund]       = useState(false); // Instant Refund value
     const [visibleComment, setVisibleComment]     = useState(false);
     const [formError, updateFormError]            = useState('');   // Form input error
     const [commentData, updateCommentData]        = useState('');  // Comment Input
-    const [successMessage, setSuccessMessage]     = useState('');
-
+    const [successMessage, setSuccessMessage]     = useState('');  // 
 
 
     // Update refund Amount value when the page loads
@@ -90,7 +89,7 @@ export default function RefundFrom({open, handleClose, refundTransactionData}) {
                 // instant_refund: instantRefund,
 
             }).then((res)=> {
-                console.log(res)
+                // console.log(res)
 
                 if (res.status === 201) {
                     setSuccessMessage('Refund Created successfully');
@@ -150,18 +149,19 @@ export default function RefundFrom({open, handleClose, refundTransactionData}) {
 
             &nbsp;
             <Box display="flex" alignItems="center" mb={2}>
-            <TextField
-                label="Refund Amount"
-                fullWidth
-                variant="outlined"
-                defaultValue={`${parseFloat(refundTransactionData?.amount).toFixed(2)}`}
-                onChange={(e)=> {handleMerchantRefundInput(e); }}
-                error={Boolean(error)}
-                helperText={error}
-                InputProps={{
-                startAdornment: <Typography variant="h6">{getCurrencyIcon(refundTransactionData?.currency)}</Typography>,
-                }}
-            />
+                <TextField
+                    label="Refund Amount"
+                    fullWidth
+                    variant="outlined"
+                    disabled
+                    value={refundTransactionData?.amount}
+                    onChange={(e)=> {handleMerchantRefundInput(e); }}
+                    error={Boolean(error)}
+                    helperText={error}
+                    InputProps={{
+                    startAdornment: <Typography variant="h6">{getCurrencyIcon(refundTransactionData?.currency)}</Typography>,
+                    }}
+                />
             </Box>
 
             {/* <FormControlLabel
