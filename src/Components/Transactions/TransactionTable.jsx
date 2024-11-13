@@ -173,7 +173,7 @@ const handlePaginationChange = (event, value)=> {
     
     if (filterActive) {
         //// Get filter paginated data
-        if (isSmallScreen && filterDate === 'CustomRange') {
+        if (isSmallScreen && selectedDate === 'CustomRange') {
             if (!ShStartDateRange) {
                 setFilterError('Please Select Start Date');
 
@@ -185,7 +185,7 @@ const handlePaginationChange = (event, value)=> {
                 GetFilteredPaginatedData(ShStartDateRange, ShEndDateRange, limit, offset);
             }
 
-        } else if (!isSmallScreen && filterDate === 'CustomRange') {
+        } else if (!isSmallScreen && selectedDate === 'CustomRange') {
             if (!LgStartDateRange) {
                 setFilterError('Please Select Date Range');
 
