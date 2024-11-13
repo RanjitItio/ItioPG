@@ -13,10 +13,14 @@ import DownloadIcon from '@mui/icons-material/Download';
 import Footer from '../Footer';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/joy/Select';
+import Select, { selectClasses } from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
 import Input from '@mui/joy/Input';
 import {Button as JoyButton} from '@mui/joy';
+import { DatePicker } from 'antd';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+
+const { RangePicker } = DatePicker;
 
 
 
@@ -31,9 +35,16 @@ export default function AllMerchantRefundRequests() {
     const [exportData, updateExportData]         = useState([]); // Excel Data
     const [totalRowCount, setTotalRowCount]      = useState(0);
     const [searchQuery, updateSearchQuery]       = useState('');  // Search Query state
+
     const [showFilters, setShowFilters]          = useState(false);  // Filter fileds state
     const [filterDate, setFilterDate]            = useState('');
     const [filterError, setFilterError]          = useState('');  // Error message of filter
+    const [LgStartDateRange, setLgStartDateRange] = useState('');  // Large Screen Start date
+    const [LgEndDateRange, setLgEndDateRange]     = useState('');  // Large Screen End Date
+    const [ShStartDateRange, setShStartDateRange] = useState('');  // Small screen Start date 
+    const [ShEndDateRange, setShEndDateRange]     = useState('');  // Small Screen End date
+    const [filterActive, setFilterActive]         = useState(false);      //// Filter Active Status
+    const [filterStatus, setFilterStatus]         = useState('');    //// Filter selected status
     const [filterData, updateFilterData]         = useState({
         transactionId: '',
         refundAmount: '',
@@ -42,10 +53,25 @@ export default function AllMerchantRefundRequests() {
     
     let countPagination = Math.ceil(totalRowCount)
 
-    /// Open close Filter fields
-    const handleToggleFilters = () => {
-        setShowFilters(!showFilters);
+    
+     /// Filter Date Range Selected in Large Screen
+     const handelLargeScreenCustomDateRange = (date, dateString)=> {
+        setLgStartDateRange(dateString[0])
+        setLgEndDateRange(dateString[1])
     };
+
+
+    /// Filter Small Screen Start date range
+    const handleSmallScreenStartDateRange = (date, dateString)=> {
+        setShStartDateRange(dateString)
+    };
+
+
+    /// Filter Small Screen End Date Range
+    const handleSmallScreenEndDateRange = (date, dateString)=> {
+        setShEndDateRange(dateString)
+    };
+
 
     // Get all the Refund requests raised by merchant
     useEffect(() => {
@@ -58,7 +84,7 @@ export default function AllMerchantRefundRequests() {
           }
   
         }).catch((error)=> {
-          console.log(error)
+        //   console.log(error)
 
           if (error.response.data.message === 'No refund requests available') {
                
@@ -133,44 +159,54 @@ export default function AllMerchantRefundRequests() {
             let limit = 10;
             let offset = (value - 1) * limit;
 
-            axiosInstance.get(`api/v6/merchant/refund/?limit=${limit}&offset=${offset}`).then((res) => {
-                if (res.status === 200 && res.data.success === true) {
-                    updateRefundRequests(res.data.merchant_refunds);
+            if (filterActive) {
+                //// Get filter paginated data
+                if (isSmallScreen && selectedDate === 'CustomRange') {
+                    if (!ShStartDateRange) {
+                        setFilterError('Please Select Start Date');
+        
+                    } else if (!ShEndDateRange) {
+                        setFilterError('Please Select End Date');
+        
+                    } else {
+                        setFilterError('');
+                        GetFilteredPaginatedData(ShStartDateRange, ShEndDateRange, limit, offset);
+                    }
+        
+                } else if (!isSmallScreen && selectedDate === 'CustomRange') {
+                    if (!LgStartDateRange) {
+                        setFilterError('Please Select Date Range');
+        
+                    } else if (!LgEndDateRange) {
+                        setFilterError('Please Select Date Range');
+        
+                    } else {
+                        setFilterError('');
+                        GetFilteredPaginatedData(LgStartDateRange, LgEndDateRange, limit, offset);
+                    }
+        
+                } else {
+                    setFilterError('');
+                    GetFilteredPaginatedData(LgStartDateRange, LgEndDateRange, limit, offset);
                 }
-            }).catch((error) => {
-                console.log(error);
-
-                if (error.response?.data?.message === 'No refund requests available') {
-                    // Handle case when no refund requests are available
-                }
-            })
+        
+            } else {
+                //// Get paginated data
+                axiosInstance.get(`api/v6/merchant/refund/?limit=${limit}&offset=${offset}`).then((res) => {
+                    if (res.status === 200 && res.data.success === true) {
+                        updateRefundRequests(res.data.merchant_refunds);
+                        setTotalRowCount(res.data.total_count)
+                    }
+                }).catch((error) => {
+                    // console.log(error);
+    
+                    // if (error.response?.data?.message === 'No refund requests available') {
+                    //     // Handle case when no refund requests are available
+                    // }
+                })
+            }
       };
 
-    // Get merchant input search text
-    const handleSearchedText = (e)=> {
-        updateSearchQuery(e.target.value);
-    };
-
-
-    // Search Withdrawal Transactions
-    const handleSearch = ()=> {
-        axiosInstance.get(`api/v6/merchant/search/refunds/?query=${searchQuery}`).then((res)=> {
-            // console.log(res)
-            if (res.status === 200 && res.data.success === true) {
-                updateRefundRequests(res.data.searched_merchant_refunds)
-            };
-
-        }).catch((error)=> {
-            console.log(error)
-
-        })
-    };
-
-
-    // Get filter date value
-    const handleFilterDateChange = (e, newValue)=> {
-        setFilterDate(newValue)
-    };
 
     // Get filter fileds data
     const handleFilterFieldsChange = (e)=> {
@@ -181,36 +217,64 @@ export default function AllMerchantRefundRequests() {
         })
     };
 
-    // Reset Filter
-    const handleFilterReset = ()=> {
-        setFilterDate('');
-        updateFilterData({
-            transactionId:'',
-            refundAmount: '',
-            status: ''
-        })
-        handlePaginationCount('e', 1);
-    };
-
     
     // Get Filtered data
     const handleGetFlterData = ()=> {
+        if (isSmallScreen && filterDate === 'CustomRange') {
+            if (!ShStartDateRange) {
+                setFilterError('Please Select Start Date');
 
+            } else if (!ShEndDateRange) {
+                setFilterError('Please Select End Date');
+
+            } else {
+                setFilterError('');
+                GetFilteredData(ShStartDateRange, ShEndDateRange);
+            }
+
+        } else if (!isSmallScreen && filterDate === 'CustomRange') {
+            if (!LgStartDateRange) {
+                setFilterError('Please Select Date Range');
+
+            } else if (!LgEndDateRange) {
+                setFilterError('Please Select Date Range');
+
+            } else {
+                setFilterError('');
+                GetFilteredData(LgStartDateRange, LgEndDateRange);
+            }
+
+        } else {
+            setFilterError('')
+            GetFilteredData()
+        }
+    };
+
+
+    //// Get filtered data from API
+    const GetFilteredData = (startDate, endDate)=> {
         axiosInstance.post(`/api/v6/filter/merchant/pg/refund/`, {
             date: filterDate,
             transaction_id: filterData.transactionId,
             refund_amount: filterData.refundAmount,
-            status: filterData.status
+            status: filterStatus,
+            start_date: startDate ? startDate : LgStartDateRange,
+            end_date: endDate ? endDate : LgEndDateRange
 
         }).then((res)=> {
-            // console.log(res)
-
+            // console.log(res);
             if (res.status === 200 && res.data.success === true) {
                 updateRefundRequests(res.data.merchant_refunds)
                 setFilterError('')
-            }   
+                setTotalRowCount(res.data.paginated_count)
+                setFilterActive(true)
+            }
+
         }).catch((error)=> {
-            // console.log(error)
+            // console.log(error);
+            setTimeout(() => {
+                setFilterError('');
+            }, 3000);
 
             if (error.response.data.message === 'No refund requests available') {
                 setFilterError('No data found')
@@ -221,6 +285,67 @@ export default function AllMerchantRefundRequests() {
             };
         })
     };
+
+
+    
+    //// Get filtered data from API
+    const GetFilteredPaginatedData = (startDate, endDate, limit, offset)=> {
+        axiosInstance.post(`/api/v6/filter/merchant/pg/refund/?limit=${limit}&offset=${offset}`, {
+            date: filterDate,
+            transaction_id: filterData.transactionId,
+            refund_amount: filterData.refundAmount,
+            status: filterStatus,
+            start_date: startDate ? startDate : LgStartDateRange,
+            end_date: endDate ? endDate : LgEndDateRange
+
+        }).then((res)=> {
+            // console.log(res);
+            if (res.status === 200 && res.data.success === true) {
+                updateRefundRequests(res.data.merchant_refunds)
+                setFilterError('')
+                setTotalRowCount(res.data.paginated_count)
+                setFilterActive(true)
+            }
+
+        }).catch((error)=> {
+            // console.log(error);
+            setTimeout(() => {
+                setFilterError('');
+            }, 3000);
+
+            if (error.response.data.message === 'No refund requests available') {
+                setFilterError('No data found')
+            } else if (error.response.data.message === 'Invalid Transaction ID') {
+                setFilterError('Invalid Transaction ID')
+            } else {
+                setFilterError('')
+            };
+        })
+    };
+
+
+     // Reset Filter
+     const handleFilterReset = ()=> {
+        setFilterDate('');
+        setFilterStatus('');
+        updateFilterData({
+            transactionId:'',
+            refundAmount: ''
+        })
+        setFilterActive(false);
+        setLgStartDateRange('');
+        setLgEndDateRange('');
+        setShStartDateRange('');
+        setShEndDateRange('');
+    };
+
+
+    //// Call default pagination after filter mode off
+    useEffect(() => {
+        if (!filterActive) {
+            handlePaginationCount('e', 1);
+        }
+    }, [!filterActive]);
 
 
 
@@ -248,7 +373,7 @@ export default function AllMerchantRefundRequests() {
                                         <DownloadIcon />
                                     </IconButton>
 
-                                    <IconButton onClick={handleToggleFilters} style={{ marginTop: -90, fontSize:'10px', color:'#0089ba' }} >
+                                    <IconButton onClick={()=> setShowFilters(!showFilters)} style={{ marginTop: -90, fontSize:'10px', color:'#0089ba' }} >
                                         <FilterAltIcon />
                                     </IconButton>
                                 </div>
@@ -261,7 +386,7 @@ export default function AllMerchantRefundRequests() {
                                 </Grid>
 
                                 <Grid item>
-                                    <Button onClick={handleToggleFilters} variant="contained" style={{ marginLeft: 10, marginTop:3}} startIcon={<FilterAltIcon />}>
+                                    <Button onClick={()=> setShowFilters(!showFilters)} variant="contained" style={{ marginLeft: 10, marginTop:3}} startIcon={<FilterAltIcon />}>
                                         Filter
                                     </Button>
                                 </Grid>
@@ -275,21 +400,43 @@ export default function AllMerchantRefundRequests() {
                             <Grid container p={2} justifyContent="flex-end" spacing={2}>
                                 <Grid item xs={12} sm={6} md={2.5}>
                                     <FormControl fullWidth>
-                                    <Select
-                                        label="date"
-                                        placeholder='Date'
-                                        id="date"
-                                        value={filterDate}
-                                        name="date"
-                                        onChange={(e, newValue)=> handleFilterDateChange(e, newValue)}
-                                    >
-                                        <Option value="Today">Today</Option>
-                                        <Option value="Yesterday">Yesterday</Option>
-                                        <Option value="ThisWeek">This Week</Option>
-                                        <Option value="ThisMonth">This Month</Option>
-                                        <Option value="PreviousMonth">Previous Month</Option>
-                                    </Select>
+                                        <Select
+                                            label="date"
+                                            placeholder='Date'
+                                            id="date"
+                                            value={filterDate}
+                                            name="date"
+                                            onChange={(e, newValue)=> setFilterDate(newValue)}
+                                            indicator={<KeyboardArrowDown />}
+                                            sx={{
+                                                [`& .${selectClasses.indicator}`]: {
+                                                transition: '0.2s',
+                                                [`&.${selectClasses.expanded}`]: {
+                                                    transform: 'rotate(-180deg)',
+                                                },
+                                                },
+                                            }}
+                                        >
+                                            <Option value="Today">Today</Option>
+                                            <Option value="Yesterday">Yesterday</Option>
+                                            <Option value="ThisWeek">This Week</Option>
+                                            <Option value="ThisMonth">This Month</Option>
+                                            <Option value="PreviousMonth">Previous Month</Option>
+                                            <Option value="CustomRange">Custom Range</Option>
+                                        </Select>
                                     </FormControl>
+                                    {filterDate === "CustomRange" && (
+                                        isSmallScreen ? (
+                                            <>
+                                                <DatePicker style={{ width: '100%', marginTop:5 }} onChange={handleSmallScreenStartDateRange} />
+                                                <DatePicker style={{ width: '100%', marginTop:5 }} onChange={handleSmallScreenEndDateRange} />
+                                            </>
+                                        ) : (
+                                            <RangePicker 
+                                                style={{ width: '100%', marginTop:5 }} onChange={handelLargeScreenCustomDateRange} 
+                                                />
+                                        )
+                                    )}
                                 </Grid>
 
                                 <Grid item xs={12} sm={6} md={2.5}>
@@ -316,12 +463,27 @@ export default function AllMerchantRefundRequests() {
 
                                 <Grid item xs={12} sm={6} md={2.5}>
                                     <FormControl fullWidth>
-                                        <Input 
-                                            name='status'
-                                            value={filterData.status}
-                                            onChange={handleFilterFieldsChange}
-                                            placeholder="Status" 
-                                            />
+                                        <Select
+                                            placeholder='Status'
+                                            id="status"
+                                            value={filterStatus}
+                                            name="status"
+                                            onChange={(e, newValue)=> setFilterStatus(newValue)}
+                                            indicator={<KeyboardArrowDown />}
+                                            sx={{
+                                                [`& .${selectClasses.indicator}`]: {
+                                                transition: '0.2s',
+                                                [`&.${selectClasses.expanded}`]: {
+                                                    transform: 'rotate(-180deg)',
+                                                },
+                                                },
+                                            }}
+                                        >
+                                            <Option value="Approved">Approved</Option>
+                                            <Option value="Pending">Pending</Option>
+                                            <Option value="Hold">Hold</Option>
+                                            <Option value="Rejected">Rejected</Option>
+                                        </Select>
                                     </FormControl>
                                 </Grid>
                                 

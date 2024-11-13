@@ -455,7 +455,6 @@ export default function MerchantWithdrawalRequests() {
 
                 {isSmallScreen && (
                     <Grid item xs={12} style={{ textAlign: 'left', marginTop: '0px' }}>
-                    
                         <IconButton onClick={handleDownloadWithdrawals} style={{color:'#0089ba' }} >
                             <FileDownloadIcon fontSize='medium' />
                         </IconButton>
