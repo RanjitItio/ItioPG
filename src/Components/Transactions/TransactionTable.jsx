@@ -12,15 +12,19 @@ import animationData from '../Animations/EmptyAnimation.json';
 import Lottie from 'lottie-react';
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
-import IconButton from '@mui/material/IconButton';
-import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
 import { useTheme } from '@mui/material/styles';
 import Footer from '../Footer';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/joy/Select';
+import Select, { selectClasses } from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
 import Input from '@mui/joy/Input';
-import {Button as JoyButton} from '@mui/joy';
+import { Button as JoyButton } from '@mui/joy';
+import { DatePicker } from 'antd';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import { useMediaQuery } from '@mui/material';
+
+
+const { RangePicker } = DatePicker;
 
 
 
@@ -30,81 +34,101 @@ import {Button as JoyButton} from '@mui/joy';
 export default function BusinessTransactionTable () {
 
   const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [businessTransactionData, updateBusinessTransactionData] = useState([])  // Production Transaction data state
   const [businessSandboxTransactionData, updateBusinessSandboxTransactionData] = useState([])  // Production Transaction data state
   const [isLoading, setIsLoading] = useState(true);
   const [emptyData, setEmptyData] = useState(false);
-  const [SwitchTransaction, setSwitchTransaction] = useState(true);
-  const [transactionModeName, setTransactionModeName] = useState('');
+  const [SwitchTransaction, setSwitchTransaction] = useState(true);   // Switch between transaction Mode
+  const [transactionModeName, setTransactionModeName] = useState(''); // Test and Prod mode
   const [exportData, updateExportData] = useState([]); // Excel Data
   const [searchText, updateSearchText] = useState();    // User searched text
   const [rowCount, setRowCount] = useState(0);
   const [error, setError] = useState('');
-  const [showFilters, setShowFilters] = useState(false);  // Filter fileds state
   const [selectedDate, setSelectedDate] = useState("");
   const [selectOrderID, setSelectOrderID] = useState('');
   const [selectTransactionID, setSelectTransactionID] = useState('');
   const [selectBusinessname, setSelectBusinessName] = useState('');
+
+  const [showFilters, setShowFilters] = useState(false);  // Filter fileds state
   const [filterError, setFilterError] = useState('');  // Error message of filter
+  const [LgStartDateRange, setLgStartDateRange] = useState('');  // Large Screen Start date
+  const [LgEndDateRange, setLgEndDateRange]     = useState('');  // Large Screen End Date
+  const [ShStartDateRange, setShStartDateRange] = useState('');  // Small screen Start date 
+  const [ShEndDateRange, setShEndDateRange]     = useState('');  // Small Screen End date
+  const [filterActive, setFilterActive]         = useState(false);      //// Filter Active Status
 
 
+  let countPagination = Math.ceil(rowCount);
 
-  /// Open close Filter fields
-    const handleToggleFilters = () => {
-        setShowFilters(!showFilters);
+    /// Filter Date Range Selected in Large Screen
+    const handelLargeScreenCustomDateRange = (date, dateString)=> {
+        setLgStartDateRange(dateString[0])
+        setLgEndDateRange(dateString[1])
     };
 
-   let countPagination = Math.ceil(rowCount);
 
-  //   Method to accept transaction type of user
-  const handleSwitchTransactions = (event)=> {
-      setSwitchTransaction(event.target.checked)
-  };
-
-
-  // Set transaction mode
-  useEffect(() => {
-    if (SwitchTransaction) {
-        setTransactionModeName('Production Mode')
-    } else if (!SwitchTransaction) {
-        setTransactionModeName('Test Mode')
+    /// Filter Small Screen Start date range
+    const handleSmallScreenStartDateRange = (date, dateString)=> {
+        setShStartDateRange(dateString)
     };
-  }, [SwitchTransaction])
+
+
+    /// Filter Small Screen End Date Range
+    const handleSmallScreenEndDateRange = (date, dateString)=> {
+        setShEndDateRange(dateString)
+    };
+
+
+    //   Method to get transaction type of user
+    const handleSwitchTransactions = (event)=> {
+        setSwitchTransaction(event.target.checked)
+    };
+
+
+    // Set transaction mode
+    useEffect(() => {
+        if (SwitchTransaction) {
+            setTransactionModeName('Production Mode')
+        } else if (!SwitchTransaction) {
+            setTransactionModeName('Test Mode')
+        };
+    }, [SwitchTransaction]);
   
 
   
   // Call API for all sandBox transaction data
   // ##########################################
-  useEffect(() => {
+    useEffect(() => {
 
-    if (!SwitchTransaction) {
+        if (!SwitchTransaction) {
 
-        axiosInstance.get(`api/v2/merchant/sandbox/transactions/?limit=${10}&offset=${0}`).then((res)=> {
+            axiosInstance.get(`api/v2/merchant/sandbox/transactions/`).then((res)=> {
 
-            if (res.status === 200) {
-                const sandBoxData = res.data.merchant_sandbox_trasactions
-                updateBusinessSandboxTransactionData(sandBoxData);
-                setRowCount(res.data.total_rows)
-                setIsLoading(false);
-    
-                if (sandBoxData.length === 0) {
+                if (res.status === 200) {
+                    const sandBoxData = res.data.merchant_sandbox_trasactions
+                    updateBusinessSandboxTransactionData(sandBoxData);
+                    setRowCount(res.data.total_rows)
+                    setIsLoading(false);
+        
+                    if (sandBoxData.length === 0) {
+                        setEmptyData(true);
+                        setIsLoading(false);
+                    };
+                }
+
+            }).catch((error)=> {
+                console.log(error)
+
+                if (error.response.data.error === 'No transaction available') {
                     setEmptyData(true);
                     setIsLoading(false);
                 };
-            }
 
-        }).catch((error)=> {
-            console.log(error)
-
-            if (error.response.data.error === 'No transaction available') {
-                setEmptyData(true);
-                setIsLoading(false);
-            };
-
-        })
-    }
-  }, [SwitchTransaction])
+            })
+        }
+    }, [SwitchTransaction]);
 
   
 
@@ -128,7 +152,7 @@ export default function BusinessTransactionTable () {
         }
 
     }).catch((error)=> {
-        console.log(error)
+        // console.log(error)
 
         if (error.response.data.error === 'No transaction available') {
             setEmptyData(true);
@@ -146,54 +170,92 @@ const handlePaginationChange = (event, value)=> {
     let limit = 10
     let offset = (value - 1) * limit
 
-    if (transactionModeName === 'Production Mode') {
+    
+    if (filterActive) {
+        //// Get filter paginated data
+        if (isSmallScreen && filterDate === 'CustomRange') {
+            if (!ShStartDateRange) {
+                setFilterError('Please Select Start Date');
 
-        axiosInstance.get(`api/v2/merchant/prod/transactions/?limit=${limit}&offset=${offset}`).then((res)=> {
+            } else if (!ShEndDateRange) {
+                setFilterError('Please Select End Date');
+
+            } else {
+                setFilterError('');
+                GetFilteredPaginatedData(ShStartDateRange, ShEndDateRange, limit, offset);
+            }
+
+        } else if (!isSmallScreen && filterDate === 'CustomRange') {
+            if (!LgStartDateRange) {
+                setFilterError('Please Select Date Range');
+
+            } else if (!LgEndDateRange) {
+                setFilterError('Please Select Date Range');
+
+            } else {
+                setFilterError('');
+                GetFilteredPaginatedData(LgStartDateRange, LgEndDateRange, limit, offset);
+            }
+
+        } else {
+            setFilterError('');
+            GetFilteredPaginatedData(LgStartDateRange, LgEndDateRange, limit, offset);
+        }
+
+    } else {
+
+        //// Get paginated data of Prod Transaction
+        if (transactionModeName === 'Production Mode') {
     
-            if (res.status === 200) {
-                const paginationProdData = res.data.merchant_prod_trasactions
-                updateBusinessTransactionData(paginationProdData);
-                setIsLoading(false);
-    
-                if (paginationProdData.length === 0) {
+            axiosInstance.get(`api/v2/merchant/prod/transactions/?limit=${limit}&offset=${offset}`).then((res)=> {
+        
+                if (res.status === 200) {
+                    const paginationProdData = res.data.merchant_prod_trasactions
+                    updateBusinessTransactionData(paginationProdData);
+                    setIsLoading(false);
+                    setRowCount(res.data.total_rows)
+        
+                    if (paginationProdData.length === 0) {
+                        // setEmptyData(true);
+                        setIsLoading(false);
+                    };
+                };
+        
+            }).catch((error)=> {
+                // console.log(error)
+        
+                if (error.response.data.error === 'No transaction available') {
                     // setEmptyData(true);
                     setIsLoading(false);
                 };
-            };
-    
-        }).catch((error)=> {
-            console.log(error)
-    
-            if (error.response.data.error === 'No transaction available') {
-                // setEmptyData(true);
-                setIsLoading(false);
-            };
-        })
+            })
 
-    } else if (transactionModeName === 'Test Mode') {
-        axiosInstance.get(`api/v2/merchant/sandbox/transactions/?limit=${limit}&offset=${offset}`).then((res)=> {
-
-            if (res.status === 200) {
-                const sandBoxData = res.data.merchant_sandbox_trasactions
-                updateBusinessSandboxTransactionData(sandBoxData);
-                setRowCount(res.data.total_rows)
-                setIsLoading(false);
+            //// Get paginated data of Test Transaction
+        } else if (transactionModeName === 'Test Mode') {
+            axiosInstance.get(`api/v2/merchant/sandbox/transactions/?limit=${limit}&offset=${offset}`).then((res)=> {
     
-                if (sandBoxData.length === 0) {
+                if (res.status === 200) {
+                    const sandBoxData = res.data.merchant_sandbox_trasactions
+                    updateBusinessSandboxTransactionData(sandBoxData);
+                    setRowCount(res.data.total_rows)
+                    setIsLoading(false);
+        
+                    if (sandBoxData.length === 0) {
+                        setEmptyData(true);
+                        setIsLoading(false);
+                    };
+                }
+    
+            }).catch((error)=> {
+                // console.log(error)
+    
+                if (error.response.data.error === 'No transaction available') {
                     setEmptyData(true);
                     setIsLoading(false);
                 };
-            }
-
-        }).catch((error)=> {
-            console.log(error)
-
-            if (error.response.data.error === 'No transaction available') {
-                setEmptyData(true);
-                setIsLoading(false);
-            };
-
-        })
+    
+            })
+        };
     };
 };
 
@@ -238,67 +300,110 @@ const handleDownloadTransactions = ()=> {
 };
 
 
-// Searched text value
-const handleSearchedText = (e)=> {
-    updateSearchText(e.target.value);
-};
 
+    // Filter Transaction Method
+    const handleFilterTransaction = ()=> {
+        if (isSmallScreen && selectedDate === 'CustomRange') {
+            if (!ShStartDateRange) {
+                setFilterError('Please Select Start Date');
 
-// Fetch all the searched transactions
-const handleFetchSearchedTransaction = ()=> {
-    // If mode is Production Mode
-    if (transactionModeName === 'Production Mode') {
-        axiosInstance.get(`api/v2/merchant/search/prod/transactions/?query=${searchText}`).then((res)=> {
-            // console.log(res)
-            if (res.status === 200 && res.data.success === true) {
-                updateBusinessTransactionData(res.data.merchant_searched_transactions)
-            };
+            } else if (!ShEndDateRange) {
+                setFilterError('Please Select End Date');
 
-         }).catch((error)=> {
-            console.log(error)
-    
-            if (error.response.data.message === 'No transaction found') {
-                // setEmptyData(true);
+            } else {
+                setFilterError('');
+                GetFilteredData(ShStartDateRange, ShEndDateRange);
             }
-         });
 
-    // If Mode is Test Mode
-    } else if (transactionModeName === 'Test Mode') {
-        axiosInstance.get(`/api/v2/merchant/search/sb/transactions/?query=${searchText}`).then((res)=> {
-            // console.log(res)
+        } else if (!isSmallScreen && selectedDate === 'CustomRange') {
+            if (!LgStartDateRange) {
+                setFilterError('Please Select Date Range');
+
+            } else if (!LgEndDateRange) {
+                setFilterError('Please Select Date Range');
+
+            } else {
+                setFilterError('');
+                GetFilteredData(LgStartDateRange, LgEndDateRange);
+            }
+
+        } else {
+            setFilterError('')
+            GetFilteredData()
+        }
+        
+    };
+
+
+    //// Get filtered data from API
+    const GetFilteredData = (startDate, endDate)=> {
+        axiosInstance.post(`/api/v2/filter/merchant/transaction/`, {
+            date: selectedDate,
+            order_id: selectOrderID,
+            transaction_id: selectTransactionID,
+            business_name: selectBusinessname,
+            start_date: startDate ? startDate : LgStartDateRange,
+            end_date: endDate ? endDate : LgEndDateRange
+
+        }).then((res)=> {
+            // console.log(res);
             if (res.status === 200 && res.data.success === true) {
-                updateBusinessSandboxTransactionData(res.data.merchant_searched_sb_transactions)
-            };
-    
+                const prodData = res.data.merchant_prod_trasactions
+                updateBusinessTransactionData(prodData);
+                setFilterError('')
+                setRowCount(res.data.paginated_count)
+                setFilterActive(true)
+            }
+
         }).catch((error)=> {
-            console.log(error)
-    
-            if (error.response.data.message === 'No transaction found') {
-                // setEmptyData(true);
+            // console.log(error);
+
+            setTimeout(() => {
+                setFilterError('');
+            }, 2000);
+
+            if (error.response.data.message === 'No transaction available') {
+                setFilterError('No Data Found');
+            } else {
+                setFilterError('')
             }
         })
-    }
-};
-
-    // Get selected date
-    const handleSelctedDate = (e, newValue)=> {
-        setSelectedDate(newValue)
     };
 
-    // Get selected Order ID
-    const handleSelctedOrderID = (e)=> {
-        const value = e.target.value;
-        setSelectOrderID(value);
-    };
-    // Get selected Transaction ID
-    const handleSelctedTransactionID = (e)=> {
-        const value = e.target.value;
-        setSelectTransactionID(value);
-    };
-    // Get selected Business Name
-    const handleSelctedBusinessName = (e)=> {
-        const value = e.target.value;
-        setSelectBusinessName(value);
+
+    
+    //// Get filtered data from API
+    const GetFilteredPaginatedData = (startDate, endDate, limit, offset)=> {
+        axiosInstance.post(`/api/v2/filter/merchant/transaction/?limit=${limit}&offset=${offset}`, {
+            date: selectedDate,
+            order_id: selectOrderID,
+            transaction_id: selectTransactionID,
+            business_name: selectBusinessname,
+            start_date: startDate ? startDate : LgStartDateRange,
+            end_date: endDate ? endDate : LgEndDateRange
+
+        }).then((res)=> {
+            // console.log(res);
+            if (res.status === 200 && res.data.success === true) {
+                const prodData = res.data.merchant_prod_trasactions
+                updateBusinessTransactionData(prodData);
+                setFilterError('')
+                setRowCount(res.data.paginated_count)
+                setFilterActive(true)
+            }
+
+        }).catch((error)=> {
+            // console.log(error);
+            setTimeout(() => {
+                setFilterError('');
+            }, 2000);
+
+            if (error.response.data.message === 'No transaction available') {
+                setFilterError('No Data Found');
+            } else {
+                setFilterError('')
+            }
+        })
     };
 
 
@@ -308,121 +413,114 @@ const handleFetchSearchedTransaction = ()=> {
         setSelectOrderID('');
         setSelectTransactionID('');
         setSelectBusinessName('');
-        handlePaginationChange('event', 1);
+
+        setFilterActive(false);
+        setLgStartDateRange('');
+        setLgEndDateRange('');
+        setShStartDateRange('');
+        setShEndDateRange('');
     };
 
-
-    // Filter Transaction Method
-    const handleFilterTransaction = ()=> {
-        
-        axiosInstance.post(`/api/v2/filter/merchant/transaction/`, {
-            date: selectedDate,
-            order_id: selectOrderID,
-            transaction_id: selectTransactionID,
-            business_name: selectBusinessname
-
-        }).then((res)=> {
-
-            if (res.status === 200) {
-                
-                const prodData = res.data.merchant_prod_trasactions
-                updateBusinessTransactionData(prodData);
-                setFilterError('')
-                
-                if (prodData.length === 0) {
-                    setFilterError('No data found')
-                };
-            }
-
-        }).catch((error)=> {
-            console.log(error)
-
-            if (error.response.data.message === 'No transaction available') {
-                setFilterError('No Data Found');
-            } else {
-                setFilterError('')
-            }
-        });
-        
-    };
-
-
-// API response witing component
-if (isLoading) {
-    return (
-        <>
-        <Box p={2} display="flex" justifyContent="space-between" alignItems="center">
-            {/* <TextField placeholder="Search for transaction here" variant="outlined" size="small" /> */}
-            <div className="d-flex justify-content-start">
-                <p>
-                    <b><span className='fs-3'>PAYMENT</span></b> <br />
-                    <small>List of all payments received from customers</small>
-                </p>
-            </div>
-        </Box>
-
-        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '3%' }}>
-            <CircularProgress />
-        </Box>
-
-        <Footer />
-        </>
-    )
-};
+    //// Call default pagination after filter mode off
+    useEffect(() => {
+        if (!filterActive) {
+            handlePaginationChange('e', 1);
+        }
+    }, [!filterActive]);
 
 
 
-// If the response data is empty
-if (emptyData) {
-    return (
-        <>
-       
-       <Grid container p={2} justifyContent="space-between" alignItems="center">
-
-            <Grid item xs={12} sm={4} md={3} lg={3}>
+    // API response witing component
+    if (isLoading) {
+        return (
+            <>
+            <Box p={2} display="flex" justifyContent="space-between" alignItems="center">
+                {/* <TextField placeholder="Search for transaction here" variant="outlined" size="small" /> */}
                 <div className="d-flex justify-content-start">
-                <p>
-                    <b><span className='fs-3'>PAYMENT</span></b> <br />
-                    <small>List of all payments received from customers</small>
-                </p>
+                    <p>
+                        <b><span className='fs-3'>PAYMENT</span></b> <br />
+                        <small>List of all payments received from customers</small>
+                    </p>
                 </div>
-            </Grid>
+            </Box>
 
-            <Grid item xs={12} sm={8} md={9} lg={9} textAlign="right">
-                <Grid container justifyContent="flex-end">
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '3%' }}>
+                <CircularProgress />
+            </Box>
 
-                {/* <Grid item>
-                    <TextField
-                        id="standard-basic" 
-                        label="Search Transactions" 
-                        variant="standard"
-                        onChange={(e)=> handleSearchedText(e)}
-                        />
+            <Footer />
+            </>
+        )
+    };
 
-                    <IconButton aria-label="delete" size="large" onClick={handleFetchSearchedTransaction}>
-                        <ContentPasteSearchIcon fontSize="inherit" color='primary' />
-                    </IconButton>
-                </Grid> */}
 
-                <Grid item>
-                    <Button variant="contained" style={{ marginLeft: 10 }} onClick={handleDownloadTransactions}>
-                        Export
-                    </Button>
+
+    // If the response data is empty
+    if (emptyData) {
+        // const [transactionModeName, setTransactionModeName] = useState(''); // Test and Prod mode
+        // const [SwitchTransaction, setSwitchTransaction] = useState(true);
+
+        //   Method to get transaction type of user
+        // const handleSwitchTransactions = (event)=> {
+        //     setSwitchTransaction(event.target.checked)
+        // };
+
+         // Set transaction mode
+        // useEffect(() => {
+        //     if (SwitchTransaction) {
+        //         setTransactionModeName('Production Mode')
+        //     } else if (!SwitchTransaction) {
+        //         setTransactionModeName('Test Mode')
+        //     };
+        // }, [SwitchTransaction]);
+
+
+        return (
+        <>
+            <Grid container p={2} justifyContent="space-between" alignItems="center">
+
+                <Grid item xs={12} sm={4} md={3} lg={3}>
+                    <div className="d-flex justify-content-start">
+                    <p>
+                        <b><span className='fs-3'>PAYMENT</span></b> <br />
+                        <small>List of all payments received from customers</small>
+                    </p>
+                    </div>
                 </Grid>
 
+                <Grid item xs={12} sm={8} md={9} lg={9} textAlign="right">
+                    <Grid container justifyContent="flex-end">
+
+                    <Grid item>
+                        <Button variant="contained" style={{ marginLeft: 10 }} onClick={handleDownloadTransactions}>
+                            Export
+                        </Button>
+                    </Grid>
+
+                    </Grid>
                 </Grid>
             </Grid>
-        </Grid>
 
-        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '0%'}}>
-            <Lottie animationData={animationData} loop={true} style={{width:'200px', height: '200px'}} />
-        </Box>
-        <p style={{display:'flex', justifyContent: 'center'}}>Nothing to show</p>
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '0%'}}>
+                <Lottie animationData={animationData} loop={true} style={{width:'200px', height: '200px'}} />
+            </Box>
+            <p style={{display:'flex', justifyContent: 'center'}}>Nothing to show</p>
 
-        <Footer />
+            <Box sx={{display:'flex', justifyContent:'end'}}>
+                <SandBoxProductionTransactionSwitch
+                        handleSwitchTransactions={(event)=> setSwitchTransaction(!event.target.checked)}
+                        transactionModeName={transactionModeName}
+                        sx={{
+                        [theme.breakpoints.down('sm')]: {
+                            marginBottom: 2,
+                        }
+                        }}
+                    />
+            </Box>
+            <Footer />
         </>
-    )
-};
+        )
+    };
 
 
 
@@ -443,19 +541,6 @@ return (
 
                 <Grid item xs={12} sm={8} md={9} textAlign="right">
                     <Grid container justifyContent="flex-end">
-                        {/* <Grid item>
-                        <TextField
-                            id="standard-basic" 
-                            label="Search Transactions" 
-                            variant="standard"
-                            onChange={(e)=> handleSearchedText(e)}
-                            />
-                        
-
-                        <IconButton aria-label="delete" size="large" onClick={handleFetchSearchedTransaction}>
-                            <ContentPasteSearchIcon fontSize="inherit" color='primary' />
-                        </IconButton>
-                        </Grid> */}
 
                         <Grid item>
                             <Button variant="contained" onClick={handleDownloadTransactions}>
@@ -467,7 +552,7 @@ return (
                             <Button
                             variant="contained"
                             style={{ marginLeft: 10 }}
-                            onClick={handleToggleFilters}
+                            onClick={()=> setShowFilters(!showFilters)}
                             >
                             Filters
                             </Button>
@@ -481,38 +566,61 @@ return (
                     <Grid container p={2} justifyContent="flex-end" spacing={2}>
                         <Grid item xs={12} sm={6} md={2.5}>
                             <FormControl fullWidth>
-                            <Select
-                                label="date"
-                                placeholder='Date'
-                                id="date"
-                                value={selectedDate}
-                                name="date"
-                                onChange={handleSelctedDate}
-                            >
-                                <Option value="Today">Today</Option>
-                                <Option value="Yesterday">Yesterday</Option>
-                                <Option value="ThisWeek">This Week</Option>
-                                <Option value="ThisMonth">This Month</Option>
-                                <Option value="PreviousMonth">Previous Month</Option>
-                            </Select>
+                                <Select
+                                    label="date"
+                                    placeholder='Date'
+                                    id="date"
+                                    value={selectedDate}
+                                    name="date"
+                                    onChange={(e, newValue)=> setSelectedDate(newValue)}
+                                    indicator={<KeyboardArrowDown />}
+                                    sx={{
+                                        [`& .${selectClasses.indicator}`]: {
+                                        transition: '0.2s',
+                                        [`&.${selectClasses.expanded}`]: {
+                                            transform: 'rotate(-180deg)',
+                                        },
+                                        },
+                                    }}
+                                >
+                                    <Option value="Today">Today</Option>
+                                    <Option value="Yesterday">Yesterday</Option>
+                                    <Option value="ThisWeek">This Week</Option>
+                                    <Option value="ThisMonth">This Month</Option>
+                                    <Option value="PreviousMonth">Previous Month</Option>
+                                    <Option value="CustomRange">Custom Range</Option>
+                                </Select>
+                            </FormControl>
+
+                            {selectedDate === "CustomRange" && (
+                                isSmallScreen ? (
+                                    <>
+                                        <DatePicker style={{ width: '100%', marginTop:5 }} onChange={handleSmallScreenStartDateRange} />
+                                        <DatePicker style={{ width: '100%', marginTop:5 }} onChange={handleSmallScreenEndDateRange} />
+                                    </>
+                                ) : (
+                                    <RangePicker 
+                                        style={{ width: '100%', marginTop:5 }} onChange={handelLargeScreenCustomDateRange} 
+                                        />
+                                )
+                            )}
+                        </Grid>
+
+                        <Grid item xs={12} sm={6} md={2.5}>
+                            <FormControl fullWidth>
+                                <Input value={selectOrderID} placeholder="Order ID" onChange={(e)=> setSelectOrderID(e.target.value)} />
                             </FormControl>
                         </Grid>
 
                         <Grid item xs={12} sm={6} md={2.5}>
                             <FormControl fullWidth>
-                                <Input value={selectOrderID} placeholder="Order ID" onChange={(e)=> handleSelctedOrderID(e)} />
+                                <Input value={selectTransactionID} placeholder="Transaction ID" onChange={(e)=> setSelectTransactionID(e.target.value)} />
                             </FormControl>
                         </Grid>
 
                         <Grid item xs={12} sm={6} md={2.5}>
                             <FormControl fullWidth>
-                                <Input value={selectTransactionID} placeholder="Transaction ID" onChange={(e)=> handleSelctedTransactionID(e)} />
-                            </FormControl>
-                        </Grid>
-
-                        <Grid item xs={12} sm={6} md={2.5}>
-                            <FormControl fullWidth>
-                                <Input value={selectBusinessname} placeholder="Business Name" onChange={(e)=> handleSelctedBusinessName(e)} />
+                                <Input value={selectBusinessname} placeholder="Business Name" onChange={(e)=> setSelectBusinessName(e.target.value)} />
                             </FormControl>
                         </Grid>
                         

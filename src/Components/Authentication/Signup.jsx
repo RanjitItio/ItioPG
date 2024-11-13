@@ -67,6 +67,8 @@ export default function Signup() {
                     setEmailOTP(res.data.otp)
                     setVerifiedMail(true);
                 }
+            }).catch((error)=> {
+                setEmailData((current) => ({ ...current, status: 'failure' }));
             })
         } catch (error) {
             setEmailData((current) => ({ ...current, status: 'failure' }));
@@ -135,7 +137,7 @@ export default function Signup() {
 
             })
             .then((res) => {
-              console.log(res)
+            //   console.log(res)
 
               if(res.status === 201) {
                 const response_msg = res.data.msg;
@@ -159,10 +161,11 @@ export default function Signup() {
               }
             })
             .catch((error) => {
-              console.log(error)
+            //   console.log(error)
 
               if (error.response.status === 400) {
-                setError(error.response.data.msg)
+                // setError(error.response.data.msg)
+                setError('Error occured while registering user')
 
               } else if (error.response.data.msg === 'Password is not same Please try again') {
                 setError('Password did not match please try again')
