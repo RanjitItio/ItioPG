@@ -43,7 +43,6 @@ export default function BusinessTransactionTable () {
   const [SwitchTransaction, setSwitchTransaction] = useState(true);   // Switch between transaction Mode
   const [transactionModeName, setTransactionModeName] = useState(''); // Test and Prod mode
   const [exportData, updateExportData] = useState([]); // Excel Data
-  const [searchText, updateSearchText] = useState();    // User searched text
   const [rowCount, setRowCount] = useState(0);
   const [error, setError] = useState('');
   const [selectedDate, setSelectedDate] = useState("");

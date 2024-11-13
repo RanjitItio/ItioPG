@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Button,
-  Box, useMediaQuery, Typography, Grid, TextField
+  Box, useMediaQuery, Grid
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import axiosInstance from '../Authentication/axios';
@@ -14,12 +14,15 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import WithdrawalFrom from './withdrawalForm';
 import Footer from '../Footer';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import Select from '@mui/joy/Select';
+import Select, {selectClasses} from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
 import Input from '@mui/joy/Input';
 import {Button as JoyButton} from '@mui/joy';
 import FormControl from '@mui/material/FormControl';
+import { DatePicker } from 'antd';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 
+const { RangePicker } = DatePicker;
 
 
 
@@ -32,12 +35,19 @@ export default function MerchantWithdrawalRequests() {
     const [withdrawalRequests, updateWithdrawalRequests] = useState([]);   // All withdrawal request data
     const [exportData, updateExportData]         = useState([]); // Excel Data
     const [totalRows, updateTotalRows]           = useState(0);
+
     const [openWithdrawl, setOpenWithdrawal]     = useState(false); // Withdrawal form state
     const [accountBalance, updateAccountBalance] = useState([]); // Merchant Account balance state
     const [selctedCurrency, setSelectedCurrency] = useState('USD'); // Selcted Currency by the merchant
     const [showFilters, setShowFilters]          = useState(false);  // Filter fileds state
     const [filterDate, setFilterDate]            = useState('');  // Filter date state field
     const [filterError, setFilterError]          = useState('');  // Error message of filter
+    const [LgStartDateRange, setLgStartDateRange] = useState('');  // Large Screen Start date
+    const [LgEndDateRange, setLgEndDateRange]     = useState('');  // Large Screen End Date
+    const [ShStartDateRange, setShStartDateRange] = useState('');  // Small screen Start date 
+    const [ShEndDateRange, setShEndDateRange]     = useState('');  // Small Screen End date
+    const [filterActive, setFilterActive]         = useState(false);      //// Filter Active Status
+    const [filterCurrency, setFilterCurrency]     = useState('');  //// Filter Withdrawal currency
     const [filterData, updateFilterData]         = useState({
         bank_name: '',
         WithdrawalCurrency: '',
@@ -46,22 +56,26 @@ export default function MerchantWithdrawalRequests() {
 
     const countPagination = Math.floor(totalRows);
 
-    // Get the selected date of filter fields
-    const handleFilterDateChange = (e, newValue)=> {
-        setFilterDate(newValue)
+
+     /// Filter Date Range Selected in Large Screen
+    const handelLargeScreenCustomDateRange = (date, dateString)=> {
+        setLgStartDateRange(dateString[0])
+        setLgEndDateRange(dateString[1])
     };
 
+
+    /// Filter Small Screen Start date range
+    const handleSmallScreenStartDateRange = (date, dateString)=> {
+        setShStartDateRange(dateString)
+    };
+
+
+    /// Filter Small Screen End Date Range
+    const handleSmallScreenEndDateRange = (date, dateString)=> {
+        setShEndDateRange(dateString)
+    };
     
-    /// Open close Filter fields
-    const handleToggleFilters = () => {
-        setShowFilters(!showFilters);
-    };
-
-    // Assign selected currency value to the state
-    const handleSelctedCurrency = (event, newValue)=> {
-        setSelectedCurrency(newValue)
-    };
-
+    
     // Filter balance according to the currency
     const filteredBalance = accountBalance.find(balance => balance.currency === selctedCurrency)
     
@@ -185,7 +199,7 @@ export default function MerchantWithdrawalRequests() {
             }
     
           }).catch((error)=> {
-            console.log(error)
+            // console.log(error)
     
           })
     };
@@ -197,19 +211,50 @@ export default function MerchantWithdrawalRequests() {
         let limit = 10;
         let offset = (value - 1) * limit;
 
-        axiosInstance.get(`/api/v3/merchant/withdrawal/?limit=${limit}&offset=${offset}`).then((res) => {
-
-            if (res.status === 200 && res.data.success === true) {
-                updateWithdrawalRequests(res.data.merchantWithdrawalRequests);
+        if (filterActive) {
+            //// Get filter paginated data
+            if (isSmallScreen && selectedDate === 'CustomRange') {
+                if (!ShStartDateRange) {
+                    setFilterError('Please Select Start Date');
+    
+                } else if (!ShEndDateRange) {
+                    setFilterError('Please Select End Date');
+    
+                } else {
+                    setFilterError('');
+                    GetFilteredPaginatedData(ShStartDateRange, ShEndDateRange, limit, offset);
+                }
+    
+            } else if (!isSmallScreen && selectedDate === 'CustomRange') {
+                if (!LgStartDateRange) {
+                    setFilterError('Please Select Date Range');
+    
+                } else if (!LgEndDateRange) {
+                    setFilterError('Please Select Date Range');
+    
+                } else {
+                    setFilterError('');
+                    GetFilteredPaginatedData(LgStartDateRange, LgEndDateRange, limit, offset);
+                }
+    
+            } else {
+                setFilterError('');
+                GetFilteredPaginatedData(LgStartDateRange, LgEndDateRange, limit, offset);
             }
+    
+        }  else {
 
-        }).catch((error) => {
-            console.log(error);
-
-            if (error.response?.data?.message === 'No refund requests available') {
-                // Handle case when no refund requests are available
-            }
-        })
+            axiosInstance.get(`/api/v3/merchant/withdrawal/?limit=${limit}&offset=${offset}`).then((res) => {
+    
+                if (res.status === 200 && res.data.success === true) {
+                    updateWithdrawalRequests(res.data.merchantWithdrawalRequests);
+                    updateTotalRows(res.data.total_row_count)
+                }
+    
+            }).catch((error) => {
+                // console.log(error);
+            })
+        }
   };
 
 
@@ -224,36 +269,64 @@ export default function MerchantWithdrawalRequests() {
     };
 
 
-    // Reset Filter values
-   const handleFilterReset = ()=> {
-        setFilterDate('');
-        updateFilterData({
-            bank_name:'',
-            WithdrawalCurrency: '',
-            withdrawalAmount: ''
-        });
-        handlePaginationData('event', 1)
-   };
-
-
     // Get Filtered data
     const handleGetFlterData = ()=> {
-        
+        if (isSmallScreen && filterDate === 'CustomRange') {
+            if (!ShStartDateRange) {
+                setFilterError('Please Select Start Date');
+
+            } else if (!ShEndDateRange) {
+                setFilterError('Please Select End Date');
+
+            } else {
+                setFilterError('');
+                GetFilteredData(ShStartDateRange, ShEndDateRange);
+            }
+
+        } else if (!isSmallScreen && filterDate === 'CustomRange') {
+            if (!LgStartDateRange) {
+                setFilterError('Please Select Date Range');
+
+            } else if (!LgEndDateRange) {
+                setFilterError('Please Select Date Range');
+
+            } else {
+                setFilterError('');
+                GetFilteredData(LgStartDateRange, LgEndDateRange);
+            }
+
+        } else {
+            setFilterError('')
+            GetFilteredData()
+        }
+    };
+
+
+    
+    //// Get filtered data from API
+    const GetFilteredData = (startDate, endDate)=> {
         axiosInstance.post(`/api/v3/filter/merchant/pg/withdrawals/`, {
             date: filterDate,
             bank_name: filterData.bank_name,
-            withdrawal_currency: filterData.WithdrawalCurrency,
-            withdrawal_amount: filterData.withdrawalAmount
+            withdrawal_currency: filterCurrency,
+            withdrawal_amount: parseFloat(filterData.withdrawalAmount),
+            start_date: startDate ? startDate : LgStartDateRange,
+            end_date: endDate ? endDate : LgEndDateRange
 
         }).then((res)=> {
-            // console.log(res)
-
+            // console.log(res);
             if (res.status === 200 && res.data.success === true) {
                 updateWithdrawalRequests(res.data.merchantWithdrawalRequests)
                 setFilterError('')
-            }   
+                updateTotalRows(res.data.paginated_count)
+                setFilterActive(true)
+            }
+
         }).catch((error)=> {
-            // console.log(error)
+            // console.log(error);
+            setTimeout(() => {
+                setFilterError('');
+            }, 2000);
 
             if (error.response.data.error === 'No withdrawal request found') {
                 setFilterError('No data found')
@@ -266,6 +339,72 @@ export default function MerchantWithdrawalRequests() {
             };
         })
     };
+
+
+    
+    //// Get filtered data from API
+    const GetFilteredPaginatedData = (startDate, endDate, limit, offset)=> {
+        axiosInstance.post(`/api/v3/filter/merchant/pg/withdrawals/?limit=${limit}&offset=${offset}`, {
+            date: filterDate,
+            bank_name: filterData.bank_name,
+            withdrawal_currency: filterCurrency,
+            withdrawal_amount: parseFloat(filterData.withdrawalAmount),
+            start_date: startDate ? startDate : LgStartDateRange,
+            end_date: endDate ? endDate : LgEndDateRange
+
+        }).then((res)=> {
+            // console.log(res);
+            if (res.status === 200 && res.data.success === true) {
+                updateWithdrawalRequests(res.data.merchantWithdrawalRequests)
+                setFilterError('')
+                updateTotalRows(res.data.paginated_count)
+                setFilterActive(true)
+            }
+
+        }).catch((error)=> {
+            // console.log(error);
+            setTimeout(() => {
+                setFilterError('');
+            }, 2000);
+
+            if (error.response.data.error === 'No withdrawal request found') {
+                setFilterError('No data found')
+            } else if (error.response.data.message === 'Invalid Bank Name') {
+                setFilterError('Invalid Bank Name')
+            } else if (error.response.data.message === 'Invalid Currency') {
+                setFilterError('Invalid Currency')
+            } else {
+                setFilterError('');
+            };
+        })
+    };
+
+
+
+
+       // Reset Filter values
+   const handleFilterReset = ()=> {
+        setFilterDate('');
+        setFilterCurrency('');
+        updateFilterData({
+            bank_name:'',
+            withdrawalAmount: ''
+        });
+
+        setFilterActive(false);
+        setLgStartDateRange('');
+        setLgEndDateRange('');
+        setShStartDateRange('');
+        setShEndDateRange('');
+    };
+
+
+    //// Call default pagination after filter mode off
+    useEffect(() => {
+        if (!filterActive) {
+            handlePaginationData('e', 1);
+        }
+    }, [!filterActive]);
 
 
 
@@ -305,7 +444,7 @@ export default function MerchantWithdrawalRequests() {
                             </Grid>
 
                             <Grid item>
-                                <Button onClick={handleToggleFilters} variant="contained" style={{ marginLeft: 10, marginTop:3}} startIcon={<FilterAltIcon />}>
+                                <Button onClick={() => setShowFilters(!showFilters)} variant="contained" style={{ marginLeft: 10, marginTop:3}} startIcon={<FilterAltIcon />}>
                                     Filter
                                 </Button>
                             </Grid>
@@ -325,7 +464,7 @@ export default function MerchantWithdrawalRequests() {
                             <IosShareIcon fontSize='medium' />
                         </IconButton>
 
-                        <IconButton onClick={handleToggleFilters} style={{ color:'#0089ba' }} >
+                        <IconButton onClick={() => setShowFilters(!showFilters)} style={{ color:'#0089ba' }} >
                             <FilterAltIcon fontSize='medium'/>
                         </IconButton>
                     </Grid>
@@ -336,21 +475,44 @@ export default function MerchantWithdrawalRequests() {
                         <Grid container p={2} justifyContent="flex-end" spacing={2}>
                             <Grid item xs={12} sm={6} md={2.5}>
                                 <FormControl fullWidth>
-                                <Select
-                                    label="date"
-                                    placeholder='Date'
-                                    id="date"
-                                    name="date"
-                                    value={filterDate}
-                                    onChange={(e, newValue) => handleFilterDateChange(e, newValue)}
-                                >
-                                    <Option value="Today">Today</Option>
-                                    <Option value="Yesterday">Yesterday</Option>
-                                    <Option value="ThisWeek">This Week</Option>
-                                    <Option value="ThisMonth">This Month</Option>
-                                    <Option value="PreviousMonth">Previous Month</Option>
-                                </Select>
+                                    <Select
+                                        label="date"
+                                        placeholder='Date'
+                                        id="date"
+                                        name="date"
+                                        value={filterDate}
+                                        onChange={(e, newValue) => setFilterDate(newValue)}
+                                        indicator={<KeyboardArrowDown />}
+                                        sx={{
+                                            [`& .${selectClasses.indicator}`]: {
+                                            transition: '0.2s',
+                                            [`&.${selectClasses.expanded}`]: {
+                                                transform: 'rotate(-180deg)',
+                                            },
+                                            },
+                                        }}
+                                    >
+                                        <Option value="Today">Today</Option>
+                                        <Option value="Yesterday">Yesterday</Option>
+                                        <Option value="ThisWeek">This Week</Option>
+                                        <Option value="ThisMonth">This Month</Option>
+                                        <Option value="PreviousMonth">Previous Month</Option>
+                                        <Option value="CustomRange">Custom Range</Option>
+                                    </Select>
                                 </FormControl>
+
+                                {filterDate === "CustomRange" && (
+                                    isSmallScreen ? (
+                                        <>
+                                            <DatePicker style={{ width: '100%', marginTop:5 }} onChange={handleSmallScreenStartDateRange} />
+                                            <DatePicker style={{ width: '100%', marginTop:5 }} onChange={handleSmallScreenEndDateRange} />
+                                        </>
+                                    ) : (
+                                        <RangePicker 
+                                            style={{ width: '100%', marginTop:5 }} onChange={handelLargeScreenCustomDateRange} 
+                                            />
+                                    )
+                                )}
                             </Grid>
 
                             <Grid item xs={12} sm={6} md={2.5}>
@@ -366,12 +528,26 @@ export default function MerchantWithdrawalRequests() {
 
                             <Grid item xs={12} sm={6} md={2.5}>
                                 <FormControl fullWidth>
-                                    <Input 
-                                        name='WithdrawalCurrency'
-                                        value={filterData.WithdrawalCurrency}
-                                        onChange={handleFilterDataChange}
-                                        placeholder="Withdrawal Currency" 
-                                        />
+                                    <Select
+                                        placeholder='Withdrawal Currency'
+                                        id="WithdrawalCurrency"
+                                        name="WithdrawalCurrency"
+                                        value={filterCurrency}
+                                        onChange={(e, newValue) => setFilterCurrency(newValue)}
+                                        indicator={<KeyboardArrowDown />}
+                                        sx={{
+                                            [`& .${selectClasses.indicator}`]: {
+                                            transition: '0.2s',
+                                            [`&.${selectClasses.expanded}`]: {
+                                                transform: 'rotate(-180deg)',
+                                            },
+                                            },
+                                        }}
+                                    >
+                                        <Option value="USD">USD</Option>
+                                        <Option value="INR">INR</Option>
+                                        <Option value="EUR">EUR</Option>
+                                    </Select>
                                 </FormControl>
                             </Grid>
 
