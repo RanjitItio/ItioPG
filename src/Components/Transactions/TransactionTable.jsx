@@ -59,6 +59,7 @@ export default function BusinessTransactionTable () {
     const [filterActive, setFilterActive]         = useState(false);  //// Filter Active Status
 
 
+
     let countPagination = Math.ceil(rowCount);
 
     /// Filter Date Range Selected in Large Screen
@@ -96,7 +97,6 @@ export default function BusinessTransactionTable () {
     }, [SwitchTransaction]);
   
 
-  
   // Call API for all sandBox transaction data
   // ##########################################
     useEffect(() => {
@@ -118,7 +118,7 @@ export default function BusinessTransactionTable () {
                 }
 
             }).catch((error)=> {
-                console.log(error)
+                // console.log(error)
 
                 if (error.response.data.error === 'No transaction available') {
                     setEmptyData(true);
@@ -126,7 +126,33 @@ export default function BusinessTransactionTable () {
                 };
 
             })
-        }
+
+        } else {
+            axiosInstance.get(`api/v2/merchant/prod/transactions/?limit=${10}&offset=${0}`).then((res)=> {
+                // console.log(res.data)
+                if (res.status === 200) {
+                    const prodData = res.data.merchant_prod_trasactions
+                    setEmptyData(false)
+                    updateBusinessTransactionData(prodData);
+                    setRowCount(res.data.total_rows)
+                    setIsLoading(false);
+        
+                    if (prodData.length === 0) {
+                        setEmptyData(true);
+                        setIsLoading(false);
+                    };
+                }
+        
+            }).catch((error)=> {
+                // console.log(error)
+        
+                if (error.response.data.error === 'No transaction available') {
+                    setEmptyData(true);
+                    setIsLoading(false);
+                };
+            })
+        }  
+
     }, [SwitchTransaction]);
 
   
@@ -283,20 +309,20 @@ const exportToExcel = async ()=> {
 };
 
 
-// Download Transactions
-const handleDownloadTransactions = ()=> {
-    axiosInstance.get(`api/v2/merchant/export/transactions/`).then((res)=> {
-        // console.log(res)
-        if (res.status === 200 && res.data.success === true) {
-            updateExportData(res.data.export_merchant_all_prod_trasactions);
-            exportToExcel();
-        }
+    // Download Transactions
+    const handleDownloadTransactions = ()=> {
+        axiosInstance.get(`api/v2/merchant/export/transactions/`).then((res)=> {
+            // console.log(res)
+            if (res.status === 200 && res.data.success === true) {
+                updateExportData(res.data.export_merchant_all_prod_trasactions);
+                exportToExcel();
+            }
 
-      }).catch((error)=> {
-        console.log(error)
+        }).catch((error)=> {
+            // console.log(error)
 
-      })
-};
+        })
+    };
 
 
 
@@ -330,7 +356,6 @@ const handleDownloadTransactions = ()=> {
             setFilterError('')
             GetFilteredData()
         }
-        
     };
 
 
