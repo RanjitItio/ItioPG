@@ -78,49 +78,54 @@ export default function Signin() {
         // Call signin API
         await axiosInstance.post(`api/v1/user/login/`, {
 				email: formData.email,
-				password: formData.password,
-      })
-			.then((res) => {
-                if(res.status == 200) {
-                    
-                    setSuccessMessage(`Login Successfull`)
-                   
-                    localStorage.setItem('is_merchant', res.data.is_merchant)
-                    
-                    localStorage.setItem('access_token', res.data.access_token);
-                    localStorage.setItem('refresh_token', res.data.access_token);
-                    localStorage.setItem('user_name', res.data.user_name);
+				password: formData.password
 
-                    axiosInstance.defaults.headers['Authorization'] =
-                      'Bearer ' + localStorage.getItem('access_token');
+      }).then((res) => {
+          if(res.status == 200) {
+              
+              setSuccessMessage(`Login Successfull`)
+              
+              localStorage.setItem('is_merchant', res.data.is_merchant)
+              
+              localStorage.setItem('access_token', res.data.access_token);
+              localStorage.setItem('refresh_token', res.data.access_token);
+              localStorage.setItem('user_name', res.data.user_name);
 
-                      setTimeout(() => {
-                        window.location.href = '/'
-                    }, 1000);
-                }
+              axiosInstance.defaults.headers['Authorization'] =
+                'Bearer ' + localStorage.getItem('access_token');
+
+                setTimeout(() => {
+                  window.location.href = '/'
+              }, 1000);
+          }
 
 			}).catch((error)=> {
-                console.log(error)
+                // console.log(error)
 
-                if (error.response.data.msg == 'Your account is not active. Please contact the administrator'){
-                    setError("Your account is not active yet please contact the Administrator");
-                }
-                else if (error.response.data.msg == 'Invalid credentials'){
-                    setError("Invalid Credentials");
-                }
-                else if (error.response.data.message === 'Kyc not submitted') {
-                    let first_name     = error.response.data.first_name
-                    let last_name      = error.response.data.last_name
-                    let contact_number = error.response.data.contact_number
-                    let email          = error.response.data.email
-                    let user_id        = error.response.data.user_id
+          setTimeout(() => {
+            setDisableButton(false);
+            setError('');
+          }, 2000);
 
-                    window.location.href = `${kycRedirectUrl}/kyc/?first_name=${first_name}&last_name=${last_name}&contact_number=${contact_number}&email=${email}&user_id=${user_id}`
+          if (error.response.data.msg == 'Your account is not active. Please contact the administrator'){
+              setError("Your account is not active yet please contact the Administrator");
+          }
+          else if (error.response.data.msg == 'Invalid credentials'){
+              setError("Invalid Credentials");
+          }
+          else if (error.response.data.message === 'Kyc not submitted') {
+              let first_name     = error.response.data.first_name
+              let last_name      = error.response.data.last_name
+              let contact_number = error.response.data.contact_number
+              let email          = error.response.data.email
+              let user_id        = error.response.data.user_id
 
-                } else {
-                    setError('')
-                }
-            })
+              window.location.href = `${kycRedirectUrl}/kyc/?first_name=${first_name}&last_name=${last_name}&contact_number=${contact_number}&email=${email}&user_id=${user_id}`
+
+          } else {
+              setError('')
+          }
+      })
     };
 
 
