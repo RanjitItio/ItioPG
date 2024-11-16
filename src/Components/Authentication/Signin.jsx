@@ -82,7 +82,6 @@ export default function Signin() {
 
       }).then((res) => {
           if(res.status == 200) {
-              
               setSuccessMessage(`Login Successfull`)
               
               localStorage.setItem('is_merchant', res.data.is_merchant)
@@ -112,8 +111,10 @@ export default function Signin() {
           }
           else if (error.response.data.msg == 'Invalid credentials'){
               setError("Invalid Credentials");
-          }
-          else if (error.response.data.message === 'Kyc not submitted') {
+          } else if (error.response.data.message === 'Only PG users allowed') {
+              setError('Only PG users Allowed')
+
+          } else if (error.response.data.message === 'Kyc not submitted') {
               let first_name     = error.response.data.first_name
               let last_name      = error.response.data.last_name
               let contact_number = error.response.data.contact_number
