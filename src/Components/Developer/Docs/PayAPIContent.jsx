@@ -7,12 +7,17 @@ import { coy } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { ResponseHeaderTable, ResponseHeaderTabledata, RequestheaderColumns, 
          RequestParameterColumns, RequestHeaderdata, RequestParameterdata,
          ResponseParameterColumn, ResponseParameterTabledata, sampleRequestPayload,
-         sampleResponsePayload, sampleRequestBase64EncodedPayload } from './ColumnData';
+         sampleResponsePayload, sampleRequestBase64EncodedPayload, sampleErrorResponsePayload,
+         ErrorResponseParameterTabledata } from './ColumnData';
 
 
 
 const { Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
+
+
+const CompanyShortName = import.meta.env.VITE_COMPANY_SHORT_NAME;
+
 
 
 const columns = [
@@ -80,17 +85,19 @@ export default function PayAPIContent() {
     
 
     return (
-        <Layout style={{ marginRight: isMobile ? 0 : 295 }}>
+        // <Layout style={{ marginRight: isMobile ? 0 : 295 }}>
+        <Layout style={{ marginRight: 0 }}>
 
             <div style={{ background: '#fff' }}>
-              <Title level={2} style={{ margin: '15px' }}>PAY API</Title>
+              <Title level={2} style={{ margin: '15px' }}>Developer Docs</Title>
             </div>
 
             <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
                 <div style={{ padding: 24, background: '#fff', minHeight: '80vh' }}>
-                <Typography>
-                    <Title level={3}>End Points</Title>
+                
 
+                <Typography>
+                    <Title level={4}>End Points</Title>
                     <Table 
                        columns={columns} 
                        dataSource={data} 
@@ -100,7 +107,7 @@ export default function PayAPIContent() {
                 </Typography>
 
                 <Typography style={{marginTop:20}}>
-                    <Title level={3}>Request Details</Title>
+                    <Title level={4}>Request Details</Title>
                     <Paragraph>
                         Request details
                     </Paragraph>
@@ -113,8 +120,8 @@ export default function PayAPIContent() {
                     </ul>
                 </Typography>
 
-                <Typography style={{marginTop:20}}>
-                    <Title level={3}>Response Details</Title>
+                {/* <Typography style={{marginTop:20}}>
+                    <Title level={4}>Response Details</Title>
                     <Paragraph>
                         Response details
                     </Paragraph>
@@ -126,9 +133,9 @@ export default function PayAPIContent() {
                         <li>How to Calculate X-AUTH/Checksum header</li>
                     </ul>
 
-                </Typography>
+                </Typography> */}
 
-                <Title level={3}>Request Details</Title>
+                <Title level={4}>Request Details</Title>
 
                 {/* Request Header */}
                 <Typography>
@@ -158,7 +165,7 @@ export default function PayAPIContent() {
                 <Title level={5}>Sample Request for Pay Page</Title>
 
                 <Card style={{ margin: '16px', padding: '2px', borderRadius: '8px' }}>
-                    <p>Sample Payload - Base64 Decoded</p>
+                    <p>Sample JSON Payload</p>
                     <Card
                         style={{
                         backgroundColor: '#f5f5f5',
@@ -214,13 +221,13 @@ export default function PayAPIContent() {
                 <Title level={5}>How to Calculate X-AUTH/Checksum header</Title>
 
                 <Paragraph style={{ marginTop: '16px' }}>
-                    Formula: SHA256(Base64 encoded payload + “/api/pg/prod/v1/pay/” + secret key) + **** + index
+                    <span style={{color:'grey'}}>Formula: SHA256(Base64 encoded payload + “/api/pg/prod/v1/pay/” + secret key) + **** + index</span>
                 </Paragraph>
 
                 <Title level={5}>Base64 encoded payload:</Title>
 
                 <Paragraph style={{ marginTop: '16px' }}>
-                    <i>
+                    <i style={{color:'grey'}}>
                         ewogICJtZXJjaGFudElkIjogIlBHVEVTVFBBWVVBVCIsCiAgIm1lcmNoYW50VHJhbnNhY3Rpb25JZCI6ICJNVDc4
                         NTA1OTAwNjgxODgxMDQiLAogICJtZXJjaGFudFVzZXJJZCI6ICJNVUlEM
                         TIzIiwKICAiYW1vdW50IjogMTAwMDAsCiAgInJlZGlyZWN0VXJsIjogImh0dHBzOi8vd2ViaG9vay5zaXRlL3JlZGlyZWN0LXVybCIsCi
@@ -232,13 +239,13 @@ export default function PayAPIContent() {
 
                 <Title level={5}>API End Point</Title>
 
-                <Paragraph style={{ marginTop: '16px' }}>
+                <Paragraph style={{ marginTop: '16px', color:'grey' }}>
                     /api/pg/sandbox/v1/pay/
                 </Paragraph>
 
                 <Title level={5}>Sample Secret Key</Title>
 
-                <Paragraph style={{ marginTop: '16px' }}>
+                <Paragraph style={{ marginTop: '16px', color:'grey'}}>
                     eyxueb0cd02cf4e23e6c6aff0399
                 </Paragraph>
 
@@ -250,7 +257,7 @@ export default function PayAPIContent() {
 
                 <Title level={5}>Final Computation</Title>
 
-                <Paragraph style={{ marginTop: '16px' }}>
+                <Paragraph style={{ marginTop: '16px', color:'grey' }}>
                     <i>
                       <b>SHA256</b>
                       (ewogICJtZXJjaGFudElkIjogIlBHVEVTVFBBWVVBVCIsCiAgIm1lcmNoYW50VHJhbnNhY3Rpb25
@@ -265,12 +272,11 @@ export default function PayAPIContent() {
 
                 <Title level={5}>Checksum Value</Title>
 
-                <Paragraph style={{ marginTop: '16px' }}>
+                <Paragraph style={{ marginTop: '16px', color:'grey' }}>
                     d7a8e4458caa6fcd781166bbdc85fec76740c18cb9baa9a4c48cf2387d554180###1
                 </Paragraph>
 
-
-                <Title level={3}>Response Details</Title>
+                <Title level={4}>Response Details</Title>
                     <Title level={5}>Sample Response</Title>
                     <Card
                         style={{
@@ -310,6 +316,51 @@ export default function PayAPIContent() {
                         <Table 
                             columns={ResponseParameterColumn} 
                             dataSource={ResponseParameterTabledata} 
+                            pagination={false}
+                            scroll={{ x: 800 }}
+                          />
+                    </Typography>
+
+                    {/* Sample Error Response */}
+                    <Title level={5}>Sample Error Response</Title>
+                    <Card
+                        style={{
+                        backgroundColor: '#f5f5f5',
+                        padding: '1px',
+                        borderRadius: '10px',
+                        position: 'relative'
+                        }}
+                    >
+                        <SyntaxHighlighter language="json" style={coy} showLineNumbers>
+                            {sampleErrorResponsePayload}
+                        </SyntaxHighlighter>
+
+                        <Button
+                          icon={<CopyOutlined />}
+                          style={{ position: 'absolute', top: '16px', right: '16px' }}
+                          onClick={()=> {handleCopy('sampleResponsePayload')}}
+                          />
+                    </Card>
+
+                    {/* Response Header */}
+                    <Typography style={{marginTop:15}}>
+                        <Title level={5}>Error Response Headers</Title>
+
+                        <Table 
+                            columns={ResponseHeaderTable} 
+                            dataSource={ResponseHeaderTabledata} 
+                            scroll={{ x: 700 }}
+                            pagination={false}
+                            />
+                    </Typography>
+
+                    {/* Response Parameters */}
+                    <Typography style={{marginTop:20}}>
+                        <Title level={5}>Error Response Parameters</Title>
+
+                        <Table 
+                            columns={ResponseParameterColumn} 
+                            dataSource={ErrorResponseParameterTabledata} 
                             pagination={false}
                             scroll={{ x: 800 }}
                           />

@@ -5,6 +5,7 @@ import PayAPIContent from './PayAPIContent';
 import { useState, useEffect } from 'react';
 import S2SCallBack from './S2S';
 import CheckStatusAPIDocs from './CheckStatus';
+import APIINtegration from './APIIntegration';
 
 
 const { Sider } = Layout;
@@ -29,6 +30,7 @@ export default function DevDocs() {
         setCollapsed(!collapsed);
     };
 
+
     useEffect(() => {
         const handleResize = () => {
         setIsMobile(window.innerWidth < 768);
@@ -37,26 +39,34 @@ export default function DevDocs() {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    
     // Method to check the clicked bar
     const handleMenuClick = (key) => {
       setSelectedKey(key);
     };
 
       let content;
+
       switch (selectedKey) {
         
         case '1':
-          content = <PayAPIContent />;
+          content = <APIINtegration 
+                setSelectedKey={setSelectedKey}
+            />;
           break;
         case '2':
-          content = <S2SCallBack />;
+          content = <PayAPIContent />;
           break;
         case '3':
+          content = <S2SCallBack />;
+          break;
+        case '4':
           content = <CheckStatusAPIDocs />;
           break;
         default:
           content = <PayAPIContent />;
-      }
+          break;
+      };
 
 
   return (
@@ -80,15 +90,21 @@ export default function DevDocs() {
                     {
                         key: '1',
                         icon: <CodeOutlined />,
+                        label: 'API Integration',
+                    },
+                    
+                    {
+                        key: '2',
+                        icon: <CodeOutlined />,
                         label: 'PAY API',
                     },
                     {
-                        key: '2',
+                        key: '3',
                         icon: <SyncOutlined />,
                         label: 'Server to Server Callback',
                     },
                     {
-                        key: '3',
+                        key: '4',
                         icon: <SyncOutlined />,
                         label: 'Check Status',
                     },
@@ -98,11 +114,12 @@ export default function DevDocs() {
       ) : (
         <>
           <Button
-            type="primary"
-            icon={<MenuOutlined />}
-            onClick={toggleDrawer}
-            style={{ position: 'fixed', left: 0, top: 0, zIndex: 1000, backgroundColor: 'white', color: 'black' }}
+             type="primary"
+             icon={<MenuOutlined />}
+             onClick={toggleDrawer}
+             style={{ position: 'fixed', left: 0, top: 0, zIndex: 1000, backgroundColor: 'white', color: 'black' }}
           />
+
           <Drawer
             title="Menu"
             placement="left"
@@ -118,6 +135,11 @@ export default function DevDocs() {
                 items={[
                 {
                     key: '1',
+                    icon: <CodeOutlined />,
+                    label: 'API Integration',
+                },
+                {
+                    key: '2',
                     icon: <CodeOutlined />,
                     label: 'PAY API',
                 },
@@ -137,14 +159,13 @@ export default function DevDocs() {
         </>
       )}
 
-
       {/* Payment API Content */}
       <Layout.Content style={{ padding: '0px' }}>
           {content}
       </Layout.Content>
 
 
-      {!isMobile && (
+      {/* {!isMobile && (
         <Sider
           width={300}
           style={{
@@ -185,7 +206,7 @@ axios.request(options).then(function (response) {
             </div>
           </Affix>
         </Sider>
-      )}
+      )} */}
     </Layout>
   
   </>

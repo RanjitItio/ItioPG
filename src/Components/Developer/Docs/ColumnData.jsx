@@ -19,14 +19,12 @@ export const RequestHeaderdata = [
   {
     key: '1',
     headerName: 'Content-Type',
-    headerValue: 'application/json',
-
+    headerValue: <span style={{color:'grey'}}>application/json</span>,
   },
   {
     key: '2',
     headerName: 'X-AUTH',
-    headerValue: `SHA256(base64 encoded payload + “/api/pg/sandbox/v1/pay/” + secret key) + **** + index`,
-    
+    headerValue: <span style={{color:'grey'}}>SHA256(base64 encoded payload + “/api/pg/sandbox/v1/pay/” + secret key) + **** + index</span>,
   }
 ];
 
@@ -116,7 +114,7 @@ export const RequestParameterdata = [
   {
     key: '10',
     parameterName: <small>paymentInstrument.type</small>,
-    dataType: 'ENUM',
+    dataType: 'STRING',
     description: `Payment instrument type.
                 Value will be: PAY_PAGE`,
     required: 'YES'
@@ -146,19 +144,35 @@ export const sampleRequestPayload = `
 export const sampleResponsePayload = `
 {
     "success": true,
-    "status": "PAYMENT_INITIATED",
-    "message": "Payment Initiated",
+    "status": "PAYMENT_SUCCESS",
+    "message": "Transaction Successfull",
     "data": {
         "merchantPublicKey": "1722830923-28TMTX6G89BI",
         "merchantOrderId": "eJxLdwQBp9xiNyfv5PJ4",
         "transactionID":  "JxLdwQBp9xiNyfv5PJ4dfghj567",
+        "time": "2024-11-18 12:50:32.245689",
+        "amount": 900,
+        "currency": "USD",
+        "paymentInstrument": {
+            "type": "Card"
+        }
+    }
+}`;
+
+export const sampleErrorResponsePayload = `
+{
+    "success": false,
+    "status": "PAYMENT_FAILED",
+    "message": "Transaction Failed",
+    "data": {
+        "merchantPublicKey": "1722830923-28TMTX6G89BI",
+        "merchantOrderId": "eJxLdwQBp9xiNyfv5PJ4",
+        "transactionID":  "JxLdwQBp9xiNyfv5PJ4dfghj567",
+        "time": "2024-11-18 12:50:32.245689",
         "amount": 90,
         "currency": "USD",
-        "instrumentResponse": {
-            "type": "PAY_PAGE",
-            "redirectInfo": {
-                "url": "https://react-payment.oyefin.com/merchant/payment/checkout/?token=IjE3MjI4MzA5MjMtMjhUTVRYNkc4OUJJIg==,NC4w,ImFkNjIzYmY1ZWMwYzRlNmFhYmZlODY0YTQwMDM5NDY5MTkxIg==,IlVTRCI=",
-            }
+        "paymentInstrument": {
+            "type": "Card",
         }
     }
 }`;
@@ -294,16 +308,69 @@ export const ResponseParameterTabledata = [
       description: `Transaction Currency`,
     },
     {
-      key: '9',
-      parameterName: <small>redirectInfo</small>,
-      dataType: 'OBJECT',
-      description: 'Payload for redirecting user to bank page for authentications',
+      key: '10',
+      parameterName: <small>paymentInstrument.type</small>,
+      dataType: 'STRING',
+      description: `Payment Mode`,
+    }
+];
+
+
+
+export const ErrorResponseParameterTabledata = [
+    {
+      key: '1',
+      parameterName: <small>success</small>,
+      dataType: 'boolean',
+      description: `Success/failure of request processing`,
+    },
+    {
+      key: '2',
+      parameterName: <small>status</small>,
+      dataType: 'STRING',
+      description: `Payment Status`,
+    },
+    {
+      key: '3',
+      parameterName: <small>message</small>,
+      dataType: 'STRING',
+      description: `Additional Information related to Transaction`,
+    },
+    {
+      key: '4',
+      parameterName: <small>merchantPublicKey</small>,
+      dataType: 'STRING',
+      description: 'Merchant Public URL provided by Itio',
+    },
+    {
+      key: '5',
+      parameterName: <small>merchantOrderId</small>,
+      dataType: 'STRING',
+      description: `Order ID provided by merchant during payment`,
+    },
+    {
+      key: '6',
+      parameterName: <small>transactionID</small>,
+      dataType: 'STRING',
+      description: 'Unique Transaction ID created for the transaction',
+    },
+    {
+      key: '7',
+      parameterName: <small>amount</small>,
+      dataType: 'FLOAT',
+      description: `Transaction Amount`,
+    },
+    {
+      key: '8',
+      parameterName: <small>currency</small>,
+      dataType: 'STRING',
+      description: `Transaction Currency`,
     },
     {
       key: '10',
-      parameterName: <small>url</small>,
+      parameterName: <small>paymentInstrument.type</small>,
       dataType: 'STRING',
-      description: `Url on which user needs to be redirected for authentication`,
+      description: `Payment Mode`,
     }
   ];
 

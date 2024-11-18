@@ -15,6 +15,8 @@ const { Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
 
 
+const CompanyShortName = import.meta.env.VITE_COMPANY_SHORT_NAME;
+
 
 // Check status API Docs
 export default function CheckStatusAPIDocs() {
@@ -42,13 +44,15 @@ export default function CheckStatusAPIDocs() {
 
 
     return (
-        <Layout style={{ marginRight: isMobile ? 0 : 295 }}>
+        // <Layout style={{ marginRight: isMobile ? 0 : 295 }}>
+        <Layout style={{ marginRight: 0 }}>
 
         <Content style={{ margin: '24px 16px 0' }}>
             <div style={{ padding: 24, background: '#fff', minHeight: '80vh' }}>
+
             <Typography>
                 <Title style={{ color: '#1890ff' }} level={3}>Check Status API</Title>
-                <div style={{display:'flex', justifyContent:'center'}}>
+                <div style={{display:'flex', justifyContent:'flex-start'}}>
                     <Button shape="circle" style={{background:'#00c9a7', color:'white', width:'50px'}}>
                         POST
                     </Button>
@@ -65,7 +69,7 @@ export default function CheckStatusAPIDocs() {
                             Once the customer is redirected back to the merchant website/app, 
                             merchants should check with their server if they have received the 
                             [Server-to-Server Callback] response. 
-                            If not, it is mandatory to make a Transaction Status API check with Itio 
+                            If not, it is mandatory to make a Transaction Status API check with {CompanyShortName} 
                             backend systems to know the actual status of the payment and, then accordingly 
                             process the result..
                     </Paragraph>
@@ -83,7 +87,7 @@ export default function CheckStatusAPIDocs() {
                         <li>Once the customer is redirected back to the merchant website/app, 
                             merchants should check with their server if they have received the 
                             Server-to-Server Callback response. If not, 
-                            it is mandatory to make a Transaction Status API check with Itio backend 
+                            it is mandatory to make a Transaction Status API check with {CompanyShortName} backend 
                             systems to know the actual status of the payment and, then accordingly 
                             process the result.
                         </li>

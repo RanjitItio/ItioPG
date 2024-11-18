@@ -13,6 +13,8 @@ const { Header, Content, Sider } = Layout;
 const { Title, Paragraph } = Typography;
 
 
+const CompanyShortName = import.meta.env.VITE_COMPANY_SHORT_NAME;
+
 
 
 // S2S Callback Response
@@ -46,7 +48,8 @@ export default function S2SCallBack() {
 
 
     return (
-        <Layout style={{ marginRight: isMobile ? 0 : 295 }}>
+        // <Layout style={{ marginRight: isMobile ? 0 : 295 }}>
+        <Layout style={{ marginRight: 0 }}>
 
             <Content style={{ margin: '24px 16px 0' }}>
                 <div style={{ padding: 24, background: '#fff', minHeight: '80vh' }}>
@@ -56,7 +59,7 @@ export default function S2SCallBack() {
 
                     <Paragraph style={{ fontSize: '16px', lineHeight: '1.7' }}>
                     <ul style={{ paddingLeft: '20px', listStyle: 'disc' }}>
-                        <li>Server to server callbacks are initiated from the Itio server to the URL provided by the merchant when the payment reaches any terminal state (SUCCESS or FAIL)</li>
+                        <li>Server to server callbacks are initiated from the {CompanyShortName} server to the URL provided by the merchant when the payment reaches any terminal state (SUCCESS or FAIL)</li>
 
                         <li>There are two ways to enable the server to server callbacks.</li>
                     </ul>
@@ -69,7 +72,7 @@ export default function S2SCallBack() {
                     <ol style={{ marginLeft: '20px' }}>
                         <li>
                             <Paragraph>
-                                Either Register your static callback URL with Itio. This is a one-time process.
+                                Either Register your static callback URL with {CompanyShortName}. This is a one-time process.
                             </Paragraph>
                         </li>
                         <li>
@@ -98,7 +101,7 @@ export default function S2SCallBack() {
                     </Paragraph>
 
                     <Paragraph style={{ fontSize: '16px', color: '#595959' }}>
-                        This is the best-case callback that would be sent from the Itio server to the merchants’ server. In the event of a callback failure, the merchants must use the <strong>transaction status API</strong> and take the transaction to closure.
+                        This is the best-case callback that would be sent from the {CompanyShortName} server to the merchants’ server. In the event of a callback failure, the merchants must use the <strong>transaction status API</strong> and take the transaction to closure.
                     </Paragraph>
 
                 </Typography>
