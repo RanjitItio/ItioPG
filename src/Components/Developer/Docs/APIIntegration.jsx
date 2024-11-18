@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Layout,Typography, Card, Button, Tag} from 'antd';
-import { ArrowRightOutlined } from "@ant-design/icons";
+import { CaretRightOutlined } from "@ant-design/icons";
 
 
 const { Header, Content } = Layout;
@@ -34,15 +34,15 @@ export default function APIINtegration({setSelectedKey}) {
             <div style={{ background: '#ffff', display:'flex', justifyContent:'space-between'}}>
               <Title level={2} style={{ margin: '15px' }}>Developer Docs</Title>
               <Button 
-                style={{backgroundColor:'#ff8066', color:'white', marginTop:'1.6%', marginRight:'3%'}} 
-                icon={<ArrowRightOutlined />}
-                iconPosition="end"
+                style={{backgroundColor:'#fc6a03', color:'white', marginTop:'1.6%', marginRight:'3%'}} 
+                icon={<CaretRightOutlined style={{fontSize:'21px'}} />}
+                iconPosition="start"
                 onClick={()=> window.open(
                     'https://documenter.getpostman.com/view/33656068/2sA3kaCyp8#1ad06466-b0ea-4793-a5a2-c266301ffa67',
                     '_blank'
                 )}
                 >
-                    PostMan
+                    Run in PostMan
                 </Button>
             </div>
 
