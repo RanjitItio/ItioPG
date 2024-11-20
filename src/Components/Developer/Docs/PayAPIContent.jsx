@@ -9,14 +9,13 @@ import { ResponseHeaderTable, ResponseHeaderTabledata, RequestheaderColumns,
          ResponseParameterColumn, ResponseParameterTabledata, sampleRequestPayload,
          sampleResponsePayload, sampleRequestBase64EncodedPayload, sampleErrorResponsePayload,
          ErrorResponseParameterTabledata } from './ColumnData';
+import { CaretRightOutlined } from "@ant-design/icons";
 
 
 
 const { Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
 
-
-const CompanyShortName = import.meta.env.VITE_COMPANY_SHORT_NAME;
 
 
 
@@ -88,8 +87,20 @@ export default function PayAPIContent() {
         // <Layout style={{ marginRight: isMobile ? 0 : 295 }}>
         <Layout style={{ marginRight: 0 }}>
 
-            <div style={{ background: '#fff' }}>
+            <div style={{ background: '#ffff', display:'flex', justifyContent:'space-between'}}>
               <Title level={2} style={{ margin: '15px' }}>Developer Docs</Title>
+              <Button 
+                style={{backgroundColor:'#fc6a03', color:'white', marginTop:'1.6%', marginRight:'3%'}} 
+                icon={<CaretRightOutlined style={{fontSize:'21px'}} />}
+                iconPosition="start"
+                onClick={()=> window.open(
+                    'https://documenter.getpostman.com/view/33656068/2sA3kaCyp8#1ad06466-b0ea-4793-a5a2-c266301ffa67',
+                    '_blank'
+                )}
+                >
+                    Run in PostMan
+              </Button>
+
             </div>
 
             <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>

@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const IS_DEVELOPMENT = import.meta.env.VITE_IS_DEVELOPMENT;
+const BACKEND_DOMAIN = import.meta.env.VITE_BACKEND_DOMAIIN;
 let baseURL = '';
 
 
@@ -9,7 +10,7 @@ let baseURL = '';
 if (IS_DEVELOPMENT === 'True') {
    baseURL = 'http://127.0.0.1:8000/'
 } else {
-    baseURL = 'https://python-uat.oyefin.com/'
+    baseURL = BACKEND_DOMAIN
 };
 
 
