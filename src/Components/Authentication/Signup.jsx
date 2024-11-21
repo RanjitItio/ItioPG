@@ -163,18 +163,19 @@ export default function Signup() {
             .catch((error) => {
             //   console.log(error)
 
-              if (error.response.data.msg === `${formData.email} already exists`) {
-                // setError(error.response.data.msg)
-                setError('Mail Address Already exists')
+              if (error.response.data.msg === `Email already exists`) {
+                  // setError(error.response.data.msg)
+                  setError('Email Address Already exists');
 
-              } else if (error.response.data.msg === `${formData.contact_number} number already exists`) {
-                  setError('Mobile Number already exists')
+              } else if (error.response.data.msg === `Mobile number already exists`) {
+                  setError('Mobile Number already exists');
 
               } else if (error.response.data.msg === 'Password is not same Please try again') {
-                setError('Password did not match please try again')
+                  setError('Password did not match please try again');
                 
               } else {
-                setError('')
+                setError('');
+
               }
           });
         }};
