@@ -42,7 +42,7 @@ const PaymentCheckoutPage = () => {
     let merchantBusinessName = '';
 
 
-
+    ///// If token available in query else show an error message
     if (token) {
       let tokenValue = token.split(',')
 
@@ -51,7 +51,15 @@ const PaymentCheckoutPage = () => {
       merchant_transaction_id = tokenValue[2]
       transaction_currency = tokenValue[3]
       merchant_business_name = tokenValue[4]
-    };
+    } else {
+      return (
+        <Container>
+          <Alert severity="error">
+            No payment token provided, please go back and provide the payment token.
+          </Alert>
+        </Container>
+      )
+    }
 
     const merchantTransactionAmount   = parseFloat(atob(transaction_amount))
     const merchantTransactionCurrency = JSON.parse(atob(transaction_currency))
@@ -80,7 +88,7 @@ const PaymentCheckoutPage = () => {
             };
 
         }).catch((error)=> {
-          console.log(error)
+          // console.log(error)
 
           if (error.response.data.error === 'Invalid key') {
                 setError('Invalid Key provided')
