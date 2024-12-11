@@ -8,8 +8,8 @@ const button = document.createElement('button');
 window.onload = async () => {
 
     try {
-        const domain_name = window.env.VITE_DOMAIN_NAME
-        console.log('domain_name: ' + domain_name)
+        // const domain_name = window.env.VITE_DOMAIN_NAME
+        // console.log('domain_name: ' + domain_name)
 
         const response = await fetch(`https://python-uat.oyefin.com/api/merchant/payment/fetch/button/?id=${button_id}`);
         if (!response.ok) {
