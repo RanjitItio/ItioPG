@@ -8,8 +8,6 @@ const button = document.createElement('button');
 window.onload = async () => {
 
     try {
-        // const domain_name = window.env.VITE_DOMAIN_NAME
-        // console.log('domain_name: ' + domain_name)
 
         const response = await fetch(`https://python-uat.oyefin.com/api/merchant/payment/fetch/button/?id=${button_id}`);
         if (!response.ok) {
@@ -25,15 +23,6 @@ window.onload = async () => {
                     <span style="font-size: 6px;">SECURED BY ITIO</span>
                 </div>
             </div>
-
-            <script>
-                console.log('Environment Variables:', {
-                    VITE_API_URL: import.meta.env.VITE_DOMAIN_NAME,
-                });
-                window.env = {
-                    VITE_API_URL: import.meta.env.VITE_DOMAIN_NAME,
-                };
-            </script>
         `;
 
         button.style.backgroundColor = data.data[0].buttonBgColor;
