@@ -239,19 +239,20 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
           open={open}
           onClose={handleClose}
           aria-labelledby="responsive-dialog-title"
+          
         >
-          <DialogContent>
+          <DialogContent sx={{scrollbarWidth:'none',  '&::-webkit-scrollbar': {display:'none'}, overflow:'auto'}}>
             <Box
                 sx={{
                 width: isSmallScreen ? '100%' : '400px',
                 backgroundColor: '#eae6e8',
                 borderRadius: '25px',
                 boxShadow: '0 10px 20px rgba(0, 0, 0, 0.1)',
-                overflow: 'hidden',
+                overflow: 'auto',
                 padding:3
                 }}
             >
-                <Box sx={{ padding: 1 }}>
+                <Box sx={{ padding: 1}}>
 
                     {/* Bank Account Dropdown */}
                     <FormControl sx={{ m: 1}} fullWidth size="small">
@@ -436,29 +437,6 @@ export default function WithdrawalFrom({open, handleClose, accountBalance, setOp
                         onChange={handleInputAmountChange}
                         />
 
-                    {/* Slider */}
-                    {/* <Slider
-                        value={sliderAmount}
-                        max={Balance ? (Balance.amount >= 10 ? Balance.amount : 0) : 0}
-                        onChange={(e, newValue) => handleSliderChange(newValue)}
-                        min={Balance.amount === undefined ? 0 : (Balance ? (Balance.amount >= 10 ? 10 : 0) : 0)}
-                        aria-label="Medium"
-                        valueLabelDisplay="auto"
-                    />
-
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-                        {[0, 10, 100, 1000, 10000].map((value) => (
-                        <AmountButton
-                            key={value}
-                            onClick={() => {setSliderAmount(value); handleFixedAmount(value);}}
-                            selected={sliderAmount === value}
-                        >
-                            {getCurrencyIcon(balanceCurrency)}{value}
-                        </AmountButton>
-                        ))}
-                    </Box> */}
-
-                {/* Withdraw Button */}
                 <p style={{color:'red'}}>{error && error}</p>
                 <p style={{color:'green'}}>{successMessage && successMessage}</p>
                 <WithdrawButton fullWidth onClick={handleRaiseWithDrawalRequest}>Withdraw</WithdrawButton>

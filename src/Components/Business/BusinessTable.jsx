@@ -203,7 +203,6 @@ if (emptyData) {
             </p>
         </div>
 
-
         <Box>
           {isSmallScreen ? (
             <>
@@ -230,85 +229,6 @@ if (emptyData) {
         </Box>
       </Box>
 
-        {/* <Collapse in={filterOpen}>
-            <Box p={1}>
-            <Grid container spacing={0}>
-                <Grid item xs={12} sm={6} md={3}>
-                    <FormControl sx={{width: {xs: '100%', sm: '95%',md:'80%'}}} size='medium'>
-                        <InputLabel id="demo-simple-select-helper-label">Age</InputLabel>
-                        <Select
-                          labelId="demo-simple-select-helper-label"
-                          id="demo-simple-select-helper"
-                          // value={age}
-                          // onChange={handleChange}
-                          label="Transaction Type"
-                        >
-                          <MenuItem value="">
-                              <em>None</em>
-                          </MenuItem>
-                          <MenuItem value={10}>Ten</MenuItem>
-                          <MenuItem value={20}>Twenty</MenuItem>
-                          <MenuItem value={30}>Thirty</MenuItem>
-                        </Select>
-                        <FormHelperText>With label + helper text</FormHelperText>
-                    </FormControl>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={3}>
-                    <FormControl sx={{width: {xs: '100%', sm: '95%',md:'80%'}}} size='medium'>
-                        <InputLabel id="demo-simple-select-helper-label">Age</InputLabel>
-                        <Select
-                        labelId="demo-simple-select-helper-label"
-                        id="demo-simple-select-helper"
-                        // value={age}
-                        label="Business Type"
-                        // onChange={handleChange}
-                        >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
-                        </Select>
-                        <FormHelperText>With label + helper text</FormHelperText>
-                    </FormControl>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={3}>
-                    <TextField 
-                          type="date" 
-                          label="Date Range" 
-                          variant="outlined" 
-                          size="medium" 
-                          InputLabelProps={{ shrink: true }} 
-                          sx={{width: {xs: '100%', sm: '95%',md:'80%'}, marginBottom: {xs: 2}}}
-                          />
-                </Grid>
-                
-                <Grid item xs={12} sm={6} md={3}>
-                    <FormControl sx={{width: {xs: '100%', sm: '95%',md:'80%'}}} size='medium'>
-                            <InputLabel id="demo-simple-select-helper-label">Age</InputLabel>
-                            <Select
-                            labelId="demo-simple-select-helper-label"
-                            id="demo-simple-select-helper"
-                            // value={age}
-                            label="Business Type"
-                            // onChange={handleChange}
-                            >
-                                <MenuItem value="">
-                                    <em>None</em>
-                                </MenuItem>
-                                <MenuItem value={10}>Ten</MenuItem>
-                                <MenuItem value={20}>Twenty</MenuItem>
-                                <MenuItem value={30}>Thirty</MenuItem>
-                            </Select>
-                            <FormHelperText>With label + helper text</FormHelperText>
-                        </FormControl>
-                </Grid>
-            </Grid>
-            </Box>
-        </Collapse> */}
 
         <TableContainer style={{ overflowX: 'auto', maxHeight: '55rem', overflowY: 'auto'}}>
             <Table stickyHeader>
@@ -319,8 +239,8 @@ if (emptyData) {
                         <TableCell><b>Business Name</b></TableCell>
                         <TableCell><b>Domain Name</b></TableCell>
                         <TableCell><b>Currency</b></TableCell>
-                        <TableCell><b>Generate Form</b></TableCell>
-                        <TableCell><b>Details</b></TableCell>
+                        {/* <TableCell><b>Generate Form</b></TableCell> */}
+                        {/* <TableCell><b>Details</b></TableCell> */}
                         <TableCell><b>Status</b></TableCell>
                         <TableCell><b>Edit</b></TableCell>
                     </TableRow>
@@ -354,12 +274,12 @@ if (emptyData) {
                         <TableCell>{business.currency.name}</TableCell>
 
                         {/* Generate Form Column */}
-                        <TableCell>{business.currency.name}</TableCell>
+                        {/* <TableCell>{business.currency.name}</TableCell> */}
 
                         {/* Business Details Column */}
-                        <TableCell>
+                        {/* <TableCell>
                               {business.currency.name}
-                        </TableCell>
+                        </TableCell> */}
 
                         {/* Status Column */}
                         <TableCell>

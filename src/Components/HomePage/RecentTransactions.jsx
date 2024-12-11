@@ -130,7 +130,7 @@ const RecentTransactions = () => {
           Recent Transactions
       </Typography>
 
-      <TableContainer component={Paper} sx={{ height: '30rem', marginTop:'18px' }}>
+      <TableContainer component={Paper} sx={{ height: '30rem', marginTop:'18px', overflow:'auto', scrollbarWidth:'none', '&::-webkit-scrollbar': { display: 'none'} }}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>
