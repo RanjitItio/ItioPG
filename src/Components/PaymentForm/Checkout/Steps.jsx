@@ -11,6 +11,9 @@ const steps = ['Amount Details', 'Customer Details'];
 export default function PaymentFormAllSteps () {
     const [current, setCurrent] = useState(0);  // All steps
     const [amountDetails, setAmountDetails] = useState([]); // Amount fields data
+    const [CustomerAmountError, setCustomerAmountError] = useState(''); // Amount fields Error
+    const [phoneNumberError, setPhoneNumberError] = useState(''); //  Phone Number Field Error
+    const [emailError, setEmailError] = useState(''); // Email Field Error
     const [formValue, updateFormValues]     = useState({
         email: '', phoneno: '', customerAmt: 0
     });   // All steps data
@@ -29,7 +32,7 @@ export default function PaymentFormAllSteps () {
                 setAmountDetails(res.data.merchant_payment_form)
             }
         }).catch((error)=> {
-            console.log(error)
+            // console.log(error)
 
         })
     }, []);
@@ -37,9 +40,26 @@ export default function PaymentFormAllSteps () {
 
     // Capture all the step values
     const handleStepValueChange  = (e)=> {
-        updateFormValues({...formValue, 
-            [e.target.name]: e.target.value
-        })
+        const { name, value } = e.target;
+
+        if (name === 'customerAmt' && value.length > 6) {
+            setCustomerAmountError('Amount must be less than 6 digits');
+
+        } else if (name === 'phoneno' && value.length > 10) {
+            setPhoneNumberError('Phone number must be at least 10 digits');
+
+        } else if (name === 'email' && value.length > 46) {
+            setEmailError('Email must be at least 46 characters');
+
+        } else {
+            setCustomerAmountError('');
+            setPhoneNumberError('');
+
+            updateFormValues({...formValue, 
+                [e.target.name]: e.target.value
+            });
+        }
+       
     };
 
 
@@ -54,6 +74,8 @@ export default function PaymentFormAllSteps () {
                     amountDetails={amountDetails}
                     handleStepValueChange={handleStepValueChange}
                     formValue={formValue}
+                    CustomerAmountError={CustomerAmountError}
+                    setCustomerAmountError={setCustomerAmountError}
                 />
             )}
 
@@ -65,6 +87,8 @@ export default function PaymentFormAllSteps () {
                     amountDetails={amountDetails}
                     handleStepValueChange={handleStepValueChange}
                     formValue={formValue}
+                    phoneNumberError={phoneNumberError}
+                    emailError={emailError}
                 />
             )}
 

@@ -26,7 +26,9 @@ const getStartDecorator = (currency) => {
 
 
 // Payment form amount step
-export default function PaymentFormAmountStep({current, steps, setCurrent, amountDetails, handleStepValueChange, formValue}) {
+export default function PaymentFormAmountStep({current, steps, setCurrent, amountDetails, 
+    handleStepValueChange, formValue, CustomerAmountError, setCustomerAmountError}) {
+
     const [open, setOpen] = useState(true);  // state to keep open the Dialogue box
 
 
@@ -37,7 +39,12 @@ export default function PaymentFormAmountStep({current, steps, setCurrent, amoun
 
     // Redirect to next step
     const handleNext = ()=> {
-        setCurrent(current + 1)
+        if (formValue.customerAmt === 0 || formValue.customerAmt < 0 || formValue.customerAmt === '') {
+            setCustomerAmountError('Please enter valid amount');
+        } else {
+            setCustomerAmountError('');
+            setCurrent(current + 1);
+        }
     };
     
 
@@ -64,7 +71,7 @@ export default function PaymentFormAmountStep({current, steps, setCurrent, amoun
                     </Box>
                     {amountDetails.isFixedAmount && (
                         <>
-                            <label htmlFor="fixedAmount">{amountDetails.fixedAmountLabel}</label>
+                            {/* <label htmlFor="fixedAmount">{amountDetails.fixedAmountLabel}</label> */}
                             <TextField 
                                 margin="dense"
                                 id='fixedAmount'
@@ -87,7 +94,7 @@ export default function PaymentFormAmountStep({current, steps, setCurrent, amoun
 
                     {amountDetails.isCustomerAmount && (
                         <>
-                            <label htmlFor="customerDecidedAmount">{amountDetails.customerAmountLabel}</label>
+                            {/* <label htmlFor="customerDecidedAmount">{amountDetails.customerAmountLabel}</label> */}
                             <TextField 
                                 id='customerDecidedAmount'
                                 name='customerAmt'
@@ -98,6 +105,8 @@ export default function PaymentFormAmountStep({current, steps, setCurrent, amoun
                                 required
                                 onChange={handleStepValueChange}
                                 value={formValue.customerAmt}
+                                error={!!CustomerAmountError}
+                                helperText={CustomerAmountError}
                                 InputProps={{
                                     startAdornment:(
                                         <InputAdornment position="start">

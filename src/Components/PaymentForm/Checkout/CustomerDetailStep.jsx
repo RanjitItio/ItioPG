@@ -42,10 +42,13 @@ const getStartDecorator = (currency) => {
 
 
 // Customer Details step
-export default function PaymentFormCustomerDetailStep({current, steps, amountDetails, handleStepValueChange, formValue}) {
-    const [open, setOpen] = useState(true);  // State to keep open the Dialoguebox
+export default function PaymentFormCustomerDetailStep({current, steps, amountDetails, 
+    handleStepValueChange, formValue, phoneNumberError, emailError}) {
+
+    const [open, setOpen]                    = useState(true);  // State to keep open the Dialoguebox
     const [merchantKeys, updateMerchantKeys] = useState([]);
-    const [error, setError] = useState(''); // Error Message
+    const [error, setError]                  = useState(''); // Error Message
+    const [disableButton, setDisableButton]  = useState(false); // Disable Button
 
     const totalAmount = amountDetails?.fixedAmount + formValue?.customerAmt // Total Amount
 
@@ -65,7 +68,7 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
             };
 
         }).catch((error)=> {
-            console.log(error)
+            // console.log(error)
 
         })
     }, []);
@@ -77,10 +80,13 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
     const handlePaymentCheckout = ()=> {
         if (formValue.email === '') {
             setError('Please type your Email ID')
+
         } else if (formValue.phoneno === '') {
             setError('Please provide your Phone Number')
+
         } else {
             setError('')
+            setDisableButton(true)
 
             // Call API for payment
             const MAINPAYLOAD = {
@@ -129,7 +135,8 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
     
             }).catch((error)=> {
                 // console.log(error)
-                console.log(error)
+                // console.log(error)
+                setDisableButton(false);
     
                 if (error.response.data.error.message === 'No Active Acquirer available, Please contact administration') {
                     alert('No acquirer asigned please contact administrator')
@@ -170,7 +177,7 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
                     <Box mb={2}>
                         <Typography variant="h6">{amountDetails.businessName}</Typography>
                     </Box>
-                        <label htmlFor="email">{amountDetails.emailLabel}</label>
+                        {/* <label htmlFor="email">{amountDetails.emailLabel}</label> */}
                         <TextField 
                             margin="dense"
                             label={amountDetails.emailLabel}
@@ -181,9 +188,11 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
                             required
                             onChange={handleStepValueChange}
                             value={formValue.email}
+                            error={!!emailError}
+                            helperText={emailError}
                         />
 
-                        <label htmlFor="phoneno">{amountDetails.phoneNoLable}</label>
+                        {/* <label htmlFor="phoneno">{amountDetails.phoneNoLable}</label> */}
                         <TextField 
                             margin="dense"
                             label={amountDetails.phoneNoLable}
@@ -194,6 +203,8 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
                             name='phoneno'
                             onChange={handleStepValueChange}
                             value={formValue.phoneno}
+                            error={!!phoneNumberError}
+                            helperText={phoneNumberError}
                         />
                 </Box>
                 {<Typography variant='p' sx={{color:'red'}}>{error && error}</Typography>}
@@ -204,7 +215,13 @@ export default function PaymentFormCustomerDetailStep({current, steps, amountDet
                     </Typography>
 
                     {current === steps.length - 1 && (
-                        <Button variant="contained" size='medium' color="primary" onClick={handlePaymentCheckout}>
+                        <Button 
+                            variant="contained" 
+                            size='medium' 
+                            color="primary" 
+                            onClick={handlePaymentCheckout}
+                            disabled={disableButton}
+                            >
                             Proceed to Pay
                         </Button>
                     )}
