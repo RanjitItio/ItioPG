@@ -6,6 +6,8 @@ import FooterSection from './Footer';
 
 
 
+
+
 // All the payment options
 export default  function AllPaymentPage({...props}) {
     const upiID = 'sahooranjitkumar53@ybl'  // default qr value
@@ -74,7 +76,7 @@ export default  function AllPaymentPage({...props}) {
                             </Box>
 
                             <Typography variant="body2" color="textSecondary">
-                                QR Code is valid for <span style={{ color: 'red' }}>7:55</span> minutes
+                                QR Code is valid for <span style={{ color: 'red' }}>{props.formatTime(props.timer)}</span> minutes
                             </Typography>
                         </Box>
                     </Box>

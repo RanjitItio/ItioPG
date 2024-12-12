@@ -21,7 +21,7 @@ export default function CheckoutErrorPopup({open, setOpen, error}) {
      
       <Dialog
         open={open}
-        onClose={handleClose}
+        // onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >

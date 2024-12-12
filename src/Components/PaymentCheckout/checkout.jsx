@@ -11,11 +11,16 @@ import AlertTitle from '@mui/material/AlertTitle';
 import Stack from '@mui/material/Stack';
 import Lottie from 'lottie-react';
 import animationData from '../Animations/Wallet.json';
+import ReportIcon from '@mui/icons-material/Report';
 
 
 
 
-
+const formatTime = (time) => {
+  const minute = Math.floor(time / 60);
+  const second = time % 60;
+  return `${minute.toString().padStart(2, '0')}:${second.toString().padStart(2, '0')}`;
+};
 
 
 // Production payment checkout
@@ -29,9 +34,29 @@ const PaymentCheckoutPage = () => {
     const [merchantPipes, setMerchantPipes] = useState([]);       // Merchant available pipes state
     const [openError, setOpenError]         = useState(false);   // 
     const [error, setError]                 = useState('');      // 
-    const [disblePayButton, setDisablePayButton] = useState(true);  // Disable button
-    const [loadingButton, setLoadingButton] = useState(false);      // Loading button state
-    const [showAnimation, setShowAnimation] = useState(true);   // Show animation during the start of the page
+    const [disblePayButton, setDisablePayButton]    = useState(true);  // Disable button
+    const [loadingButton, setLoadingButton]         = useState(false);      // Loading button state
+    const [showAnimation, setShowAnimation]         = useState(true);   // Show animation during the start of the page
+    const [base64DecodeError, setBase64DecodeError] = useState(false); // Decode error state
+    const [timer, setTimer]                 = useState(5 * 60);
+    const [paymentFailed, setPaymentFailed] = useState(false); // Timer stoppped or transaction has failed
+    const [FailedToPay, setFailedToPay]     = useState(false); // API Call to fail a transaction
+
+
+    //// Timer Configuration
+    useEffect(() => { 
+      if (timer <= 0) {
+        setPaymentFailed(true);
+        setFailedToPay(true);  //// For API Call to fail a transaction
+      };
+
+      const timerInterval = setInterval(() => {
+        setTimer(timer - 1);
+      }, 1000);
+
+      return () => clearInterval(timerInterval);
+      
+    }, [timer]);    
  
 
     let merchant_public_key  = '';
@@ -46,11 +71,12 @@ const PaymentCheckoutPage = () => {
     if (token) {
       let tokenValue = token.split(',')
 
-      merchant_public_key  = tokenValue[0]
-      transaction_amount   = tokenValue[1]
+      merchant_public_key     = tokenValue[0]
+      transaction_amount      = tokenValue[1]
       merchant_transaction_id = tokenValue[2]
-      transaction_currency = tokenValue[3]
-      merchant_business_name = tokenValue[4]
+      transaction_currency    = tokenValue[3]
+      merchant_business_name  = tokenValue[4]
+
     } else {
       return (
         <Container>
@@ -59,11 +85,28 @@ const PaymentCheckoutPage = () => {
           </Alert>
         </Container>
       )
-    }
+    };
 
-    const merchantTransactionAmount   = parseFloat(atob(transaction_amount))
-    const merchantTransactionCurrency = JSON.parse(atob(transaction_currency))
-    const merchatTransactionID        = JSON.parse(atob(merchant_transaction_id))
+    //// Decode base64 value;
+    let merchantTransactionAmount = '';
+    let merchantTransactionCurrency = '';
+    let merchatTransactionID = '';
+    let merchantPublicKey = '';
+
+    try {
+      merchantTransactionAmount   = parseFloat(atob(transaction_amount))
+      merchantTransactionCurrency = JSON.parse(atob(transaction_currency))
+      merchatTransactionID        = JSON.parse(atob(merchant_transaction_id))
+      merchantPublicKey            = JSON.parse(atob(merchant_public_key))
+
+    } catch (e) { 
+      // console.log(e);
+      // Update the state only if it hasn't been updated already
+      if (!base64DecodeError) {
+        setBase64DecodeError(true);
+      }
+    };
+    
 
     // Business Name
     try{
@@ -73,12 +116,25 @@ const PaymentCheckoutPage = () => {
       merchantBusinessName      = 'Business Name'
     }
     
+
+    //// Call API to Fail the transaction if unable to pay within timer interval.
+    useEffect(() => {
+      if (FailedToPay) {
+          axiosInstance.get(`/api/v5/fail/prod/transaction/${merchatTransactionID}/${merchantPublicKey}`).then((res)=> {
+            // console.log(res);
+
+          }).catch((error)=> {
+              // console.log(error);
+          })
+      }
+    }, [FailedToPay]);
     
 
     // Get the available acquirer for the merchant
     useEffect(() => {
         axiosInstance.post(`api/v3/merchant/checkout/pipe/`, {
-            merchant_public_key: merchant_public_key
+            merchant_public_key: merchant_public_key,
+            transaction_id: merchatTransactionID
 
         }).then((res)=> {
             // console.log(res)
@@ -91,8 +147,14 @@ const PaymentCheckoutPage = () => {
           // console.log(error)
 
           if (error.response.data.error === 'Invalid key') {
-                setError('Invalid Key provided')
                 setOpenError(true)
+                setError('Invalid Key provided')
+
+          } else if (error.response.data.error === 'Invalid Transaction') {
+              setPaymentFailed(true);
+
+          } else if (error.response.data.error === 'Transaction failed') {
+              setPaymentFailed(true);
 
           } else if (error.response.data.error === 'No assigned pipe'){
                setError('No Acquirer assigned please contact Administration')
@@ -122,7 +184,7 @@ const PaymentCheckoutPage = () => {
          clearTimeout(animationTimeoutID)
        };
 
-    }, [])
+    }, []);
 
 
   // If the values are not present in URL
@@ -138,6 +200,35 @@ const PaymentCheckoutPage = () => {
     
     );
   };
+
+  /// Deocde Error
+  if (base64DecodeError) {
+    return (
+      <Container maxWidth="xs" style={{ marginTop: '5rem' }}>
+        <Alert severity="error">
+           Invalid Data Provided can not proceed.
+        </Alert>
+      </Container>
+    )
+  };
+
+  //// If Payment Failed
+  if (paymentFailed) {
+    return (
+      <>
+        <Box sx={{display:'flex', justifyContent:'center', alignItems:'center', marginTop:'7rem'}}>
+          <ReportIcon sx={{color:'red', fontSize:'10rem'}}/>
+        </Box>
+
+        <Container maxWidth="xs">
+          <Alert severity="error">
+            Payment Failed, please try again.
+          </Alert>
+        </Container>
+      </>
+    )
+  };
+
 
 
   return (
@@ -160,6 +251,8 @@ const PaymentCheckoutPage = () => {
             setCardDetails={setCardDetails} 
             allPayment={allPayment}
             merchantBusinessName={merchantBusinessName}
+            timer={timer}
+            formatTime={formatTime}
          />
 
          <Box sx={{ flexGrow: 1 }}>
@@ -174,6 +267,8 @@ const PaymentCheckoutPage = () => {
                       disblePayButton={disblePayButton}
                       loadingButton={loadingButton}
                       setLoadingButton={setLoadingButton}
+                      timer={timer}
+                      formatTime={formatTime}
                       />
                   }
               {upiqrPage && <UPIQRCOde />}

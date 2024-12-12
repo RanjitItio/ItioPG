@@ -142,7 +142,7 @@ export default function CardPayment({...props}) {
                     request: encoded_base64
 
                 }).then((res)=> {
-                    console.log(res)
+                    // console.log(res)
 
                     if (res.status === 200 && res.data.status === 'AUTHENTICATION_IN_PROGRESS') {
                         setSessionID(res.data.session)
@@ -158,7 +158,7 @@ export default function CardPayment({...props}) {
                     }
 
                 }).catch((error)=> {
-                    console.log(error)
+                    // console.log(error)
 
                     if (error.response.data.status === 'PAYMENT_FAILED') {
                         setAPIError(error.response.data.message)
@@ -181,103 +181,103 @@ export default function CardPayment({...props}) {
 
     return (
         <>
-        <div style={{marginBottom:'90px'}}>
-        <Grid container spacing={2}>
-            <Grid item xs={12} sm={12} md={6} lg={6}>
-            <MaskedInput
-                mask={cardNumberMask}
-                guide={false}
-                name='cardNumber'
-                value={cardNumber}
-                onChange={(e)=> {IdentifyCardType(e);}}
-                render={(ref, props) => (
-                    <TextField
-                    {...props}
-                    inputRef={ref}
-                    type="text"
-                    size="small"
-                    id="card_number"
-                    label="Card Number"
-                    variant="outlined"
-                    fullWidth
-                    error={Boolean(cardError)}
-                    helperText={cardError}
-                    />
-                )}
-                />
-            </Grid>
+        <div style={{marginBottom:'90px', marginTop:'15px'}}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={12} md={6} lg={6}>
+                    <MaskedInput
+                        mask={cardNumberMask}
+                        guide={false}
+                        name='cardNumber'
+                        value={cardNumber}
+                        onChange={(e)=> {IdentifyCardType(e);}}
+                        render={(ref, props) => (
+                            <TextField
+                            {...props}
+                            inputRef={ref}
+                            type="text"
+                            size="small"
+                            id="card_number"
+                            label="Card Number"
+                            variant="outlined"
+                            fullWidth
+                            error={Boolean(cardError)}
+                            helperText={cardError}
+                            />
+                        )}
+                        />
+                    </Grid>
 
-            <Grid item xs={12} sm={12} md={6} lg={6}>
-            <MaskedInput
-                mask={expiryMask}
-                guide={false}
-                name='expiry'
-                value={formValues.expiry}
-                onChange={handleChange}
-                render={(ref, props) => (
-                    <TextField
-                    {...props}
-                    inputRef={ref}
-                    type="text"
-                    size="small"
-                    id="expiry"
-                    label="Expiry"
-                    variant="outlined"
-                    fullWidth
-                    error={Boolean(expiryError)}
-                    helperText={expiryError}
-                    />
-                )}
-                />
-                
-            </Grid>
-
-            <Grid item xs={12} sm={12} md={6} lg={6}>
-                <TextField 
-                        size='small'
-                        name='secretCode' 
-                        id="secretCode" 
-                        label="CVV" 
-                        variant="outlined" 
-                        fullWidth 
+                    <Grid item xs={12} sm={12} md={6} lg={6}>
+                    <MaskedInput
+                        mask={expiryMask}
+                        guide={false}
+                        name='expiry'
+                        value={formValues.expiry}
                         onChange={handleChange}
-                        error={Boolean(cvvError)}
-                        helperText={cvvError}
-                    />
-            </Grid>
+                        render={(ref, props) => (
+                            <TextField
+                            {...props}
+                            inputRef={ref}
+                            type="text"
+                            size="small"
+                            id="expiry"
+                            label="Expiry"
+                            variant="outlined"
+                            fullWidth
+                            error={Boolean(expiryError)}
+                            helperText={expiryError}
+                            />
+                        )}
+                        />
+                        
+                    </Grid>
 
-            <Grid item xs={12} sm={12} md={6} lg={6}>
-                <TextField 
-                    size='small' 
-                    id="cardHolderName" 
-                    name='cardHolderName'
-                    label="Card Holder Name" 
-                    variant="outlined" 
-                    onChange={handleChange}
-                    error={Boolean(holderNameError)}
-                    helperText={holderNameError}
-                    fullWidth 
-                     />
-            </Grid>
+                    <Grid item xs={12} sm={12} md={6} lg={6}>
+                        <TextField 
+                                size='small'
+                                name='secretCode' 
+                                id="secretCode" 
+                                label="CVV" 
+                                variant="outlined" 
+                                fullWidth 
+                                onChange={handleChange}
+                                error={Boolean(cvvError)}
+                                helperText={cvvError}
+                            />
+                    </Grid>
 
-        </Grid>
+                    <Grid item xs={12} sm={12} md={6} lg={6}>
+                        <TextField 
+                            size='small' 
+                            id="cardHolderName" 
+                            name='cardHolderName'
+                            label="Card Holder Name" 
+                            variant="outlined" 
+                            onChange={handleChange}
+                            error={Boolean(holderNameError)}
+                            helperText={holderNameError}
+                            fullWidth 
+                            />
+                    </Grid>
 
-        {/* API Response Error Message */}
-            {apiError && 
-                <p style={{color: 'red', display: 'flex', 
-                            justifyContent: 'center', alignItems:'center'}}
-                        >
-                    {apiError}
-                </p>
-            }
+                </Grid>
 
-        <FooterSection
-           merchantTransactionAmount={props.merchantTransactionAmount}
-           merchantTransactionCurrency={props.merchantTransactionCurrency}
-           disblePayButton={props.disblePayButton}
-           handleSubmitCardPayment={handleSubmitCardPayment}
-           loadingButton={props.loadingButton}
-        />
+                {/* API Response Error Message */}
+                    {apiError && 
+                        <p style={{color: 'red', display: 'flex', 
+                                    justifyContent: 'center', alignItems:'center'}}
+                                >
+                            {apiError}
+                        </p>
+                    }
+
+                <FooterSection
+                    merchantTransactionAmount={props.merchantTransactionAmount}
+                    merchantTransactionCurrency={props.merchantTransactionCurrency}
+                    disblePayButton={props.disblePayButton}
+                    handleSubmitCardPayment={handleSubmitCardPayment}
+                    loadingButton={props.loadingButton}
+                />
 
         </div>
 
